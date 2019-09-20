@@ -4,7 +4,7 @@ export default StyleSheet.create({
   primaryText: {
     fontFamily: "Nunito-Regular",
     color: "#606060",
-    fontSize: 14
+    fontSize: 16
   },
   greenText: {
     color: "#30be76"
