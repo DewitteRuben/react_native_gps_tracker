@@ -3,6 +3,7 @@ import { Navigation } from 'react-native-navigation';
 import { SCREENS } from '../constants/screen';
 
 import * as Home from './home';
+import * as Map from "./map";
 
 const registerComponentWithRedux = (redux: any) => (
   name: string,
@@ -18,4 +19,5 @@ const registerComponentWithRedux = (redux: any) => (
 
 export function registerScreens(redux: any) {
   registerComponentWithRedux(redux)(SCREENS.Home, Home.default);
+  registerComponentWithRedux(redux)(SCREENS.Map, Map.default);
 }

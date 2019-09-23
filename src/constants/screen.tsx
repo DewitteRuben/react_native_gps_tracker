@@ -1,7 +1,8 @@
 // Screen ids constants
 
 const SCREENS = {
-  Home: 'Home',
+  Home: "Home",
+  Map: "Map"
 };
 
 export { SCREENS };

@@ -1,13 +1,21 @@
-import { Navigation } from 'react-native-navigation';
+import { Navigation } from "react-native-navigation";
 
-import { SCREENS } from '../constants/screen';
-import { TYPOGRAPHY } from '../styles/typography';
+import { SCREENS } from "../constants/screen";
+import { TYPOGRAPHY } from "../styles/typography";
 
 export const showSplash = () => {
   Navigation.setRoot({
     root: {
-      component: { name: SCREENS.Home },
-    },
+      stack: {
+        children: [
+          {
+            component: {
+              name: SCREENS.Home
+            }
+          }
+        ]
+      }
+    }
   });
 };
 

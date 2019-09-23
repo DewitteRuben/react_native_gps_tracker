@@ -3,10 +3,17 @@ import { Text, View, Image } from "react-native";
 import Button from "../../components/Button";
 import Overlay from "../../components/Overlay";
 import { CText } from "../../components";
+import { Navigation } from "react-native-navigation";
 
-export interface Props {}
+const Home: React.FC = (props: any) => {
+  const goToScreen = (screenName: string) => {
+    Navigation.push(props.componentId, {
+      component: {
+        name: screenName
+      }
+    });
+  };
 
-const Home: React.FC = (props: Props) => {
   return (
     <>
       <Overlay>
@@ -28,7 +35,7 @@ const Home: React.FC = (props: Props) => {
           paddingHorizontal: 40
         }}
       >
-        <Button text="Routed Tracking" block callback={() => {}}></Button>
+        <Button text="Routed Tracking" block callback={() => goToScreen("Map")}></Button>
         <View style={{ marginVertical: 12 }}>
           <CText text="or" />
         </View>
