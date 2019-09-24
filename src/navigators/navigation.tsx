@@ -1,7 +1,7 @@
-import { createStackNavigator } from "react-navigation-stack";
+import { createSwitchNavigator } from "react-navigation";
 import { Home, Map } from "../views/index";
 
-export const appNavigator = createStackNavigator(
+export const appNavigator = createSwitchNavigator(
   {
     Home: {
       screen: Home

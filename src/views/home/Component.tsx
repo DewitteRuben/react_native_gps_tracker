@@ -59,9 +59,4 @@ const Home: any = (props: Props) => {
   );
 };
 
-Home.navigationOptions = {
-  header: null,
-  headerMode: "none"
-};
-
 export default Home;
