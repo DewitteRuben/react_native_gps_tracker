@@ -1,23 +1,4 @@
-import { Navigation } from 'react-native-navigation';
+import Home from "./home";
+import Map from "./map";
 
-import { SCREENS } from '../constants/screen';
-
-import * as Home from './home';
-import * as Map from "./map";
-
-const registerComponentWithRedux = (redux: any) => (
-  name: string,
-  component: any,
-) => {
-  Navigation.registerComponentWithRedux(
-    name,
-    () => component,
-    redux.Provider,
-    redux.store,
-  );
-};
-
-export function registerScreens(redux: any) {
-  registerComponentWithRedux(redux)(SCREENS.Home, Home.default);
-  registerComponentWithRedux(redux)(SCREENS.Map, Map.default);
-}
+export { Home, Map };

@@ -1,23 +1,18 @@
-import { Navigation } from 'react-native-navigation';
-import { Provider } from 'react-redux';
+import { createAppContainer } from "react-navigation";
+import { appNavigator } from "./../navigators/navigation";
+import { Provider } from "react-redux";
+import React from "react";
 
-import store from '../../shared/redux/store';
-import { registerScreens } from '../views';
-import { showSplash } from './navigation';
+import store from "../redux/store";
+import { Home } from "../views";
 
-/**
- * Register screens and components for react native navigation
- */
-registerScreens({ store, Provider });
+const Navigation = createAppContainer(appNavigator);
 
-const app = () => {
-  Navigation.events().registerAppLaunchedListener(() => {
-    Navigation.setDefaultOptions({
-      topBar: { visible: true },
-    });
-
-    showSplash();
-  });
-};
+const app: React.FC = () => (
+  // <Provider store={store}>
+  //   <Navigation />
+  // </Provider>
+  <Home />
+);
 
 export default app;

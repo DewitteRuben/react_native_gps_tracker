@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View, Image } from "react-native";
 import Button from "../../components/Button";
 import Overlay from "../../components/Overlay";
 import { CText } from "../../components";
-import { Navigation } from "react-native-navigation";
+import {
+  NavigationScreenProp,
+  NavigationState,
+  NavigationParams
+} from "react-navigation";
 
-const Home: React.FC = (props: any) => {
-  const goToScreen = (screenName: string) => {
-    Navigation.push(props.componentId, {
-      component: {
-        name: screenName
-      }
-    });
-  };
+export interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}
 
+const Home: any = (props: Props) => {
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <Overlay>
         <Image
           resizeMode={"cover"}
@@ -35,7 +35,11 @@ const Home: React.FC = (props: any) => {
           paddingHorizontal: 40
         }}
       >
-        <Button text="Routed Tracking" block callback={() => goToScreen("Map")}></Button>
+        <Button
+          text="Routed Tracking"
+          block
+          callback={() => props.navigation.navigate("Map")}
+        ></Button>
         <View style={{ marginVertical: 12 }}>
           <CText text="or" />
         </View>
@@ -51,8 +55,13 @@ const Home: React.FC = (props: any) => {
           <CText bold green text="Read more here" />
         </View>
       </View>
-    </>
+    </View>
   );
+};
+
+Home.navigationOptions = {
+  header: null,
+  headerMode: "none"
 };
 
 export default Home;
