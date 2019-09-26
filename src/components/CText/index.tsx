@@ -5,7 +5,7 @@ import styles from "./style";
 export interface Props {
   bold?: boolean;
   style?: object;
-  text: string;
+  text: string | number | null;
   green?: boolean;
   gray?: boolean;
   h1?: boolean;
