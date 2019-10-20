@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import {
+import Geolocation, {
   default as GPS,
   GeolocationResponse,
   GeolocationError,
 } from "@react-native-community/geolocation";
-import { CText } from "../../components";
+import { CText, Button } from "../../components";
 
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoicnViZW5kZXdpdHRlIiwiYSI6ImNrMHNtcWhjZzAzd24zY3J4NDJwODhxeHoifQ.YsajnMm8yJlFW0kbkP4bpQ",
@@ -22,9 +22,39 @@ const setResponse = (
   geolocation: IGeolocation,
 ) => {
   return (position: GeolocationResponse) => {
-    console.log(position);
     setGeolocation({ ...geolocation, position, error: null });
   };
+};
+
+const useTrackLocation = (routed: boolean) => {
+  const [route, setRoute] = useState<ICoordinate[]>([]);
+  const [geolocation, setGeolocation] = useState<IGeolocation>({
+    position: null,
+    error: null,
+  });
+
+  useEffect(() => {
+    const watchId = GPS.watchPosition(
+      (position: GeolocationResponse) => {
+        setResponse(setGeolocation, geolocation)(position);
+        if (routed) {
+          console.log("is saving route");
+          setRoute([
+            ...route,
+            {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          ]);
+        }
+      },
+      setError(setGeolocation, geolocation),
+      gpsOptions,
+    );
+
+    return () => GPS.clearWatch(watchId);
+  }, [routed]);
+  return [route, geolocation];
 };
 
 const setError = (
@@ -34,17 +64,6 @@ const setError = (
   return (error: GeolocationError) => {
     setGeolocation({ ...geolocation, error, position: null });
   };
-};
-
-const watchCurPos = (
-  setGeolocation: React.Dispatch<React.SetStateAction<IGeolocation>>,
-  geolocation: IGeolocation,
-) => {
-  return GPS.watchPosition(
-    setResponse(setGeolocation, geolocation),
-    setError(setGeolocation, geolocation),
-    gpsOptions,
-  );
 };
 
 const gpsOptions = {
@@ -88,20 +107,28 @@ const gpsDetails = (geolocation: IGeolocation) => (
   </View>
 );
 
+interface ICoordinate {
+  latitude: number;
+  longitude: number;
+}
+
 const map: React.FC = () => {
-  const [geolocation, setGeolocation] = useState<IGeolocation>({
-    position: null,
-    error: null,
-  });
   const mapView = useRef(null);
-  console.log(mapView);
+  const [isTracking, setTracking] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
+
+  const [route, geolocation] = useTrackLocation(isTracking) as [
+    ICoordinate[],
+    IGeolocation,
+  ];
 
   useEffect(() => {
-    const watchId = watchCurPos(setGeolocation, geolocation);
-
-    return () => {
-      GPS.clearWatch(watchId);
+    const requestPermissions = async () => {
+      const hasBeenGranted = await MapboxGL.requestAndroidLocationPermissions();
+      setHasPermission(hasBeenGranted);
     };
+
+    requestPermissions();
   }, []);
 
   return (
@@ -109,22 +136,22 @@ const map: React.FC = () => {
       <MapboxGL.MapView
         ref={mapView}
         style={{ flex: 1 }}
-        showUserLocation={true}>
-        {geolocation.position && (
-          <MapboxGL.Camera
-            zoomLevel={16}
-            centerCoordinate={[3.1188, 51.09217]}
-          />
-        )}
-        <MapboxGL.PointAnnotation
-          id={"0"}
-          coordinate={[3.1188, 51.09217]}
-          title={"Home"}>
-          <MapboxGL.Callout title="Home" />
-        </MapboxGL.PointAnnotation>
+        userTrackingMode={MapboxGL.UserTrackingModes.FollowWithHeading}>
+        <MapboxGL.UserLocation visible={hasPermission} />
+        <MapboxGL.Camera
+          zoomLevel={16}
+          followZoomLevel={16}
+          followUserMode="normal"
+          followUserLocation={true}
+        />
       </MapboxGL.MapView>
       <View></View>
       {gpsDetails(geolocation)}
+      <View>
+        <Button
+          text={(isTracking ? "Stop " : "Start ") + "Track"}
+          onPress={() => setTracking(!isTracking)}></Button>
+      </View>
     </View>
   );
 };

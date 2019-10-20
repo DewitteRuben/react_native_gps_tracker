@@ -6,7 +6,7 @@ import { CText } from "../../components";
 import {
   NavigationScreenProp,
   NavigationState,
-  NavigationParams
+  NavigationParams,
 } from "react-navigation";
 
 export interface Props {
@@ -20,8 +20,7 @@ const Home: any = (props: Props) => {
         <Image
           resizeMode={"cover"}
           style={{ width: "100%", height: 225 }}
-          source={require("src/assets/images/header-travel.jpg")}
-        ></Image>
+          source={require("src/assets/images/header-travel.jpg")}></Image>
       </Overlay>
       <View style={{ paddingHorizontal: 40, marginTop: 20 }}>
         <CText h1 bold text="Welcome!" />
@@ -32,25 +31,22 @@ const Home: any = (props: Props) => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          paddingHorizontal: 40
-        }}
-      >
+          paddingHorizontal: 40,
+        }}>
         <Button
           text="Routed Tracking"
           block
-          callback={() => props.navigation.navigate("Map")}
-        ></Button>
+          onPress={() => props.navigation.navigate("Map")}></Button>
         <View style={{ marginVertical: 12 }}>
           <CText text="or" />
         </View>
-        <Button text="Free Tracking" block callback={() => {}}></Button>
+        <Button text="Free Tracking" block></Button>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 30
-          }}
-        >
+            marginTop: 30,
+          }}>
           <CText gray text="New?" />
           <CText bold green text="Read more here" />
         </View>

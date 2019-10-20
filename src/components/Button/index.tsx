@@ -6,14 +6,14 @@ export interface Props {
   text: string;
   containerStyle?: object;
   style?: object;
-  callback: () => any;
+  onPress?: () => any;
   block?: boolean;
 }
 
 const button = (props: Props) => (
   <TouchableOpacity
     style={[styles.primary, props.block ? styles.block : null, props.containerStyle]}
-    onPress={props.callback}
+    onPress={props.onPress}
   >
     <Text style={[styles.primaryText, props.style]}>{props.text}</Text>
   </TouchableOpacity>
