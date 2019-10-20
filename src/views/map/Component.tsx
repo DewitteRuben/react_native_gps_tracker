@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import { CText, Button } from "../../components";
+import { CText as Text, Button } from "../../components";
+
+const COORD_PRECISION = 0.000001;
 
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoicnViZW5kZXdpdHRlIiwiYSI6ImNrMHNtcWhjZzAzd24zY3J4NDJwODhxeHoifQ.YsajnMm8yJlFW0kbkP4bpQ",
@@ -9,25 +11,35 @@ MapboxGL.setAccessToken(
 
 const gpsDetails = (coords: MapboxGL.Coordinates) => (
   <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-    <CText text="accuracy: " />
-    <CText text={coords.accuracy || 0} />
-    <CText text="altitude: " />
+    <Text text="accuracy: " />
+    <Text text={coords.accuracy || 0} />
+    <Text text="altitude: " />
 
-    <CText text={coords.altitude || 0} />
-    <CText text="latitude: " />
+    <Text text={coords.altitude || 0} />
+    <Text text="latitude: " />
 
-    <CText text={coords.latitude} />
-    <CText text="longitude: " />
+    <Text text={coords.latitude} />
+    <Text text="longitude: " />
 
-    <CText text={coords.longitude} />
-    <CText text="speed: " />
+    <Text text={coords.longitude} />
+    <Text text="speed: " />
 
-    <CText text={coords.speed || 0} />
+    <Text text={coords.speed || 0} />
 
-    <CText text="heading: " />
-    <CText text={coords.heading || 0} />
+    <Text text="heading: " />
+    <Text text={coords.heading || 0} />
   </View>
 );
+
+let curLat = 0;
+let curLong = 0;
+
+const didCoordsUpdate = (coords: MapboxGL.Coordinates) => {
+  return (
+    Math.abs(curLat - coords.latitude) > COORD_PRECISION ||
+    Math.abs(curLong - coords.longitude) > COORD_PRECISION
+  );
+};
 
 const map: React.FC = () => {
   const mapView = useRef(null);
@@ -38,9 +50,18 @@ const map: React.FC = () => {
 
   const onUserlocationUpdate = (isTracking: boolean) => {
     return (location: MapboxGL.Location) => {
-      setLocation(location);
-      if (isTracking) {
-        setRoute([...route, location.coords]);
+      if (curLat === 0 && curLong === 0) {
+        curLat = location.coords.latitude;
+        curLong = location.coords.longitude;
+      }
+
+      if (didCoordsUpdate(location.coords)) {
+        setLocation(location);
+        if (isTracking) {
+          setRoute([...route, location.coords]);
+        }
+        curLat = location.coords.latitude;
+        curLong = location.coords.longitude;
       }
     };
   };
@@ -54,6 +75,7 @@ const map: React.FC = () => {
     requestPermissions();
   }, []);
 
+  console.log(location);
   return (
     <View style={{ flex: 1 }}>
       <MapboxGL.MapView
@@ -61,7 +83,7 @@ const map: React.FC = () => {
         style={{ flex: 1 }}
         userTrackingMode={MapboxGL.UserTrackingModes.FollowWithHeading}>
         <MapboxGL.UserLocation
-          onUpdate={onUserlocationUpdate(isTracking)}
+          onUpdate={onUserlocationUpdate(true)}
           visible={hasPermission}
         />
         <MapboxGL.Camera
@@ -71,8 +93,10 @@ const map: React.FC = () => {
           followUserLocation={true}
         />
       </MapboxGL.MapView>
-      <View></View>
-      {location && gpsDetails(location.coords)}
+      <View>{location && gpsDetails(location.coords)}</View>
+      <View>
+        <Text text="Text" />
+      </View>
       <View>
         <Button
           text={(isTracking ? "Stop " : "Start ") + "Track"}
