@@ -1,126 +1,49 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import Geolocation, {
-  default as GPS,
-  GeolocationResponse,
-  GeolocationError,
-} from "@react-native-community/geolocation";
 import { CText, Button } from "../../components";
 
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoicnViZW5kZXdpdHRlIiwiYSI6ImNrMHNtcWhjZzAzd24zY3J4NDJwODhxeHoifQ.YsajnMm8yJlFW0kbkP4bpQ",
 );
 
-interface IGeolocation {
-  position: GeolocationResponse | null;
-  error: GeolocationError | null;
-}
-
-const setResponse = (
-  setGeolocation: React.Dispatch<React.SetStateAction<IGeolocation>>,
-  geolocation: IGeolocation,
-) => {
-  return (position: GeolocationResponse) => {
-    setGeolocation({ ...geolocation, position, error: null });
-  };
-};
-
-const useTrackLocation = (routed: boolean) => {
-  const [route, setRoute] = useState<ICoordinate[]>([]);
-  const [geolocation, setGeolocation] = useState<IGeolocation>({
-    position: null,
-    error: null,
-  });
-
-  useEffect(() => {
-    const watchId = GPS.watchPosition(
-      (position: GeolocationResponse) => {
-        setResponse(setGeolocation, geolocation)(position);
-        if (routed) {
-          console.log("is saving route");
-          setRoute([
-            ...route,
-            {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-          ]);
-        }
-      },
-      setError(setGeolocation, geolocation),
-      gpsOptions,
-    );
-
-    return () => GPS.clearWatch(watchId);
-  }, [routed]);
-  return [route, geolocation];
-};
-
-const setError = (
-  setGeolocation: React.Dispatch<React.SetStateAction<IGeolocation>>,
-  geolocation: IGeolocation,
-) => {
-  return (error: GeolocationError) => {
-    setGeolocation({ ...geolocation, error, position: null });
-  };
-};
-
-const gpsOptions = {
-  enableHighAccuracy: true,
-};
-
-const gpsDetails = (geolocation: IGeolocation) => (
+const gpsDetails = (coords: MapboxGL.Coordinates) => (
   <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
     <CText text="accuracy: " />
-    <CText
-      text={geolocation.position && geolocation.position.coords.accuracy}
-    />
+    <CText text={coords.accuracy || 0} />
     <CText text="altitude: " />
 
-    <CText
-      text={geolocation.position && geolocation.position.coords.altitude}
-    />
-    <CText text="altitudeAccuracy: " />
-
-    <CText
-      text={
-        geolocation.position && geolocation.position.coords.altitudeAccuracy
-      }
-    />
+    <CText text={coords.altitude || 0} />
     <CText text="latitude: " />
 
-    <CText
-      text={geolocation.position && geolocation.position.coords.latitude}
-    />
+    <CText text={coords.latitude} />
     <CText text="longitude: " />
 
-    <CText
-      text={geolocation.position && geolocation.position.coords.longitude}
-    />
+    <CText text={coords.longitude} />
     <CText text="speed: " />
 
-    <CText text={geolocation.position && geolocation.position.coords.speed} />
+    <CText text={coords.speed || 0} />
 
     <CText text="heading: " />
-    <CText text={geolocation.position && geolocation.position.coords.heading} />
+    <CText text={coords.heading || 0} />
   </View>
 );
-
-interface ICoordinate {
-  latitude: number;
-  longitude: number;
-}
 
 const map: React.FC = () => {
   const mapView = useRef(null);
   const [isTracking, setTracking] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
+  const [location, setLocation] = useState<MapboxGL.Location>();
+  const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
 
-  const [route, geolocation] = useTrackLocation(isTracking) as [
-    ICoordinate[],
-    IGeolocation,
-  ];
+  const onUserlocationUpdate = (isTracking: boolean) => {
+    return (location: MapboxGL.Location) => {
+      setLocation(location);
+      if (isTracking) {
+        setRoute([...route, location.coords]);
+      }
+    };
+  };
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -137,7 +60,10 @@ const map: React.FC = () => {
         ref={mapView}
         style={{ flex: 1 }}
         userTrackingMode={MapboxGL.UserTrackingModes.FollowWithHeading}>
-        <MapboxGL.UserLocation visible={hasPermission} />
+        <MapboxGL.UserLocation
+          onUpdate={onUserlocationUpdate(isTracking)}
+          visible={hasPermission}
+        />
         <MapboxGL.Camera
           zoomLevel={16}
           followZoomLevel={16}
@@ -146,7 +72,7 @@ const map: React.FC = () => {
         />
       </MapboxGL.MapView>
       <View></View>
-      {gpsDetails(geolocation)}
+      {location && gpsDetails(location.coords)}
       <View>
         <Button
           text={(isTracking ? "Stop " : "Start ") + "Track"}
