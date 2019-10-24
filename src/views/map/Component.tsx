@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { CText as Text, Button } from "../../components";
+import * as GeoJSON from "@turf/helpers/lib/geojson";
 
 const COORD_PRECISION = 0.000001;
 
@@ -31,8 +32,8 @@ const gpsDetails = (coords: MapboxGL.Coordinates) => (
   </View>
 );
 
-let curLat = 0;
 let curLong = 0;
+let curLat = 0;
 
 const didCoordsUpdate = (coords: MapboxGL.Coordinates) => {
   return (
@@ -41,30 +42,8 @@ const didCoordsUpdate = (coords: MapboxGL.Coordinates) => {
   );
 };
 
-const map: React.FC = () => {
-  const mapView = useRef(null);
-  const [isTracking, setTracking] = useState(false);
+const useLocationPermission = () => {
   const [hasPermission, setHasPermission] = useState(false);
-  const [location, setLocation] = useState<MapboxGL.Location>();
-  const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
-
-  const onUserlocationUpdate = (isTracking: boolean) => {
-    return (location: MapboxGL.Location) => {
-      if (curLat === 0 && curLong === 0) {
-        curLat = location.coords.latitude;
-        curLong = location.coords.longitude;
-      }
-
-      if (didCoordsUpdate(location.coords)) {
-        setLocation(location);
-        if (isTracking) {
-          setRoute([...route, location.coords]);
-        }
-        curLat = location.coords.latitude;
-        curLong = location.coords.longitude;
-      }
-    };
-  };
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -75,31 +54,81 @@ const map: React.FC = () => {
     requestPermissions();
   }, []);
 
-  console.log(location);
+  return hasPermission;
+};
+
+const setRouteLineFeature = (route: MapboxGL.Coordinates[]) => {
+  const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
+
+  const routeLineString: GeoJSON.Feature = {
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: "LineString",
+      coordinates: route.map(coord => [coord.longitude, coord.latitude]),
+    },
+  };
+  setGeoJsonFeature(routeLineString);
+
+  return geojsonFeature;
+};
+
+const map: React.FC = () => {
+  const hasPermission = useLocationPermission();
+  const [isTracking, setTracking] = useState(false);
+  const [followUser, setFollowUser] = useState(false);
+  const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
+  let geojsonFeature = null;
+
+  const onUserlocationUpdate = (location: MapboxGL.Location) => {
+    if (curLat === 0 && curLong === 0) {
+      curLong = location.coords.longitude;
+      curLat = location.coords.latitude;
+    }
+
+    if (didCoordsUpdate(location.coords)) {
+      setFollowUser(true);
+      if (isTracking) {
+        setRoute([...route, location.coords]);
+        geojsonFeature = setRouteLineFeature(route);
+      }
+
+      curLong = location.coords.longitude;
+      curLat = location.coords.latitude;
+    }
+  };
+
+
   return (
     <View style={{ flex: 1 }}>
       <MapboxGL.MapView
-        ref={mapView}
         style={{ flex: 1 }}
-        userTrackingMode={MapboxGL.UserTrackingModes.FollowWithHeading}>
+        animated={true}
+        onTouchMove={() => setFollowUser(false)}
+        userTrackingMode={MapboxGL.UserTrackingModes.Follow}>
         <MapboxGL.UserLocation
-          onUpdate={onUserlocationUpdate(true)}
+          onUpdate={onUserlocationUpdate}
           visible={hasPermission}
+          renderMode="normal"
         />
         <MapboxGL.Camera
-          zoomLevel={16}
-          followZoomLevel={16}
+          zoomLevel={12}
+          followZoomLevel={12}
+          followUserLocation={followUser}
           followUserMode="normal"
-          followUserLocation={true}
         />
+
+        {geojsonFeature && (
+          <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
+            <MapboxGL.LineLayer
+              id="routeLine"
+              style={{ lineWidth: 3, lineColor: "#F7455D" }}></MapboxGL.LineLayer>
+          </MapboxGL.ShapeSource>
+        )}
       </MapboxGL.MapView>
-      <View>{location && gpsDetails(location.coords)}</View>
-      <View>
-        <Text text="Text" />
-      </View>
       <View>
         <Button
-          text={(isTracking ? "Stop " : "Start ") + "Track"}
+          text={`${isTracking ? "Stop" : "Start"} Tracking`}
           onPress={() => setTracking(!isTracking)}></Button>
       </View>
     </View>
