@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@react-native-community/geolocation": "^2.0.2",
+    "@react-native-firebase/app": "^6.0.2",
+    "@react-native-firebase/database": "^6.0.2",
     "@react-native-mapbox-gl/maps": "^7.0.7",
     "jetifier": "^1.6.4",
     "react": "16.8.6",

@@ -3,6 +3,7 @@ import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { CText as Text, Button } from "../../components";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
+import { fbTest } from "../../services/firebase";
 
 const COORD_PRECISION = 0.000001;
 
@@ -57,20 +58,15 @@ const useLocationPermission = () => {
   return hasPermission;
 };
 
-const setRouteLineFeature = (route: MapboxGL.Coordinates[]) => {
-  const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
-
-  const routeLineString: GeoJSON.Feature = {
+const routeToFeature = (route: MapboxGL.Coordinates[]) => {
+  return {
     type: "Feature",
     properties: {},
     geometry: {
       type: "LineString",
       coordinates: route.map(coord => [coord.longitude, coord.latitude]),
     },
-  };
-  setGeoJsonFeature(routeLineString);
-
-  return geojsonFeature;
+  } as GeoJSON.Feature;
 };
 
 const map: React.FC = () => {
@@ -78,7 +74,8 @@ const map: React.FC = () => {
   const [isTracking, setTracking] = useState(false);
   const [followUser, setFollowUser] = useState(false);
   const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
-  let geojsonFeature = null;
+  const [routeSegment, setRouteSegment] = useState<MapboxGL.Coordinates>();
+  const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
 
   const onUserlocationUpdate = (location: MapboxGL.Location) => {
     if (curLat === 0 && curLong === 0) {
@@ -89,15 +86,19 @@ const map: React.FC = () => {
     if (didCoordsUpdate(location.coords)) {
       setFollowUser(true);
       if (isTracking) {
-        setRoute([...route, location.coords]);
-        geojsonFeature = setRouteLineFeature(route);
+        const newRoute = [...route, location.coords];
+
+        fbTest(location.coords);
+        setRouteSegment(location.coords);
+
+        setRoute(newRoute);
+        setGeoJsonFeature(routeToFeature(newRoute));
       }
 
       curLong = location.coords.longitude;
       curLat = location.coords.latitude;
     }
   };
-
 
   return (
     <View style={{ flex: 1 }}>
