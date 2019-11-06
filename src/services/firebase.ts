@@ -1,10 +1,13 @@
 import database from "@react-native-firebase/database";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-
-const FB_REF = {
-  USERS: database().ref("users/"),
-};
+import getUUID from "../utils/uuid";
 
 export const fbTest = async (coords: MapboxGL.Coordinates) => {
-  await FB_REF.USERS.set(coords);
+  try {
+    const UUID = await getUUID();
+    const ref = database().ref(`users/${UUID}`);
+    await ref.set(coords);
+  } catch (error) {
+    throw new Error(error);
+  }
 };

@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:33745741384:android:bf2d35af5b56fbff5d5a7d",
+        "mobilesdk_app_id": "1:33745741384:android:77ed8532bd3a89315d5a7d",
         "android_client_info": {
           "package_name": "com.gpsapp"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "33745741384-4j79o2c4knv79jjlfkflbs5ncno96ghi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.gpsapp",
-            "certificate_hash": "77d2c7157127d3aafb94e9d40dda9a9c1fc8a65c"
-          }
-        },
         {
           "client_id": "33745741384-87j6nc3a4fuci65m3bnibiih59u1sp7c.apps.googleusercontent.com",
           "client_type": 3
