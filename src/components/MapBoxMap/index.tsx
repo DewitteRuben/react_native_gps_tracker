@@ -29,8 +29,8 @@ const MapboxMap: React.FC<Props> = ({ tracking, style }) => {
         prevCoords = location.coords;
       }
 
+      setFollowUser(true);
       if (didCoordsUpdate(prevCoords, location.coords)) {
-        setFollowUser(true);
         if (tracking) {
           const newRoute = [...route, location.coords];
           if (liveUpdate) {
