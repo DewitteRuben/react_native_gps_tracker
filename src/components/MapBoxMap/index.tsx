@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { View, StyleProp, ViewStyle } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
-import { fbUpdateCoords } from "../../services/firebase";
+import { fbUpdateLastCoords, fbUpdateCoords } from "../../services/firebase";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import config from "../../config";
 import Icon from "react-native-vector-icons/Feather";
@@ -34,10 +34,13 @@ const MapboxMap: React.FC<Props> = ({ tracking, style }) => {
         if (tracking) {
           const newRoute = [...route, location.coords];
           if (liveUpdate) {
-            fbUpdateCoords(location.coords);
+            fbUpdateLastCoords(location.coords);
+            fbUpdateCoords(newRoute);
           }
           setRoute(newRoute);
-          setGeoJsonFeature(routeToFeature(newRoute));
+          setTimeout(() => {
+            setGeoJsonFeature(routeToFeature(newRoute));
+          }, 1000);
         }
 
         prevCoords = location.coords;
@@ -57,7 +60,7 @@ const MapboxMap: React.FC<Props> = ({ tracking, style }) => {
         <MapboxGL.Camera zoomLevel={12} followZoomLevel={12} followUserLocation={followUser} followUserMode="normal" />
         {geojsonFeature && (
           <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
-            <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }}></MapboxGL.LineLayer>
+            <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }} />
           </MapboxGL.ShapeSource>
         )}
 
