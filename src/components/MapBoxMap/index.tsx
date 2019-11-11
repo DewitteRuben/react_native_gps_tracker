@@ -32,7 +32,7 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
       setFollowUser(true);
       if (didCoordsUpdate(prevCoords, location.coords)) {
         if (isTracking) {
-          const newRoute = [...route, location.coords];
+          const newRoute = [...route, ...(route.length < 2 ? [prevCoords] : []), location.coords];
           if (liveUpdate) {
             fbUpdateLastCoords(location.coords);
             fbUpdateCoords(newRoute);
