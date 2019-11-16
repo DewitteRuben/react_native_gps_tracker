@@ -26,6 +26,7 @@
     "react": "16.8.6",
     "react-native": "0.60.5",
     "react-native-gesture-handler": "^1.4.1",
+    "react-native-modal": "^11.5.3",
     "react-native-navigation": "^2.18.3",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.0.7",
@@ -34,7 +35,6 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "rn-bottom-drawer": "^1.4.3",
     "uuid": "^3.3.3"
   },
   "license": "MIT",
@@ -42,6 +42,7 @@
     "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/preset-env": "^7.3.1",
     "@types/jest": "^23.3.13",
+    "@types/pubsub-js": "^1.5.18",
     "@types/react": "^16.7.21",
     "@types/react-native": "^0.57.32",
     "@types/react-native-vector-icons": "^6.4.4",

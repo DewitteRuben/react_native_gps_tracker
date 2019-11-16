@@ -23,7 +23,7 @@ const mapControls: React.FC<Props> = ({ isTracking, liveUpdate, onPressToggleLiv
           backgroundColor="#FAFAFA"
         />
       </View>
-      <View style={{ position: "absolute", zIndex: 10, bottom: isTracking ? 104 : 20, right: 15 }}>
+      <View style={{ position: "absolute", zIndex: 10, bottom: 20, right: 15 }}>
         <CircleButton
           onPress={onPressTrack}
         >
@@ -36,7 +36,7 @@ const mapControls: React.FC<Props> = ({ isTracking, liveUpdate, onPressToggleLiv
         </CircleButton>
       </View>
       {isTracking && (
-        <View style={{ position: "absolute", zIndex: 10, bottom: 20, right: 15 }}>
+        <View style={{ position: "absolute", zIndex: 10, bottom: isTracking ? 94 : 20, right: 15 }}>
           <CircleButton backgroundColor="#30be76" containerStyle={{ padding: 17 }} onPress={onPressFinish}>
             <CIcon type="FontAwesome" color="#FFFFFF" size={26} name="flag-checkered" />
           </CircleButton>

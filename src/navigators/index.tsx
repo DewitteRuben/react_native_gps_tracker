@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import React from "react";
 
 import store from "../redux/store";
-import { Home } from "../views";
 
 const Navigation = createAppContainer(appNavigator);
 

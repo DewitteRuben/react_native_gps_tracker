@@ -1,11 +1,11 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { View, StyleProp, ViewStyle } from "react-native";
+import { View, StyleProp, ViewStyle, Text, StyleSheet, Button } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords } from "../../services/firebase";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import config from "../../config";
-import { CircleButton, Icon as CIcon, MapControls } from "..";
+import { MapControls, CText, Modal } from "..";
 
 MapboxGL.setAccessToken(config.mapbox.accessToken);
 
@@ -22,6 +22,7 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
   const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
+  const [isModalVisible, setModalVisbility] = useState(false);
 
   const onUserlocationUpdate = useCallback(
     (location: MapboxGL.Location) => {
@@ -76,10 +77,20 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
         liveUpdate={liveUpdate}
         onPressToggleLive={() => setLiveUpdate(!liveUpdate)}
         onPressTrack={() => setTracking(!isTracking)}
-        onPressFinish={() => console.log("test")}
+        onPressFinish={() => setModalVisbility(true)}
+      />
+      <Modal
+        isVisible={isModalVisible}
+        onSwipeComplete={() => setModalVisbility(false)}
+        swipeDirection="up"
+        onBackdropPress={() => setModalVisbility(false)}
+        text="Do you wish to conclude your current track?"
+        buttons={[
+          { onPress: () => setModalVisbility(false), text: "Close", style: { width: "45%", paddingVertical: 15 } },
+          { onPress: () => {}, text: "Confirm", style: { width: "45%", paddingVertical: 15 } }
+        ]}
       />
     </View>
   );
 };
-
 export default MapboxMap;

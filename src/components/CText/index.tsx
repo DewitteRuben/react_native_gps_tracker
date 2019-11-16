@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "react-native";
 import styles from "./style";
 
-export interface Props {
+interface Props {
   bold?: boolean;
   style?: object;
   text: string | number | null;
