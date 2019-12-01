@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { View, StyleProp, ViewStyle, Text, StyleSheet, Button } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
-import { fbUpdateLastCoords, fbUpdateCoords } from "../../services/firebase";
+import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import config from "../../config";
 import { MapControls, CText, Modal } from "..";
@@ -23,6 +23,15 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
   const [isModalVisible, setModalVisbility] = useState(false);
+
+  const clearRoute = useCallback(() => {
+    setRoute([]);
+    setGeoJsonFeature(routeToFeature([]));
+    setTracking(false);
+    if (liveUpdate) {
+      fbClearRoute();
+    }
+  }, [liveUpdate]);
 
   const onUserlocationUpdate = useCallback(
     (location: MapboxGL.Location) => {
@@ -86,8 +95,15 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
         onBackdropPress={() => setModalVisbility(false)}
         text="Do you wish to conclude your current track?"
         buttons={[
-          { onPress: () => setModalVisbility(false), text: "Close", style: { width: "45%", paddingVertical: 15 } },
-          { onPress: () => {}, text: "Confirm", style: { width: "45%", paddingVertical: 15 } }
+          { onPress: () => setModalVisbility(false), text: "No", style: { width: "45%", paddingVertical: 15 } },
+          {
+            onPress: () => {
+              setModalVisbility(false);
+              clearRoute();
+            },
+            text: "Yes",
+            style: { width: "45%", paddingVertical: 15 }
+          }
         ]}
       />
     </View>

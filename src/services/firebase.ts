@@ -21,3 +21,13 @@ export const fbUpdateCoords = async (coords: MapboxGL.Coordinates[]) => {
     throw new Error(error);
   }
 };
+
+export const fbClearRoute = async () => {
+  try {
+    const UUID = await getUUID();
+    const ref = database().ref(`users/${UUID}/full`);
+    await ref.set(null);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
