@@ -28,9 +28,10 @@ const modal: React.FC<Props> = ({ onSwipeComplete, swipeDirection, onBackdropPre
           <CText text={text} />
         </View>
         <View style={styles.content}>
-          {buttons.map(button => (
+          {buttons.map((button, index) => (
             <Button
               text={button.text}
+              key={`i-${index}`}
               onPress={button.onPress}
               containerStyle={{ ...button.style, marginHorizontal: 5 }}
             />

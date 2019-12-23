@@ -1,20 +1,34 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View } from "react-native";
-import { CText as Text, Button, CircleButton } from "../../components";
+import { CText as Text, Button, CircleButton, Icon } from "../../components";
 import MapBoxMap from "../../components/MapBoxMap";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  NavigationStackScreenComponent,
+  NavigationStackScreenProps,
+  NavigationStackOptions,
+  NavigationStackProp
+} from "react-navigation-stack";
+import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
+import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 
-// const TAB_BAR_HEIGHT = 49;
+interface Props extends NavigationStackScreenProps {
+  // your props...
+}
 
-const map: React.FC = () => {
+const map: NavigationStackScreenComponent<Props> = () => {
   return (
     <View style={{ flex: 1 }}>
       <MapBoxMap />
-      <View style={{ padding: 20 }}></View>
-      {/* <BottomDrawer startUp={false} containerHeight={250} offset={TAB_BAR_HEIGHT}> */}
-      {/* </BottomDrawer> */}
     </View>
   );
 };
+
+map.navigationOptions = {
+  tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
+    <Icon type="Foundation" name="map" color={focused ? "#ffffff" : "#30be76"} size={23} />
+  )
+} as Partial<
+  NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, NavigationParams>, unknown>
+>;
 
 export default map;

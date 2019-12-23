@@ -1,13 +1,38 @@
 import { createSwitchNavigator } from "react-navigation";
-import { Home, Map } from "../views/index";
+import { Home, Map, Routes, Settings } from "../views/index";
+import { createBottomTabNavigator } from "react-navigation-tabs";
+
+export const MainTabs = createBottomTabNavigator(
+  {
+    Routes: {
+      screen: Routes
+    },
+    Map: {
+      screen: Map
+    },
+    Settings: {
+      screen: Settings
+    }
+  },
+  {
+    tabBarOptions: {
+      showLabel: true,
+      activeTintColor: "#ffffff",
+      inactiveTintColor: "#30be76",
+      activeBackgroundColor: "#30be76",
+      inactiveBackgroundColor: "#26985F"
+    },
+    initialRouteName: "Map"
+  }
+);
 
 export const appNavigator = createSwitchNavigator(
   {
     Home: {
       screen: Home
     },
-    Map: {
-      screen: Map
+    Main: {
+      screen: MainTabs
     }
   },
   {
