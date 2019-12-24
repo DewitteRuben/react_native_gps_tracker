@@ -8,21 +8,28 @@ interface Props {
   text: string | number | null;
   green?: boolean;
   gray?: boolean;
-  h1?: boolean;
+  variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "subtitle1" | "paragraph";
+  align?: "inherit" | "left" | "center" | "right" | "justify";
+  fontSize?: number;
 }
 
-const CText: React.FC<Props> = props => (
-  <Text
-    style={[
-      props.bold ? styles.boldText : styles.primaryText,
-      props.green && styles.greenText,
-      props.h1 && styles.h1,
-      props.gray && styles.grayText,
-      props.style
-    ]}
-  >
-    {props.text}
-  </Text>
-);
+const CText: React.FC<Props> = ({ bold, green, gray, style, variant, text, align, fontSize }) => {
+  const { boldText, greenText, grayText } = styles;
+  return (
+    <Text
+      style={[
+        bold ? boldText : styles.primaryText,
+        green && greenText,
+        variant && styles[variant],
+        fontSize && { fontSize },
+        gray && grayText,
+        align && { textAlign: align },
+        style
+      ]}
+    >
+      {text}
+    </Text>
+  );
+};
 
 export default CText;

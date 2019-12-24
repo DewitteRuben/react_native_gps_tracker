@@ -21,7 +21,7 @@ const Home: NavigationStackScreenComponent<Props> = (props: Props) => {
         ></Image>
       </Overlay>
       <View style={{ paddingHorizontal: 40, marginTop: 20 }}>
-        <CText h1 bold text="Welcome!" />
+        <CText variant="h1" bold text="Welcome!" />
         <CText text="Please select your preffered routing method:" />
       </View>
       <View
