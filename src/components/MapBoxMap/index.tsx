@@ -1,21 +1,20 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { View, StyleProp, ViewStyle, Text, StyleSheet, Button } from "react-native";
+import React, { useCallback, useState, useMemo } from "react";
+import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import config from "../../config";
-import { MapControls, CText, Modal } from "..";
+import { MapControls, Modal } from "..";
+import { GLOBAL } from "../../styles/global";
 
 MapboxGL.setAccessToken(config.mapbox.accessToken);
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
-export interface Props {
-  style?: StyleProp<ViewStyle>;
-}
+export interface Props {}
 
-const MapboxMap: React.FC<Props> = ({ style }) => {
+const MapboxMap: React.FC<Props> = React.memo(() => {
   const hasPermission = useLocationPermission();
   const [followUser, setFollowUser] = useState(false);
   const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
@@ -23,6 +22,27 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
   const [isModalVisible, setModalVisbility] = useState(false);
+
+  const onModalClose = useCallback(() => {
+    setModalVisbility(false);
+  }, []);
+
+  const toggleLive = useCallback(() => {
+    setLiveUpdate(!liveUpdate);
+  }, [liveUpdate]);
+
+  const toggleTracking = useCallback(() => {
+    setTracking(!isTracking);
+  }, [isTracking]);
+
+  const onTrackFinish = useCallback(() => {
+    setModalVisbility(true);
+  }, []);
+
+  const onTrackSave = useCallback(() => {
+    setModalVisbility(false);
+    clearRoute();
+  }, []);
 
   const clearRoute = useCallback(() => {
     setRoute([]);
@@ -32,6 +52,18 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
       fbClearRoute();
     }
   }, [liveUpdate]);
+
+  const modalButtons = useMemo(
+    () => [
+      { onPress: onModalClose, text: "No", style: { width: "45%", paddingVertical: 15 } },
+      {
+        onPress: onTrackSave,
+        text: "Yes",
+        style: { width: "45%", paddingVertical: 15 }
+      }
+    ],
+    []
+  );
 
   const onUserlocationUpdate = useCallback(
     (location: MapboxGL.Location) => {
@@ -59,12 +91,16 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
     [isTracking, route, liveUpdate]
   );
 
+  const handleTouchMove = useCallback(() => {
+    setFollowUser(false);
+  }, []);
+
   return (
-    <View style={[style, { flex: 1 }]}>
+    <View style={GLOBAL.LAYOUT.container}>
       <MapboxGL.MapView
-        style={{ flex: 1 }}
+        style={GLOBAL.LAYOUT.container}
         animated={true}
-        onTouchMove={() => setFollowUser(false)}
+        onTouchMove={handleTouchMove}
         userTrackingMode={MapboxGL.UserTrackingModes.Follow}
       >
         <MapboxGL.Camera zoomLevel={12} followZoomLevel={12} followUserLocation={followUser} followUserMode="normal" />
@@ -84,29 +120,20 @@ const MapboxMap: React.FC<Props> = ({ style }) => {
       <MapControls
         isTracking={isTracking}
         liveUpdate={liveUpdate}
-        onPressToggleLive={() => setLiveUpdate(!liveUpdate)}
-        onPressTrack={() => setTracking(!isTracking)}
-        onPressFinish={() => setModalVisbility(true)}
+        onPressToggleLive={toggleLive}
+        onPressTrack={toggleTracking}
+        onPressFinish={onTrackFinish}
       />
       <Modal
         isVisible={isModalVisible}
-        onSwipeComplete={() => setModalVisbility(false)}
+        onSwipeComplete={onModalClose}
         swipeDirection="up"
-        onBackdropPress={() => setModalVisbility(false)}
+        onBackdropPress={onModalClose}
         text="Do you wish to conclude your current track?"
-        buttons={[
-          { onPress: () => setModalVisbility(false), text: "No", style: { width: "45%", paddingVertical: 15 } },
-          {
-            onPress: () => {
-              setModalVisbility(false);
-              clearRoute();
-            },
-            text: "Yes",
-            style: { width: "45%", paddingVertical: 15 }
-          }
-        ]}
+        buttons={modalButtons}
       />
     </View>
   );
-};
+});
+
 export default MapboxMap;

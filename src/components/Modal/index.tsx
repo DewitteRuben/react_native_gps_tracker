@@ -15,31 +15,35 @@ interface Props extends Partial<ModalProps> {
   text: string;
 }
 
-const modal: React.FC<Props> = ({ onSwipeComplete, swipeDirection, onBackdropPress, isVisible, text, buttons }) => (
-  <View>
-    <Modal
-      onSwipeComplete={onSwipeComplete}
-      swipeDirection={swipeDirection}
-      onBackdropPress={onBackdropPress}
-      isVisible={isVisible}
-    >
-      <View style={styles.container}>
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <CText text={text} />
-        </View>
-        <View style={styles.content}>
-          {buttons.map((button, index) => (
-            <Button
-              text={button.text}
-              key={`i-${index}`}
-              onPress={button.onPress}
-              containerStyle={{ ...button.style, marginHorizontal: 5 }}
-            />
-          ))}
-        </View>
+const modal: React.FC<Props> = React.memo(
+  ({ onSwipeComplete, swipeDirection, onBackdropPress, isVisible, text, buttons }) => {
+    return (
+      <View>
+        <Modal
+          onSwipeComplete={onSwipeComplete}
+          swipeDirection={swipeDirection}
+          onBackdropPress={onBackdropPress}
+          isVisible={isVisible}
+        >
+          <View style={styles.container}>
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              <CText text={text} />
+            </View>
+            <View style={styles.content}>
+              {buttons.map((button, index) => (
+                <Button
+                  text={button.text}
+                  key={`i-${index}`}
+                  onPress={button.onPress}
+                  containerStyle={{ ...button.style, marginHorizontal: 5 }}
+                />
+              ))}
+            </View>
+          </View>
+        </Modal>
       </View>
-    </Modal>
-  </View>
+    );
+  }
 );
 
 export default modal;

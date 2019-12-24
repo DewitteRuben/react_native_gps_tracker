@@ -2,7 +2,8 @@
  * @format
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
-import { AppRegistry } from 'react-native'
+import React from "react";
+import { AppRegistry } from "react-native";
 import App from "./src/navigators";
 import { name as appName } from "./app.json";
 

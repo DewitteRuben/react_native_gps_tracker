@@ -10,6 +10,7 @@ import {
 } from "react-navigation-stack";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
+import { GLOBAL } from "../../styles/global";
 
 interface Props extends NavigationStackScreenProps {
   // your props...
@@ -17,7 +18,7 @@ interface Props extends NavigationStackScreenProps {
 
 const map: NavigationStackScreenComponent<Props> = () => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={GLOBAL.LAYOUT.container}>
       <MapBoxMap />
     </View>
   );

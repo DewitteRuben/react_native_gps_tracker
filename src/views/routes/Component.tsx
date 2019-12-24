@@ -10,7 +10,7 @@ import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 const routes: NavigationBottomTabScreenComponent = () => {
   return (
     <View style={{ flex: 1, paddingHorizontal: 20 }}>
-      <CText bold variant="h1" text="Saved Routes" style={{ marginBottom: 10 }} />
+      <CText bold variant="h2" text="Saved Routes" style={{ marginBottom: 15 }} />
       <RouteItem
         title="Funky Bus Trip"
         type="bus"
