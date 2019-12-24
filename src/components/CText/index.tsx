@@ -1,10 +1,10 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, StyleProp, TextStyle } from "react-native";
 import styles from "./style";
 
 interface Props {
   bold?: boolean;
-  style?: object;
+  style?: StyleProp<TextStyle>;
   text: string | number | null;
   green?: boolean;
   gray?: boolean;
