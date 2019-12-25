@@ -1,7 +1,5 @@
 import { StyleSheet, Platform } from "react-native";
 
-import { TYPOGRAPHY } from "./typography";
-
 export const widgetPaddingValue = 16;
 
 const LAYOUT = StyleSheet.create({
