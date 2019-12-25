@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import v4 from "uuid/v4";
+import shortid from "shortid";
 
 const UUID_KEY = "STORE_UUID";
 
@@ -7,7 +7,7 @@ const getUUID = async () => {
   try {
     const UUID = await AsyncStorage.getItem(UUID_KEY);
     if (!UUID) {
-      const newUUID = v4();
+      const newUUID = shortid.generate();
       AsyncStorage.setItem(UUID_KEY, newUUID);
       return newUUID;
     }

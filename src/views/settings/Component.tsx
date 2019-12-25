@@ -1,14 +1,42 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import { CText as Text, Button, CircleButton, Icon } from "../../components";
+import { CText as Text, Icon } from "../../components";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { NavigationBottomTabScreenComponent } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
+import { GLOBAL } from "../../styles/global";
+import getUUID from "../../utils/uuid";
+
+const useUUID = () => {
+  const [uuid, setUUID] = useState();
+
+  useEffect(() => {
+    async function requestUUID() {
+      try {
+        const id = await getUUID();
+        setUUID(id);
+      } catch (error) {
+        setUUID(null);
+      }
+    }
+
+    requestUUID();
+  }, []);
+
+  return [uuid];
+};
 
 const settings: NavigationBottomTabScreenComponent = () => {
-  return <View style={{ flex: 1 }}></View>;
+  const [uuid] = useUUID();
+
+  return (
+    <View style={GLOBAL.LAYOUT.container}>
+      <Text text="Settings" bold variant="h2" />
+      <Text text={`Tracking ID:${uuid}`} />
+    </View>
+  );
 };
 
 settings.navigationOptions = {
