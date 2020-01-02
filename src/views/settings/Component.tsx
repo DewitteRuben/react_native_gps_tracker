@@ -4,7 +4,7 @@ import { CText as Text, Icon, Dropdown } from "../../components";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
-import { NavigationBottomTabScreenComponent } from "react-navigation-tabs";
+import { NavigationBottomTabScreenComponent, NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { GLOBAL } from "../../styles/global";
 import getUUID from "../../utils/uuid";
@@ -28,8 +28,21 @@ const useUUID = () => {
   return [uuid];
 };
 
-const settings: NavigationBottomTabScreenComponent = () => {
+interface NavigationBottomTabScreenComponent {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationBottomTabOptions,
+    NavigationTabProp<NavigationRoute, NavigationParams>,
+    unknown
+  >;
+}
+
+interface Props {
+  distanceUnit: string;
+}
+
+const settings: NavigationBottomTabScreenComponent = (props: Props) => {
   const [uuid] = useUUID();
+  const { distanceUnit } = props;
 
   return (
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>

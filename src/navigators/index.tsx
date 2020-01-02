@@ -2,7 +2,6 @@ import { createAppContainer } from "react-navigation";
 import { appNavigator } from "./../navigators/navigation";
 import { Provider } from "react-redux";
 import React from "react";
-
 import store from "../redux/store";
 
 const Navigation = createAppContainer(appNavigator);

@@ -3,10 +3,10 @@
  * Import all and add to combineReducers to use any among whole app
  *
  * ** */
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import app from './app';
+import settingsReducer from "./settings";
 
 export default combineReducers({
-  app,
+  settings: settingsReducer
 });
