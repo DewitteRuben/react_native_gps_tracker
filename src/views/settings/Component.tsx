@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import { CText as Text, Icon } from "../../components";
+import { CText as Text, Icon, Dropdown } from "../../components";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
@@ -34,7 +34,15 @@ const settings: NavigationBottomTabScreenComponent = () => {
   return (
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
       <Text text="Settings" bold variant="h2" />
-      <Text text={`Tracking ID:${uuid}`} />
+      <Text text={`Tracking ID: ${uuid}`} />
+      <Dropdown
+        label={"Distance unit"}
+        data={[
+          { value: "km", label: "km" },
+          { value: "mile", label: "mile" }
+        ]}
+        defaultValue="km"
+      />
     </View>
   );
 };

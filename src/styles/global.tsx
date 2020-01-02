@@ -21,8 +21,14 @@ const LAYOUT = StyleSheet.create({
   }
 });
 
+const MAIN = {
+  green: "#30be76",
+  gray: "#A8A8A8"
+};
+
 const GLOBAL = {
-  LAYOUT
+  LAYOUT,
+  MAIN
 };
 
 export { GLOBAL };
