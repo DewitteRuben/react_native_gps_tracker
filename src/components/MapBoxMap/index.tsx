@@ -7,21 +7,31 @@ import * as GeoJSON from "@turf/helpers/lib/geojson";
 import config from "../../config";
 import { MapControls, Modal } from "..";
 import { GLOBAL } from "../../styles/global";
+import { useNavigation } from "react-navigation-hooks";
+import PreciseElapsedTime from "../../utils/timer";
 
 MapboxGL.setAccessToken(config.mapbox.accessToken);
 
 let prevCoords = { longitude: 0, latitude: 0 };
+const timer = new PreciseElapsedTime();
 
 export interface Props {}
 
 const MapboxMap: React.FC<Props> = React.memo(() => {
+  const { navigate } = useNavigation();
   const hasPermission = useLocationPermission();
-  const [followUser, setFollowUser] = useState(false);
+
   const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
   const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
+
+  const [isModalVisible, setModalVisbility] = useState(false);
+  const [followUser, setFollowUser] = useState(false);
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
-  const [isModalVisible, setModalVisbility] = useState(false);
+
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  console.log(route);
 
   const onModalClose = useCallback(() => {
     setModalVisbility(false);
@@ -32,6 +42,13 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   }, [liveUpdate]);
 
   const toggleTracking = useCallback(() => {
+    if (!isTracking) {
+      timer.start();
+    } else {
+      setElapsedTime(elapsedTime + timer.getElapsedTime());
+      timer.stop();
+    }
+
     setTracking(!isTracking);
   }, [isTracking]);
 
@@ -40,9 +57,23 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   }, []);
 
   const onTrackSave = useCallback(() => {
+    if (!route.length) {
+      return;
+    }
+
+    const startingLatLong = route[0];
+    const endLatLong = route[route.length - 1];
+
+    if (!(startingLatLong && endLatLong)) {
+      return;
+    }
+    const duration = timer.getElapsedTime();
+    timer.stop();
+
     setModalVisbility(false);
-    clearRoute();
-  }, []);
+
+    navigate("SaveRoute", { duration, distance: { start: startingLatLong, end: endLatLong } });
+  }, [route]);
 
   const clearRoute = useCallback(() => {
     setRoute([]);
@@ -62,7 +93,7 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
         style: { width: "45%", paddingVertical: 15 }
       }
     ],
-    []
+    [onTrackSave]
   );
 
   const onUserlocationUpdate = useCallback(

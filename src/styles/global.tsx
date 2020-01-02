@@ -6,6 +6,9 @@ const LAYOUT = StyleSheet.create({
   container: {
     flex: 1
   },
+  containerPadding: {
+    paddingHorizontal: 20
+  },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {

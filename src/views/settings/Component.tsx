@@ -32,7 +32,7 @@ const settings: NavigationBottomTabScreenComponent = () => {
   const [uuid] = useUUID();
 
   return (
-    <View style={GLOBAL.LAYOUT.container}>
+    <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
       <Text text="Settings" bold variant="h2" />
       <Text text={`Tracking ID:${uuid}`} />
     </View>
