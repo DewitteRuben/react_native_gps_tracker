@@ -38,20 +38,27 @@ interface NavigationBottomTabScreenComponent {
   >;
 }
 
+interface NavigationBottomTabScreenFunctionalComponent extends React.FC<Props>, NavigationBottomTabScreenComponent {}
+
 interface Props {
   distanceUnit: string;
   updateDistanceUnit: (unit: string) => IUpdateDistanceUnitAction;
 }
 
-const settings: NavigationBottomTabScreenComponent = (props: Props) => {
+const settings: NavigationBottomTabScreenFunctionalComponent = (props: Props) => {
   const [uuid] = useUUID();
   const { distanceUnit, updateDistanceUnit } = props;
 
-  const handleDropdownChange = useCallback(
-    (item: DropDownData, itemIndex: number) => {
-      updateDistanceUnit(item.value);
-    },
-    [updateDistanceUnit]
+  const handleDropdownChange = useCallback((item: DropDownData, itemIndex: number) => {
+    updateDistanceUnit(item.value);
+  }, []);
+
+  const distanceUnitsData = React.useMemo(
+    () => [
+      { value: "km", label: "km" },
+      { value: "mile", label: "mile" }
+    ],
+    []
   );
 
   return (
@@ -61,10 +68,7 @@ const settings: NavigationBottomTabScreenComponent = (props: Props) => {
       <Dropdown
         label={"Distance unit"}
         onChangeText={handleDropdownChange}
-        data={[
-          { value: "km", label: "km" },
-          { value: "mile", label: "mile" }
-        ]}
+        data={distanceUnitsData}
         defaultValue={distanceUnit}
       />
     </View>

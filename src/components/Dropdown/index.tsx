@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Picker, View } from "react-native";
 import { Input } from "..";
 
@@ -14,25 +14,23 @@ interface Props {
   onChangeText?: (item: DropdownData, itemIndex: number) => void;
 }
 
-const dropdown: React.FC<Props> = React.memo(({ data, label, defaultValue, onChangeText }) => {
-  const [selectedValue, setSelectedValue] = useState();
-
-  useEffect(() => {
-    if (defaultValue) {
-      const value = data.filter(item => item.label === defaultValue)[0];
-      setSelectedValue(value);
-    }
-  }, []);
-
+const dropdown: React.FC<Props> = memo(({ data, label, defaultValue, onChangeText }) => {
   const handleValueChange = useCallback(
     (item: DropdownData, itemIndex: number) => {
       if (onChangeText) {
-        const item = data[itemIndex];
-        onChangeText(item, itemIndex);
+        const selectedItem = data[itemIndex];
+        onChangeText(selectedItem, itemIndex);
       }
-      setSelectedValue(item);
     },
     [onChangeText]
+  );
+
+  const pickerItems = React.useMemo(
+    () =>
+      data.map((item: DropdownData, index: number) => (
+        <Picker.Item key={`i-${index}`} label={item.label} value={item.value} />
+      )),
+    [data]
   );
 
   return (
@@ -41,11 +39,9 @@ const dropdown: React.FC<Props> = React.memo(({ data, label, defaultValue, onCha
       <Picker
         style={{ position: "absolute", top: 17, left: 4, right: 0, zIndex: 100 }}
         onValueChange={handleValueChange}
-        selectedValue={selectedValue}
+        selectedValue={defaultValue}
       >
-        {data.map((item: DropdownData, index: number) => (
-          <Picker.Item key={`i-${index}`} label={item.label} value={item.value} />
-        ))}
+        {pickerItems}
       </Picker>
     </View>
   );
