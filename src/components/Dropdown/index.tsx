@@ -11,7 +11,7 @@ interface Props {
   data: DropdownData[];
   label: string;
   defaultValue?: string;
-  onChangeText?: (itemVal: DropdownData, itemIndex: number) => void;
+  onChangeText?: (item: DropdownData, itemIndex: number) => void;
 }
 
 const dropdown: React.FC<Props> = React.memo(({ data, label, defaultValue, onChangeText }) => {
@@ -22,14 +22,18 @@ const dropdown: React.FC<Props> = React.memo(({ data, label, defaultValue, onCha
       const value = data.filter(item => item.label === defaultValue)[0];
       setSelectedValue(value);
     }
-  }, [defaultValue]);
+  }, []);
 
-  const handleValueChange = useCallback((itemVal: DropdownData, itemIndex: number) => {
-    setSelectedValue(itemVal);
-    if (onChangeText) {
-      onChangeText(itemVal, itemIndex);
-    }
-  }, [onChangeText]);
+  const handleValueChange = useCallback(
+    (item: DropdownData, itemIndex: number) => {
+      if (onChangeText) {
+        const item = data[itemIndex];
+        onChangeText(item, itemIndex);
+      }
+      setSelectedValue(item);
+    },
+    [onChangeText]
+  );
 
   return (
     <View style={{ position: "relative" }}>

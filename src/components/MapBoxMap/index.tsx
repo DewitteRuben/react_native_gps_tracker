@@ -31,8 +31,6 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
 
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  console.log(route);
-
   const onModalClose = useCallback(() => {
     setModalVisbility(false);
   }, []);

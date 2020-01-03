@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View } from "react-native";
 import { CText as Text, Icon, Dropdown } from "../../components";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
-import { NavigationBottomTabScreenComponent, NavigationBottomTabOptions } from "react-navigation-tabs";
+import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { GLOBAL } from "../../styles/global";
 import getUUID from "../../utils/uuid";
+import { DropDownData } from "react-native-material-dropdown";
+import { IUpdateDistanceUnitAction } from "../../redux/actions/settings";
 
 const useUUID = () => {
   const [uuid, setUUID] = useState();
@@ -38,11 +40,19 @@ interface NavigationBottomTabScreenComponent {
 
 interface Props {
   distanceUnit: string;
+  updateDistanceUnit: (unit: string) => IUpdateDistanceUnitAction;
 }
 
 const settings: NavigationBottomTabScreenComponent = (props: Props) => {
   const [uuid] = useUUID();
-  const { distanceUnit } = props;
+  const { distanceUnit, updateDistanceUnit } = props;
+
+  const handleDropdownChange = useCallback(
+    (item: DropDownData, itemIndex: number) => {
+      updateDistanceUnit(item.value);
+    },
+    [updateDistanceUnit]
+  );
 
   return (
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
@@ -50,11 +60,12 @@ const settings: NavigationBottomTabScreenComponent = (props: Props) => {
       <Text text={`Tracking ID: ${uuid}`} />
       <Dropdown
         label={"Distance unit"}
+        onChangeText={handleDropdownChange}
         data={[
           { value: "km", label: "km" },
           { value: "mile", label: "mile" }
         ]}
-        defaultValue="km"
+        defaultValue={distanceUnit}
       />
     </View>
   );
