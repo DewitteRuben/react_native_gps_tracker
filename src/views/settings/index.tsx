@@ -7,7 +7,8 @@ import { StoreState } from "../../redux/store/types";
 import { updateDistanceUnitAction } from "../../redux/actions/settings";
 
 const mapStateToProps = (state: StoreState) => ({
-  distanceUnit: state.settings.distanceUnit
+  distanceUnit: state.settings.distanceUnit,
+  trackingId: state.settings.trackingId
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({

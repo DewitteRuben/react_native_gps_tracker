@@ -4,6 +4,7 @@ interface StoreState {
 
 interface SettingsState {
   distanceUnit: string;
+  trackingId: string;
 }
 
 export { StoreState, SettingsState };

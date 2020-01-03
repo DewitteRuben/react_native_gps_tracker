@@ -7,28 +7,8 @@ import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { GLOBAL } from "../../styles/global";
-import getUUID from "../../utils/uuid";
 import { DropDownData } from "react-native-material-dropdown";
 import { IUpdateDistanceUnitAction } from "../../redux/actions/settings";
-
-const useUUID = () => {
-  const [uuid, setUUID] = useState();
-
-  useEffect(() => {
-    async function requestUUID() {
-      try {
-        const id = await getUUID();
-        setUUID(id);
-      } catch (error) {
-        setUUID(null);
-      }
-    }
-
-    requestUUID();
-  }, []);
-
-  return [uuid];
-};
 
 interface NavigationBottomTabScreenComponent {
   navigationOptions?: NavigationScreenConfig<
@@ -42,12 +22,12 @@ interface NavigationBottomTabScreenFunctionalComponent extends React.FC<Props>, 
 
 interface Props {
   distanceUnit: string;
+  trackingId: string;
   updateDistanceUnit: (unit: string) => IUpdateDistanceUnitAction;
 }
 
 const settings: NavigationBottomTabScreenFunctionalComponent = (props: Props) => {
-  const [uuid] = useUUID();
-  const { distanceUnit, updateDistanceUnit } = props;
+  const { distanceUnit, updateDistanceUnit, trackingId } = props;
 
   const handleDropdownChange = useCallback((item: DropDownData, itemIndex: number) => {
     updateDistanceUnit(item.value);
@@ -64,7 +44,7 @@ const settings: NavigationBottomTabScreenFunctionalComponent = (props: Props) =>
   return (
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
       <Text text="Settings" bold variant="h2" />
-      <Text text={`Tracking ID: ${uuid}`} />
+      <Text text={`Tracking ID: ${trackingId}`} />
       <Dropdown
         label={"Distance unit"}
         onChangeText={handleDropdownChange}

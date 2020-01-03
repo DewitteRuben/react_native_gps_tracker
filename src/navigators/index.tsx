@@ -1,15 +1,20 @@
 import { createAppContainer } from "react-navigation";
 import { appNavigator } from "./../navigators/navigation";
 import { Provider } from "react-redux";
-import React from "react";
+import React, { useEffect } from "react";
 import store from "../redux/store";
+import { getTrackingIdAction } from "../redux/actions/settings";
 
 const Navigation = createAppContainer(appNavigator);
 
-const app: React.FC = () => (
-  <Provider store={store}>
-    <Navigation />
-  </Provider>
-);
+store.dispatch<any>(getTrackingIdAction());
+
+const app: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
+  );
+};
 
 export default app;
