@@ -6,13 +6,14 @@ import { CircleButton, Icon as CIcon } from "..";
 interface Props {
   isTracking: boolean;
   liveUpdate: boolean;
+  hasTracked: boolean;
   onPressTrack: () => void;
   onPressFinish: () => void;
   onPressToggleLive: () => void;
 }
 
 const mapControls: React.FC<Props> = React.memo(
-  ({ isTracking, liveUpdate, onPressToggleLive, onPressTrack, onPressFinish }) => {
+  ({ isTracking, liveUpdate, onPressToggleLive, onPressTrack, onPressFinish, hasTracked }) => {
     return (
       <>
         <View style={{ position: "absolute", zIndex: 10, top: 0, right: -8 }}>
@@ -36,8 +37,8 @@ const mapControls: React.FC<Props> = React.memo(
         </View>
         {isTracking && (
           <View style={{ position: "absolute", zIndex: 10, bottom: isTracking ? 94 : 20, right: 15 }}>
-            <CircleButton backgroundColor="#30be76" containerStyle={{ padding: 17 }} onPress={onPressFinish}>
-              <CIcon type="FontAwesome" color="#FFFFFF" size={26} name="flag-checkered" />
+            <CircleButton disabled={!hasTracked} backgroundColor={hasTracked ? "#30be76" : "#CCCCCC"} containerStyle={{ padding: 17 }} onPress={onPressFinish}>
+              <CIcon type="FontAwesome" color={hasTracked ? "#FFFFFF" : "#8B8B8B"} size={26} name="flag-checkered" />
             </CircleButton>
           </View>
         )}

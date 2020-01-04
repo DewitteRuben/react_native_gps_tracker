@@ -51,8 +51,10 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   }, [isTracking]);
 
   const onTrackFinish = useCallback(() => {
-    setModalVisbility(true);
-  }, []);
+    if (route.length) {
+      setModalVisbility(true);
+    }
+  }, [route]);
 
   const onTrackSave = useCallback(() => {
     if (!route.length) {
@@ -124,6 +126,10 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
     setFollowUser(false);
   }, []);
 
+  const hasTracked = useMemo(() => {
+    return !!route.length;
+  }, [route]);
+
   return (
     <View style={GLOBAL.LAYOUT.container}>
       <MapboxGL.MapView
@@ -149,6 +155,7 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
       <MapControls
         isTracking={isTracking}
         liveUpdate={liveUpdate}
+        hasTracked={hasTracked}
         onPressToggleLive={toggleLive}
         onPressTrack={toggleTracking}
         onPressFinish={onTrackFinish}
