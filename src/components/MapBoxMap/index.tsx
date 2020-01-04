@@ -24,7 +24,9 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
   const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
 
-  const [isModalVisible, setModalVisbility] = useState(false);
+  const [isConcludeModalVisible, setConcludeModalVisibility] = useState(false);
+  const [isSaveModalVisible, setSaveModalVisibility] = useState(false);
+
   const [followUser, setFollowUser] = useState(false);
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
@@ -32,7 +34,7 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   const [elapsedTime, setElapsedTime] = useState(0);
 
   const onModalClose = useCallback(() => {
-    setModalVisbility(false);
+    setConcludeModalVisibility(false);
   }, []);
 
   const toggleLive = useCallback(() => {
@@ -52,25 +54,34 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
 
   const onTrackFinish = useCallback(() => {
     if (route.length) {
-      setModalVisbility(true);
+      setConcludeModalVisibility(true);
     }
   }, [route]);
 
-  const onTrackSave = useCallback(() => {
+  const onRouteConclude = useCallback(() => {
+    setConcludeModalVisibility(false);
+    setSaveModalVisibility(true);
+  }, []);
+
+  const onRouteSave = useCallback(() => {
+    console.log( route);
     if (!route.length) {
       return;
     }
 
-    const startingLatLong = route[0];
-    const endLatLong = route[route.length - 1];
+    const currentRoute = route.map(e => ({ ...e })); // deep copy
+
+    const startingLatLong = currentRoute[0];
+    const endLatLong = currentRoute[currentRoute.length - 1];
 
     if (!(startingLatLong && endLatLong)) {
       return;
     }
+
     const duration = timer.getElapsedTime();
     timer.stop();
 
-    setModalVisbility(false);
+    clearRoute();
 
     navigate("SaveRoute", { duration, distance: { start: startingLatLong, end: endLatLong } });
   }, [route]);
@@ -82,18 +93,31 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
     if (liveUpdate) {
       fbClearRoute();
     }
+    setSaveModalVisibility(false);
   }, [liveUpdate]);
 
-  const modalButtons = useMemo(
+  const concludeModalButtons = useMemo(
     () => [
-      { onPress: onModalClose, text: "No", style: { width: "45%", paddingVertical: 15 } },
+      { onPress: () => setConcludeModalVisibility(false), text: "No", style: { width: "45%", paddingVertical: 15 } },
       {
-        onPress: onTrackSave,
+        onPress: onRouteConclude,
         text: "Yes",
         style: { width: "45%", paddingVertical: 15 }
       }
     ],
-    [onTrackSave]
+    [onRouteConclude]
+  );
+
+  const saveModalButtons = useMemo(
+    () => [
+      { onPress: clearRoute, text: "No", style: { width: "45%", paddingVertical: 15 } },
+      {
+        onPress: onRouteSave,
+        text: "Yes",
+        style: { width: "45%", paddingVertical: 15 }
+      }
+    ],
+    [clearRoute, onRouteSave]
   );
 
   const onUserlocationUpdate = useCallback(
@@ -161,12 +185,19 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
         onPressFinish={onTrackFinish}
       />
       <Modal
-        isVisible={isModalVisible}
+        isVisible={isConcludeModalVisible}
         onSwipeComplete={onModalClose}
         swipeDirection="up"
         onBackdropPress={onModalClose}
-        text="Do you wish to conclude your current track?"
-        buttons={modalButtons}
+        text="Do you wish to conclude the current route?"
+        buttons={concludeModalButtons}
+      />
+      <Modal
+        isVisible={isSaveModalVisible}
+        swipeDirection="up"
+        onBackdropPress={onModalClose}
+        text="Do you wish to save the route?"
+        buttons={saveModalButtons}
       />
     </View>
   );

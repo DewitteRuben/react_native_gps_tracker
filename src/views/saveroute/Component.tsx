@@ -32,31 +32,12 @@ const saveRoute: React.FC = () => {
     setModalVisibility(false);
   }, []);
 
-  const modalButtons = useMemo(
-    () => [
-      { onPress: onModalClose, text: "No", style: { width: "45%", paddingVertical: 15 } },
-      {
-        onPress: onRouteSave,
-        text: "Yes",
-        style: { width: "45%", paddingVertical: 15 }
-      }
-    ],
-    []
-  );
-
   return (
     <>
       <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
         <Text text="Save route" bold variant="h2" />
         <SaveRouteForm distance={distanceInMeters.toString()} duration={duration.toString()} />
       </View>
-      <Modal
-        isVisible={isModalVisible}
-        swipeDirection="up"
-        onBackdropPress={onModalClose}
-        text="Do you wish to save the route?"
-        buttons={modalButtons}
-      />
     </>
   );
 };
