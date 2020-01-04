@@ -6,14 +6,25 @@ import { TextInputProps } from "react-native-paper/lib/typescript/src/components
 
 interface Props extends TextInputProps {}
 
-const input: React.FC<Props> = ({ label, disabled, style, onChange, onChangeText, value, defaultValue, editable }) => (
+const input: React.FC<Props> = ({
+  label,
+  disabled,
+  style,
+  onChange,
+  onChangeText,
+  value,
+  defaultValue,
+  editable,
+  error
+}) => (
   <TextInput
     theme={{
       colors: {
         primary: styles.primary.color,
-        disabled: styles.primary.color,
+        disabled: styles.primary.color
       }
     }}
+    error={error}
     editable={editable}
     disabled={disabled}
     onChange={onChange}
