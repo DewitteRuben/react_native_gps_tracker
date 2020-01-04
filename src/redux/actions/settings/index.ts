@@ -25,9 +25,7 @@ export const updateDistanceUnitAction: ActionCreator<IUpdateDistanceUnitAction> 
 export const getTrackingIdAction = (): ThunkResult<void> => async (dispatch) => {
   try {
     const trackingId = await getUUID();
-    console.log(trackingId);
     dispatch(updateTrackingIdAction(trackingId));
   } catch (error) {
-    console.log(error);
   }
 };
