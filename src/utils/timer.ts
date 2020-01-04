@@ -23,6 +23,6 @@ export default class PreciseElapsedTime {
     }
 
     const curTime = Date.now();
-    return (curTime - this.initTime) / 1000;
+    return (curTime - this.initTime);
   }
 }

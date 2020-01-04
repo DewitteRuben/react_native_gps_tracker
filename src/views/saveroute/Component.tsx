@@ -1,36 +1,25 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import { View } from "react-native";
-import { CText as Text, Modal, SaveRouteForm } from "../../components";
+import { CText as Text, SaveRouteForm } from "../../components";
 import { GLOBAL } from "../../styles/global";
 import * as geometry from "spherical-geometry-js";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import { useNavigation, useNavigationParam } from "react-navigation-hooks";
+import { useNavigationParam } from "react-navigation-hooks";
+import { metersToMiles, metersToKilometers } from "../../utils/units";
 
-const saveRoute: React.FC = () => {
-  const { navigate } = useNavigation();
+interface Props {
+  distanceUnit: string;
+}
+
+const saveRoute: React.FC<Props> = ({ distanceUnit }) => {
   const distance: { start: MapboxGL.Coordinates; end: MapboxGL.Coordinates } = useNavigationParam("distance");
   const duration: number = useNavigationParam("duration");
-
-  const [isModalVisible, setModalVisibility] = useState(false);
 
   const distanceInMeters = useMemo(() => {
     const { latitude: startLat, longitude: startLong } = distance.start;
     const { latitude: endLat, longitude: endLong } = distance.end;
     return geometry.computeDistanceBetween([startLat, startLong], [endLat, endLong]);
   }, [distance]);
-
-  useEffect(() => {
-    setModalVisibility(true);
-  }, []);
-
-  const onModalClose = useCallback(() => {
-    setModalVisibility(false);
-    navigate("Map");
-  }, []);
-
-  const onRouteSave = useCallback(() => {
-    setModalVisibility(false);
-  }, []);
 
   return (
     <>

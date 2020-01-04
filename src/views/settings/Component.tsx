@@ -36,7 +36,7 @@ const settings: NavigationBottomTabScreenFunctionalComponent = (props: Props) =>
   const distanceUnitsData = React.useMemo(
     () => [
       { value: "km", label: "km" },
-      { value: "mile", label: "mile" }
+      { value: "miles", label: "miles" }
     ],
     []
   );
