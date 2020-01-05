@@ -1,24 +1,20 @@
-import React, { useMemo, useState, useCallback } from "react";
-import { View } from "react-native";
+import React, { useMemo, useState, useCallback, Dispatch, useEffect, useRef } from "react";
+import { View, Route } from "react-native";
 import { CText as Text, SaveRouteForm, Modal } from "../../components";
 import { GLOBAL } from "../../styles/global";
 import * as geometry from "spherical-geometry-js";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
-import { metersToMiles, metersToKilometers } from "../../utils/units";
-
-export interface RouteDetails {
-  title?: string;
-  distance?: string;
-  duration?: string;
-  method?: string;
-  start?: string;
-  end?: string;
-  [key: string]: string | undefined;
-}
+import { ISaveRouteForm } from "../../components/SaveRouteForm";
+import { RouteData, StoreState } from "../../redux/store/types";
+import { ThunkAction } from "redux-thunk";
+import { IRouteSaveState } from "../../redux/actions/routes";
 
 interface Props {
   distanceUnit: string;
+  saveRoute: (route: RouteData) => ThunkAction<void, StoreState, undefined, any>;
+  clearLastId: () => ThunkAction<void, StoreState, undefined, any>;
+  routeState: IRouteSaveState;
 }
 
 const formKeyToPrettyName: { [key: string]: string } = {
@@ -28,14 +24,34 @@ const formKeyToPrettyName: { [key: string]: string } = {
   title: "Trip title"
 };
 
-const saveRoute: React.FC<Props> = ({ distanceUnit }) => {
+const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clearLastId }) => {
   const { navigate } = useNavigation();
 
   const distance: { start: MapboxGL.Coordinates; end: MapboxGL.Coordinates } = useNavigationParam("distance");
   const duration: number = useNavigationParam("duration");
+  const route: MapboxGL.Coordinates[] = useNavigationParam("route");
+  const didMount = useRef(false);
 
   const [isModalVisible, setModalVisibility] = useState(false);
   const [modalValidationMessage, setModalValidationMessage] = useState("");
+
+  useEffect(() => {
+    if (didMount.current) {
+      clearLastId();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+      return;
+    }
+
+    const { loading, finished, lastInsertId: id } = routeState;
+    if (!loading && finished && id) {
+      navigate("Routes");
+    }
+  }, [routeState]);
 
   const distanceInMeters = useMemo(() => {
     const { latitude: startLat, longitude: startLong } = distance.start;
@@ -50,8 +66,8 @@ const saveRoute: React.FC<Props> = ({ distanceUnit }) => {
     []
   );
 
-  const computeErrorMessages = (routeDetails: RouteDetails) =>
-    Object.entries(routeDetails).reduce((acc, cur) => {
+  const computeErrorMessages = (formData: ISaveRouteForm) =>
+    Object.entries(formData).reduce((acc, cur) => {
       const curKey = cur[0];
       const curVal = cur[1];
 
@@ -62,15 +78,22 @@ const saveRoute: React.FC<Props> = ({ distanceUnit }) => {
       return acc;
     }, [] as string[]);
 
-  const onRouteSave = (routeDetails: RouteDetails) => {
-    const errorMessages = computeErrorMessages(routeDetails);
-    if (!errorMessages.length) {
-      // save route
-      navigate("Routes"); // navigate to the specified route
+  const onRouteSave = (formData: ISaveRouteForm) => {
+    const errorMessages = computeErrorMessages(formData);
+    if (errorMessages.length) {
+      const missingFields = errorMessages.join(", ");
+      setModalValidationMessage(`The following fields are not filled in: ${missingFields}.`);
+      setModalVisibility(true);
+      return;
     }
-    const missingFields = errorMessages.join(", ");
-    setModalValidationMessage(`The following fields are not filled in: ${missingFields}.`);
-    setModalVisibility(true);
+
+    const { distance, end, start, duration, title, method } = formData;
+    if (!(distance && end && start && duration && title && method)) {
+      return;
+    }
+
+    const routeData: RouteData = { distance, end, start, duration, title, method, coordinates: route };
+    saveRoute(routeData);
   };
 
   return (

@@ -6,7 +6,9 @@
 import { combineReducers } from "redux";
 
 import settingsReducer from "./settings";
+import routesReducer from "./routes";
 
 export default combineReducers({
-  settings: settingsReducer
+  settings: settingsReducer,
+  routes: routesReducer
 });

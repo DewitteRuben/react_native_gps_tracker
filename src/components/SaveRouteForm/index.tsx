@@ -4,7 +4,6 @@ import { CText as Text, Input, Button, Modal } from "../../components";
 import store from "../../redux/store";
 import { metersToKilometers, metersToMiles } from "../../utils/units";
 import prettyMilliseconds from "pretty-ms";
-import { RouteDetails } from "../../views/saveroute/Component";
 import { HelperText } from "react-native-paper";
 
 interface Props {
@@ -14,7 +13,17 @@ interface Props {
   method?: string;
   start?: string;
   end?: string;
-  onSubmit?: (routeDetails: RouteDetails) => void;
+  onSubmit?: (routeDetails: ISaveRouteForm) => void;
+}
+
+export interface ISaveRouteForm {
+  title?: string;
+  distance?: string;
+  duration?: string;
+  method?: string;
+  start?: string;
+  end?: string;
+  [key: string]: string | undefined;
 }
 
 const distanceUnitMap: { [key: string]: (m: number) => number } = {
@@ -23,14 +32,14 @@ const distanceUnitMap: { [key: string]: (m: number) => number } = {
 };
 
 const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, method, start, end, onSubmit }) => {
-  const [formState, setFormState] = useState<RouteDetails>({ title, distance, duration, method, start, end });
+  const [formState, setFormState] = useState<ISaveRouteForm>({ title, distance, duration, method, start, end });
   const [helperTextVisiblity, setHelperTextVisibility] = useState(false);
 
   const { distanceUnit } = store.getState().settings;
 
   useEffect(() => {
     setFormState({ ...formState, title, distance, duration, method, start, end });
-  }, [title, distance, duration, method, start, end]);
+  }, []);
 
   const updateformState = useCallback(
     (propName: string) => {
@@ -51,16 +60,16 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
   }, [duration]);
 
   const onPress = () => {
+    setHelperTextVisibility(true);
     if (onSubmit) {
       onSubmit(formState);
     }
-    setHelperTextVisibility(true);
   };
 
   const getHelperText = (propName: string) =>
     helperTextVisiblity && (
       <HelperText type="error" visible={!formState[propName]?.length}>
-        This field is mandatory
+        Required
       </HelperText>
     );
 

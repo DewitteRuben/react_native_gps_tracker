@@ -43,7 +43,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.15",
-    "spherical-geometry-js": "^2.0.0"
+    "spherical-geometry-js": "^2.0.0",
+    "uuid": "^3.3.3"
   },
   "license": "MIT",
   "devDependencies": {

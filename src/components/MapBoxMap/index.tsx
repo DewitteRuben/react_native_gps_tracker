@@ -64,7 +64,6 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   }, []);
 
   const onRouteSave = useCallback(() => {
-    console.log( route);
     if (!route.length) {
       return;
     }
@@ -83,7 +82,7 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
 
     clearRoute();
 
-    navigate("SaveRoute", { duration, distance: { start: startingLatLong, end: endLatLong } });
+    navigate("SaveRoute", { duration, distance: { start: startingLatLong, end: endLatLong }, route: currentRoute });
   }, [route]);
 
   const clearRoute = useCallback(() => {
