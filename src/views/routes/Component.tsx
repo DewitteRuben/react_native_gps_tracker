@@ -26,7 +26,7 @@ const routes: NavigationBottomTabScreenComponent = () => {
 
 routes.navigationOptions = {
   tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
-    <Icon type="MaterialCommunity" name="map-marker-path" color={focused ? "#ffffff" : "#30be76"} size={23} />
+    <Icon type="FontAwesome5" name="route" color={focused ? "#ffffff" : "#30be76"} size={23} />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>

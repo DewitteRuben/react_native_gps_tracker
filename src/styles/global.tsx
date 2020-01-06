@@ -11,6 +11,7 @@ const LAYOUT = StyleSheet.create({
   },
   shadow: {
     shadowColor: "#000",
+    backgroundColor: "#ffffff",
     shadowOffset: {
       width: 0,
       height: 3
