@@ -49,7 +49,7 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
 
     const { loading, finished, lastInsertId: id } = routeState;
     if (!loading && finished && id) {
-      navigate("Routes");
+      navigate("RouteDetail", { routeId: id });
     }
   }, [routeState]);
 
