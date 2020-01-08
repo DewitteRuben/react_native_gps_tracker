@@ -5,9 +5,12 @@ import React, { useEffect } from "react";
 import store from "../redux/store";
 import { getTrackingIdAction } from "../redux/actions/settings";
 import { localLoadRoutes } from "../redux/actions/routes";
+import MapboxGL from "@react-native-mapbox-gl/maps";
+import config from "../config";
 
 const Navigation = createAppContainer(appNavigator);
 
+MapboxGL.setAccessToken(config.mapbox.accessToken);
 batch(() => {
   store.dispatch<any>(getTrackingIdAction());
   store.dispatch<any>(localLoadRoutes());

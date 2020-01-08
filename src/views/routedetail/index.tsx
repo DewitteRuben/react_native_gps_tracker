@@ -6,6 +6,7 @@ import { compose } from "redux";
 import { StoreState } from "../../redux/store/types";
 
 const mapStateToProps = (state: StoreState) => ({
+  distanceUnit: state.settings.distanceUnit,
   routes: state.routes.savedRoutes
 });
 

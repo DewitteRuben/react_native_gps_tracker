@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { CText as Text, Input, Button, Modal } from "../../components";
 import store from "../../redux/store";
-import { metersToKilometers, metersToMiles } from "../../utils/units";
 import prettyMilliseconds from "pretty-ms";
 import { HelperText } from "react-native-paper";
+import { prettyDuration, prettyDistance } from "../../utils/prettyText";
 
 interface Props {
   title?: string;
@@ -26,11 +26,6 @@ export interface ISaveRouteForm {
   [key: string]: string | undefined;
 }
 
-const distanceUnitMap: { [key: string]: (m: number) => number } = {
-  km: metersToKilometers,
-  miles: metersToMiles
-};
-
 const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, method, start, end, onSubmit }) => {
   const [formState, setFormState] = useState<ISaveRouteForm>({ title, distance, duration, method, start, end });
   const [helperTextVisiblity, setHelperTextVisibility] = useState(false);
@@ -49,15 +44,6 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
     },
     [formState]
   );
-
-  const parsedDistance = useMemo(() => {
-    const value = distanceUnitMap[distanceUnit](parseFloat(distance || "0")).toFixed(4);
-    return `${value} ${distanceUnit}`;
-  }, [distance]);
-
-  const parsedDuration = useMemo(() => {
-    return prettyMilliseconds(parseFloat(duration || "0"));
-  }, [duration]);
 
   const onPress = () => {
     setHelperTextVisibility(true);
@@ -112,8 +98,18 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
           />
           {getHelperText("method")}
         </View>
-        <Input editable={false} label="Distance" value={parsedDistance} onChangeText={updateformState("distance")} />
-        <Input editable={false} label="Duration" value={parsedDuration} onChangeText={updateformState("duration")} />
+        <Input
+          editable={false}
+          label="Distance"
+          value={prettyDistance(distance || "0", distanceUnit)}
+          onChangeText={updateformState("distance")}
+        />
+        <Input
+          editable={false}
+          label="Duration"
+          value={prettyDuration(duration || "0")}
+          onChangeText={updateformState("duration")}
+        />
       </View>
       <Button text="Save route" block onPress={onPress} />
     </>

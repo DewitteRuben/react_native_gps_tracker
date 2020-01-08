@@ -18,7 +18,7 @@ interface NavigationBottomTabScreenComponent {
   >;
 }
 
-interface NavigationBottomTabScreenFunctionalComponent extends React.FC<Props>, NavigationBottomTabScreenComponent {}
+interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomTabScreenComponent {}
 
 interface Props {
   distanceUnit: string;
@@ -26,7 +26,7 @@ interface Props {
   updateDistanceUnit: (unit: string) => IUpdateDistanceUnitAction;
 }
 
-const settings: NavigationBottomTabScreenFunctionalComponent = (props: Props) => {
+const settings: NavigationBottomTabScreenFC = (props: Props) => {
   const { distanceUnit, updateDistanceUnit, trackingId } = props;
 
   const handleDropdownChange = useCallback((item: DropDownData, itemIndex: number) => {

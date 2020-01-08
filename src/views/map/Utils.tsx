@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { View } from "react-native";
 import { CText as Text } from "../../components";
-import style from "../../components/CText/style";
 
 const useLocationPermission = () => {
   const [hasPermission, setHasPermission] = useState(false);
@@ -26,8 +25,8 @@ const routeToFeature = (route: MapboxGL.Coordinates[]) => {
     properties: {},
     geometry: {
       type: "LineString",
-      coordinates: route.map(coord => [coord.longitude, coord.latitude]),
-    },
+      coordinates: route.map(coord => [coord.longitude, coord.latitude])
+    }
   } as GeoJSON.Feature;
 };
 

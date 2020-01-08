@@ -4,20 +4,17 @@ import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
-import config from "../../config";
 import { MapControls, Modal } from "..";
 import { GLOBAL } from "../../styles/global";
 import { useNavigation } from "react-navigation-hooks";
 import PreciseElapsedTime from "../../utils/timer";
-
-MapboxGL.setAccessToken(config.mapbox.accessToken);
 
 let prevCoords = { longitude: 0, latitude: 0 };
 const timer = new PreciseElapsedTime();
 
 export interface Props {}
 
-const MapboxMap: React.FC<Props> = React.memo(() => {
+const trackingMap: React.FC<Props> = React.memo(() => {
   const { navigate } = useNavigation();
   const hasPermission = useLocationPermission();
 
@@ -202,4 +199,4 @@ const MapboxMap: React.FC<Props> = React.memo(() => {
   );
 });
 
-export default MapboxMap;
+export default trackingMap;

@@ -5,6 +5,7 @@ import { RouteData } from "../../store/types";
 import { ACTION_TYPES, ThunkResult } from "../../constants/actionTypes";
 import { AsyncStorage } from "react-native";
 import uuidv4 from "uuid/v4";
+import moment from "moment";
 
 const ROUTE_KEY = "STORE_ROUTES";
 
@@ -47,8 +48,10 @@ export const localSaveRoute = (route: RouteData): ThunkResult<void> => async (di
     const routes = getState().routes.savedRoutes;
     const routeState = getState().routes.routeState;
     route.id = uuidv4();
+    route.date = moment().toISOString();
 
     if (!route.id) throw new Error("No id has been set for the route");
+    if (!route.date) throw new Error("No date has been set for this route");
     if (!route.coordinates.length) throw new Error("No coordinates found in the route details");
 
     dispatch(setPendingRouteState({ ...routeState, loading: true, finished: false }));

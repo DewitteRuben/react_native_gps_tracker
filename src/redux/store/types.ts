@@ -12,6 +12,7 @@ export interface RouteDetail {
 
 export interface RouteData extends RouteDetail {
   id?: string;
+  date?: string;
   coordinates: MapboxGL.Coordinates[];
 }
 

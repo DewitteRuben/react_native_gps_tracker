@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View } from "react-native";
 import { CText as Text, Button, CircleButton, Icon } from "../../components";
-import MapBoxMap from "../../components/MapBoxMap";
+import TrackingMap from "../../components/TrackingMap";
 import {
   NavigationStackScreenComponent,
   NavigationStackScreenProps,
@@ -19,7 +19,7 @@ interface Props extends NavigationStackScreenProps {
 const map: NavigationStackScreenComponent<Props> = () => {
   return (
     <View style={GLOBAL.LAYOUT.container}>
-      <MapBoxMap />
+      <TrackingMap />
     </View>
   );
 };
