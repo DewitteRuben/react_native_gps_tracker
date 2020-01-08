@@ -5,13 +5,13 @@ import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { RouteData } from "../../redux/store/types";
 import { GLOBAL } from "../../styles/global";
 import { prettyDistance, prettyDuration } from "../../utils/prettyText";
-import MapboxGL, { Point } from "@react-native-mapbox-gl/maps";
+import MapboxGL from "@react-native-mapbox-gl/maps";
 import { routeToFeature } from "../map/Utils";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
+
 // @ts-ignore
 import center from "@turf/center";
 import bbox from "@turf/bbox";
-import styles from "../../components/Overlay/styles";
 
 interface Props {
   routes: RouteData[];
@@ -43,7 +43,6 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit }) => {
   const { navigate } = useNavigation();
   const routeId = useNavigationParam("routeId");
   const { route, geoJSON, middlePoint } = useFilteredRoute(routes, routeId);
-  let cameraRef: MapboxGL.Camera | null = null;
 
   if (!route || !geoJSON) {
     return (
@@ -61,16 +60,12 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit }) => {
   const startCoords = [startPoint.longitude, startPoint.latitude];
   const endCoords = [endPoint.longitude, endPoint.latitude];
 
-  const handleCameraRef = (ref: any) => {
-    cameraRef = ref;
-  };
-
-  const onMapDidFinishLoading = () => {
+  const handleCameraRef = (camera: MapboxGL.Camera) => {
     const boundingBox = bbox(geoJSON);
     const nwCoords = [boundingBox[0], boundingBox[1]];
     const swCoords = [boundingBox[2], boundingBox[3]];
-    if (cameraRef) {
-      cameraRef.fitBounds(nwCoords, swCoords, 70);
+    if (camera) {
+      camera.fitBounds(nwCoords, swCoords, 70);
     }
   };
 
@@ -105,19 +100,19 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit }) => {
             <Icon type="FontAwesome5" size={24} name="route" />
             <Text text={prettyDistance(distance, distanceUnit)} />
           </View>
-          <View style={{ flex: 0, width: 65, flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ flex: 0, width: 70, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="Feather" size={24} name="clock" />
             <Text text={prettyDuration(duration)} />
           </View>
         </View>
       </View>
-      <MapboxGL.MapView style={GLOBAL.LAYOUT.container} onDidFinishLoadingMap={onMapDidFinishLoading} animated={true}>
+      <MapboxGL.MapView style={GLOBAL.LAYOUT.container} animated={true}>
         <MapboxGL.Camera ref={handleCameraRef} zoomLevel={11} centerCoordinate={middlePoint} followUserMode="normal" />
         <MapboxGL.PointAnnotation title="Start" id="start" coordinate={startCoords}>
-          <MapboxGL.Callout title={"Start"} />
+          <MapboxGL.Callout title={start} />
         </MapboxGL.PointAnnotation>
         <MapboxGL.PointAnnotation title="End" id="end" coordinate={endCoords}>
-          <MapboxGL.Callout title={"End"} />
+          <MapboxGL.Callout title={end} />
         </MapboxGL.PointAnnotation>
         <MapboxGL.ShapeSource id="routeSource" shape={geoJSON}>
           <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }} />
