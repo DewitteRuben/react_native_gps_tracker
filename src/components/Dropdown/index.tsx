@@ -15,15 +15,17 @@ interface Props {
 }
 
 const dropdown: React.FC<Props> = memo(({ data, label, defaultValue, onChangeText }) => {
+  useEffect(() => {
+    if (onChangeText && !defaultValue) {
+      onChangeText(data[0], 0);
+    }
+  }, [data, defaultValue, onChangeText]);
+
   const handleValueChange = useCallback(
     (item: DropdownData | string, itemIndex: number) => {
       if (onChangeText) {
         const selectedItem = data[itemIndex];
-        if (typeof selectedItem === "string") {
-          onChangeText(selectedItem as string, itemIndex);
-        } else {
-          onChangeText(selectedItem as DropdownData, itemIndex);
-        }
+        onChangeText(selectedItem, itemIndex);
       }
     },
     [onChangeText]
