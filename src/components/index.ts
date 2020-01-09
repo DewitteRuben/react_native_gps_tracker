@@ -11,6 +11,7 @@ import Input from "./Input";
 import Dropdown from "./Dropdown";
 import Spinner from "./Spinner";
 import BackArrowButton from "./Back";
+import LoadingOverlay from "./LoadingOverlay";
 
 export {
   Button,
@@ -25,5 +26,6 @@ export {
   Input,
   Dropdown,
   Spinner,
-  BackArrowButton
+  BackArrowButton,
+  LoadingOverlay
 };

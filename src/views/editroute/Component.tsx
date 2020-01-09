@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SaveRouteForm, CText as Text, Spinner, BackArrowButton } from "../../components";
+import { SaveRouteForm, CText as Text, Spinner, BackArrowButton, LoadingOverlay } from "../../components";
 import { View, BackHandler } from "react-native";
 import { GLOBAL } from "../../styles/global";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
@@ -19,12 +19,7 @@ const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
 
   if (!routeId) {
     navigate("Routes");
-
-    return (
-      <View style={{ flex: 0, justifyContent: "center", alignItems: "center" }}>
-        <Spinner />
-      </View>
-    );
+    return <LoadingOverlay />;
   }
 
   const route = getRoutesById(routeId);
@@ -44,6 +39,7 @@ const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
   if (updatedRoute) {
     updateRoute(updatedRoute);
     navigate("RouteDetail", { routeId: id });
+    return <LoadingOverlay />;
   }
 
   return (

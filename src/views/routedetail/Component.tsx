@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { View, TouchableOpacity, BackHandler } from "react-native";
-import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton } from "../../components";
+import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOverlay } from "../../components";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { GLOBAL } from "../../styles/global";
@@ -81,11 +81,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
       navigate("Routes");
     }
 
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Spinner />
-      </View>
-    );
+    return <LoadingOverlay />;
   }
 
   const { title, end, duration, method, distance, date, id, start, coordinates } = route;
