@@ -6,7 +6,7 @@ import { StoreState } from "../../redux/store/types";
 const getRoutesById = (state: StoreState) => (id: string) => state.routes.savedRoutes.filter(route => route.id === id)[0];
 
 const mapStateToProps = (state: StoreState) => ({
-  routes: getRoutesById(state)
+  getRoutesById: getRoutesById(state)
 });
 
 const mapDispatchToProps = () => ({});

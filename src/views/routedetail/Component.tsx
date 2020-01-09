@@ -108,9 +108,14 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
       <View style={{ paddingHorizontal: 35 }}>
         <View style={{ paddingVertical: 20, flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
           <BackArrowButton onPress={() => navigate("Routes")} />
-          <TouchableOpacity onPress={onModalOpen}>
-            <Icon name="trash" size={21} type="FontAwesome" />
-          </TouchableOpacity>
+          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between", width: 60 }}>
+            <TouchableOpacity onPress={() => navigate("EditRoute", { routeId: id })}>
+              <Icon name="pencil" size={21} type="FontAwesome" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onModalOpen}>
+              <Icon name="trash" size={21} type="FontAwesome" />
+            </TouchableOpacity>
+          </View>
         </View>
         <Text text={title} bold variant="h2" />
         <View style={{ flex: 0, justifyContent: "space-between", flexDirection: "row", marginVertical: 10 }}>
