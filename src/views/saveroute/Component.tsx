@@ -9,6 +9,7 @@ import { ISaveRouteForm } from "../../components/SaveRouteForm";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { ThunkAction } from "redux-thunk";
 import { IRouteSaveState } from "../../redux/actions/routes";
+import { getModalButtons } from "../../utils/modal";
 
 interface Props {
   distanceUnit: string;
@@ -61,10 +62,7 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
 
   const onModalClose = useCallback(() => setModalVisibility(false), []);
 
-  const modalButtons = useMemo(
-    () => [{ onPress: onModalClose, text: "Ok", style: { width: "100%", paddingVertical: 15 } }],
-    []
-  );
+  const modalButtons = useMemo(() => getModalButtons({ label: "Ok", callback: onModalClose }), []);
 
   const computeErrorMessages = (formData: ISaveRouteForm) =>
     Object.entries(formData).reduce((acc, cur) => {

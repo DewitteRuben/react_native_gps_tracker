@@ -15,6 +15,7 @@ import bbox from "@turf/bbox";
 import { ThunkAction } from "redux-thunk";
 import { withNavigation } from "react-navigation";
 import { typeToIconMap, TravelingMethod } from "../../utils/supportedTravelingMethods";
+import { getModalButtons } from "../../utils/modal";
 
 interface Props {
   routes: RouteData[];
@@ -63,14 +64,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
   }, [routeId]);
 
   const concludeModalButtons = useMemo(
-    () => [
-      { onPress: onModalClose, text: "No", style: { width: "45%", paddingVertical: 15 } },
-      {
-        onPress: onDeleteRoute,
-        text: "Yes",
-        style: { width: "45%", paddingVertical: 15 }
-      }
-    ],
+    () => getModalButtons({ label: "No", callback: onModalClose }, { label: "Yes", callback: onDeleteRoute }),
     [routeId]
   );
 

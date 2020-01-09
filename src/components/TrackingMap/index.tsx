@@ -8,6 +8,7 @@ import { MapControls, Modal } from "..";
 import { GLOBAL } from "../../styles/global";
 import { useNavigation } from "react-navigation-hooks";
 import PreciseElapsedTime from "../../utils/timer";
+import { getModalButtons } from "../../utils/modal";
 
 let prevCoords = { longitude: 0, latitude: 0 };
 const timer = new PreciseElapsedTime();
@@ -93,26 +94,16 @@ const trackingMap: React.FC<Props> = React.memo(() => {
   }, [liveUpdate]);
 
   const concludeModalButtons = useMemo(
-    () => [
-      { onPress: () => setConcludeModalVisibility(false), text: "No", style: { width: "45%", paddingVertical: 15 } },
-      {
-        onPress: onRouteConclude,
-        text: "Yes",
-        style: { width: "45%", paddingVertical: 15 }
-      }
-    ],
+    () =>
+      getModalButtons(
+        { label: "No", callback: () => setConcludeModalVisibility(false) },
+        { label: "Yes", callback: onRouteConclude }
+      ),
     [onRouteConclude]
   );
 
   const saveModalButtons = useMemo(
-    () => [
-      { onPress: clearRoute, text: "No", style: { width: "45%", paddingVertical: 15 } },
-      {
-        onPress: onRouteSave,
-        text: "Yes",
-        style: { width: "45%", paddingVertical: 15 }
-      }
-    ],
+    () => getModalButtons({ label: "No", callback: clearRoute }, { label: "Yes", callback: onRouteSave }),
     [clearRoute, onRouteSave]
   );
 
