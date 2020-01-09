@@ -89,14 +89,6 @@ export const localLoadRoutes = (): ThunkResult<void> => async (dispatch, getStat
   }
 };
 
-export const localGetRouteById = (id: string): ThunkResult<void> => async (dispatch, getState) => {
-  const routes = getState().routes.savedRoutes;
-  if (routes && routes.length) {
-    return routes.filter(route => route.id && route.id === id)[0];
-  }
-  return null;
-};
-
 export const localRemoveRouteById = (id: string): ThunkResult<void> => async (dispatch, getState) => {
   const routes = getState().routes.savedRoutes;
   if (routes && routes.length) {
