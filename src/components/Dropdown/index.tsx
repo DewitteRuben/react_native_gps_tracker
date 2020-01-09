@@ -2,24 +2,28 @@ import React, { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Picker, View } from "react-native";
 import { Input } from "..";
 
-interface DropdownData {
+export interface DropdownData {
   label: string;
   value: any;
 }
 
 interface Props {
-  data: DropdownData[];
+  data: DropdownData[] | string[];
   label: string;
   defaultValue?: string;
-  onChangeText?: (item: DropdownData, itemIndex: number) => void;
+  onChangeText?(item: DropdownData | string, itemIndex: number): void;
 }
 
 const dropdown: React.FC<Props> = memo(({ data, label, defaultValue, onChangeText }) => {
   const handleValueChange = useCallback(
-    (item: DropdownData, itemIndex: number) => {
+    (item: DropdownData | string, itemIndex: number) => {
       if (onChangeText) {
         const selectedItem = data[itemIndex];
-        onChangeText(selectedItem, itemIndex);
+        if (typeof selectedItem === "string") {
+          onChangeText(selectedItem as string, itemIndex);
+        } else {
+          onChangeText(selectedItem as DropdownData, itemIndex);
+        }
       }
     },
     [onChangeText]
@@ -27,9 +31,11 @@ const dropdown: React.FC<Props> = memo(({ data, label, defaultValue, onChangeTex
 
   const pickerItems = React.useMemo(
     () =>
-      data.map((item: DropdownData, index: number) => (
-        <Picker.Item key={`i-${index}`} label={item.label} value={item.value} />
-      )),
+      // typescript Call signatures of union types bug.. therefore any is used
+      (data as any).map((item: DropdownData | string, index: number) => {
+        const value = typeof item === "string" ? item : item.value;
+        return <Picker.Item key={`i-${index}`} label={value} value={value} />;
+      }),
     [data]
   );
 

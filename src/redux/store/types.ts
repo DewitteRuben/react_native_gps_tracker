@@ -1,11 +1,12 @@
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { IPendingRouteStateAction, IRouteSaveState } from "../actions/routes";
+import { TravelingMethods } from "../../utils/supportedTravelingMethods";
 
 export interface RouteDetail {
   title: string;
   distance: string;
   duration: string;
-  method: string;
+  method: TravelingMethods;
   start: string;
   end: string;
 }

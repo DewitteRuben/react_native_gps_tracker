@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { View } from "react-native";
-import { CText as Text, Input, Button, Modal } from "../../components";
+import { Input, Button, Dropdown } from "../../components";
 import store from "../../redux/store";
-import prettyMilliseconds from "pretty-ms";
 import { HelperText } from "react-native-paper";
 import { prettyDuration, prettyDistance } from "../../utils/prettyText";
+import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTravelingMethods";
+import { toTitleCase } from "../../utils/string";
+import { DropdownData } from "../Dropdown";
 
 interface Props {
   title?: string;
   distance?: string;
   duration?: string;
-  method?: string;
+  method?: TravelingMethod;
   start?: string;
   end?: string;
   onSubmit?: (routeDetails: ISaveRouteForm) => void;
@@ -20,7 +22,7 @@ export interface ISaveRouteForm {
   title?: string;
   distance?: string;
   duration?: string;
-  method?: string;
+  method?: TravelingMethod;
   start?: string;
   end?: string;
   [key: string]: string | undefined;
@@ -59,6 +61,13 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
       </HelperText>
     );
 
+  const travelingMethod = useMemo(
+    () => travelingMethodsArray.map(method => ({ label: toTitleCase(method), value: toTitleCase(method) })),
+    []
+  );
+
+  const handleDropDown = (item: DropdownData) => updateformState("method")(item.value);
+
   return (
     <>
       <View style={{ marginBottom: 20 }}>
@@ -90,11 +99,11 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
           {getHelperText("end")}
         </View>
         <View>
-          <Input
+          <Dropdown
+            onChangeText={handleDropDown}
+            defaultValue={formState.method}
             label="Method"
-            error={helperTextVisiblity && !formState.method?.length}
-            value={formState.method}
-            onChangeText={updateformState("method")}
+            data={travelingMethod}
           />
           {getHelperText("method")}
         </View>

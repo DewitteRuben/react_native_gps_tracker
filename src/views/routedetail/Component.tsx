@@ -14,6 +14,7 @@ import center from "@turf/center";
 import bbox from "@turf/bbox";
 import { ThunkAction } from "redux-thunk";
 import { withNavigation } from "react-navigation";
+import { typeToIconMap, TravelingMethod } from "../../utils/supportedTravelingMethods";
 
 interface Props {
   routes: RouteData[];
@@ -129,7 +130,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           ]}
         >
           <View style={{ flex: 0, width: 60, flexDirection: "row", justifyContent: "space-between" }}>
-            <Icon type="FontAwesome5" size={24} name="bus" />
+            <Icon type="FontAwesome5" size={24} name={typeToIconMap[method.toLowerCase() as TravelingMethod]} />
             <Text text={method} />
           </View>
           <View style={{ flex: 0, width: 108, flexDirection: "row", justifyContent: "space-between" }}>

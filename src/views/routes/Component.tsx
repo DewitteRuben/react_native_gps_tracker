@@ -48,7 +48,7 @@ const routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
               <RouteItem
                 onPress={viewRoute(id!)}
                 title={title}
-                type="bus"
+                type={method}
                 startPoint={start}
                 endPoint={end}
                 date={moment(date!).format("LLL")}

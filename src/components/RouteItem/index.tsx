@@ -3,11 +3,11 @@ import { View, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import CText from "../CText";
 import { Icon } from "../../components";
-import moment from "moment";
+import { TravelingMethod, typeToIconMap } from "../../utils/supportedTravelingMethods";
 
 interface Props {
   title: string;
-  type: "bus" | "train" | "train" | "walking" | "plane";
+  type: TravelingMethod;
   startPoint: string;
   endPoint: string;
   date: string;
@@ -16,19 +16,12 @@ interface Props {
   onPress?: () => void;
 }
 
-const typeToIconMap = {
-  bus: "bus",
-  train: "train",
-  walking: "walking",
-  plane: "plane-departure"
-};
-
 const routeItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, duration, distance, onPress }) => {
   return (
     <TouchableOpacity style={styles.default} onPress={onPress}>
       <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
         <CText bold variant="h3" text={title} />
-        <Icon type="FontAwesome5" name={typeToIconMap[type]} size={21} />
+        <Icon type="FontAwesome5" name={typeToIconMap[type.toLowerCase() as TravelingMethod]} size={21} />
       </View>
       <View
         style={{ flex: 0, flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 5 }}
