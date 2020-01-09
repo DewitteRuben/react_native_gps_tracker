@@ -68,10 +68,12 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     [routeId]
   );
 
-  useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => navigate("Routes"));
+  const backHandler = () => navigate("Routes");
 
-    return BackHandler.removeEventListener("hardwareBackPress", () => navigate("Routes"));
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+
+    return () => BackHandler.removeEventListener("hardwareBackPress", backHandler);
   }, []);
 
   if (!route || !geoJSON || deleted) {
@@ -107,7 +109,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     <View style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 35 }}>
         <View style={{ paddingVertical: 20, flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
-          <BackArrowButton onPress={() => navigate("Routes")} />
+          <BackArrowButton onPress={backHandler} />
           <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between", width: 60 }}>
             <TouchableOpacity onPress={() => navigate("EditRoute", { routeId: id })}>
               <Icon name="pencil" size={21} type="FontAwesome" />

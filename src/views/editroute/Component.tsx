@@ -29,11 +29,12 @@ const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
 
   const route = getRoutesById(routeId);
   const { duration, distance, start, title, end, method, coordinates, id } = route;
+  const backHandler = () => navigate("RouteDetail", { routeId: id });
 
   useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => navigate("RouteDetail", { routeId: id }));
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
 
-    return BackHandler.removeEventListener("hardwareBackPress", () => navigate("RouteDetail", { routeId: id }));
+    return () => BackHandler.removeEventListener("hardwareBackPress", backHandler);
   }, []);
 
   const handleSaveRoute = (routeDetails: ISaveRouteForm) => {
@@ -48,7 +49,7 @@ const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
   return (
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
       <View style={{ paddingVertical: 20 }}>
-        <BackArrowButton onPress={() => navigate("RouteDetail", { routeId: id })} />
+        <BackArrowButton onPress={backHandler} />
       </View>
       <Text text="Edit route" bold variant="h2" />
       <SaveRouteForm
