@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, BackHandler } from "react-native";
 import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton } from "../../components";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { RouteData, StoreState } from "../../redux/store/types";
@@ -73,6 +73,12 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     ],
     [routeId]
   );
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => navigate("Routes"));
+
+    return BackHandler.removeEventListener("hardwareBackPress", () => navigate("Routes"));
+  }, []);
 
   if (!route || !geoJSON || deleted) {
     if (deleted) {
