@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Input, Button, Dropdown } from "../../components";
 import store from "../../redux/store";
 import { HelperText } from "react-native-paper";
-import { prettyDuration, prettyDistance } from "../../utils/prettyText";
+import { prettyDuration, prettyDistance } from "../../utils/units";
 import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { toTitleCase } from "../../utils/string";
 import { DropdownData } from "../Dropdown";
