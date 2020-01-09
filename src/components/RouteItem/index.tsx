@@ -28,18 +28,12 @@ const routeItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, d
     <TouchableOpacity style={styles.default} onPress={onPress}>
       <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
         <CText bold variant="h3" text={title} />
-        <Icon type="FontAwesome" name="trash" size={23} />
+        <Icon type="FontAwesome5" name={typeToIconMap[type]} size={21} />
       </View>
       <View
         style={{ flex: 0, flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 5 }}
       >
         <View style={{ position: "relative", width: "100%" }}>
-          <Icon
-            style={{ position: "absolute", left: 0, top: 0 }}
-            type="FontAwesome5"
-            name={typeToIconMap[type]}
-            size={21}
-          />
           <View style={{ marginBottom: 10 }}>
             <CText align="center" text={`${startPoint} → ${endPoint}`} />
             <CText align="center" text={distance} />

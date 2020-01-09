@@ -101,7 +101,7 @@ export const localRemoveRouteById = (id: string): ThunkResult<void> => async (di
   const routes = getState().routes.savedRoutes;
   if (routes && routes.length) {
     const updatedRoutes = routes.filter(route => route.id && route.id !== id);
-    dispatch(updateRoutesAction(updateRoutesAction));
+    dispatch(updateRoutesAction(updatedRoutes));
     try {
       await AsyncStorage.setItem(ROUTE_KEY, JSON.stringify(updatedRoutes));
     } catch (error) {

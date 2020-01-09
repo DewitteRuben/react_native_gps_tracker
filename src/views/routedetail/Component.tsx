@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
-import { View, Animated } from "react-native";
-import { CText as Text, CText, Spinner, Icon } from "../../components";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { View, TouchableOpacity } from "react-native";
+import { CText as Text, CText, Spinner, Icon, Modal } from "../../components";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
-import { RouteData } from "../../redux/store/types";
+import { RouteData, StoreState } from "../../redux/store/types";
 import { GLOBAL } from "../../styles/global";
 import { prettyDistance, prettyDuration } from "../../utils/prettyText";
 import MapboxGL from "@react-native-mapbox-gl/maps";
@@ -12,10 +12,14 @@ import * as GeoJSON from "@turf/helpers/lib/geojson";
 // @ts-ignore
 import center from "@turf/center";
 import bbox from "@turf/bbox";
+import { ThunkAction } from "redux-thunk";
+import { withNavigation } from "react-navigation";
 
 interface Props {
   routes: RouteData[];
   distanceUnit: string;
+  navigation: any;
+  deleteRoute: (routeId: string) => ThunkAction<void, StoreState, undefined, any>;
 }
 
 const useFilteredRoute = (routes: RouteData[], routeId: string) => {
@@ -25,12 +29,15 @@ const useFilteredRoute = (routes: RouteData[], routeId: string) => {
 
   useEffect(() => {
     const filteredRoutes = routes.filter(route => route.id && route.id === routeId);
-    const routeWithId = filteredRoutes[0];
 
+    if (!filteredRoutes.length) {
+      return;
+    }
+
+    const routeWithId = filteredRoutes[0];
     const geoJsonFeature = routeToFeature(routeWithId.coordinates);
     const centerGeoJson: GeoJSON.Feature<GeoJSON.Geometry> = center(geoJsonFeature);
     const point = centerGeoJson.geometry.coordinates as GeoJSON.Position;
-
     setRoute(routeWithId);
     setGeoJSON(geoJsonFeature);
     setMiddlePoint(point);
@@ -39,12 +46,38 @@ const useFilteredRoute = (routes: RouteData[], routeId: string) => {
   return { route, geoJSON, middlePoint };
 };
 
-const routeDetail: React.FC<Props> = ({ routes, distanceUnit }) => {
-  const { navigate } = useNavigation();
+const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navigation }) => {
+  const { navigate } = navigation;
   const routeId = useNavigationParam("routeId");
   const { route, geoJSON, middlePoint } = useFilteredRoute(routes, routeId);
 
-  if (!route || !geoJSON) {
+  const [isModalVisible, setModalVisbility] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+
+  const onModalOpen = useCallback(() => setModalVisbility(true), []);
+  const onModalClose = useCallback(() => setModalVisbility(false), []);
+  const onDeleteRoute = useCallback(() => {
+    deleteRoute(routeId);
+    setDeleted(true);
+  }, [routeId]);
+
+  const concludeModalButtons = useMemo(
+    () => [
+      { onPress: onModalClose, text: "No", style: { width: "45%", paddingVertical: 15 } },
+      {
+        onPress: onDeleteRoute,
+        text: "Yes",
+        style: { width: "45%", paddingVertical: 15 }
+      }
+    ],
+    [routeId]
+  );
+
+  if (!route || !geoJSON || deleted) {
+    if (deleted) {
+      navigate("Routes");
+    }
+
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Spinner />
@@ -72,11 +105,14 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit }) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 35 }}>
-        <View style={{ paddingVertical: 20 }}>
+        <View style={{ paddingVertical: 20, flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
           <Text text="Back" onPress={() => navigate("Routes")} />
+          <TouchableOpacity onPress={onModalOpen}>
+            <Icon name="trash" size={21} type="FontAwesome" />
+          </TouchableOpacity>
         </View>
         <Text text={title} bold variant="h2" />
-        <View style={{ flex: 0, justifyContent: "space-between", flexDirection: "row", marginBottom: 10 }}>
+        <View style={{ flex: 0, justifyContent: "space-between", flexDirection: "row", marginVertical: 10 }}>
           <Text variant="h3" text={`From ${start}`} />
           <Text variant="h3" text={`To ${end}`} />
         </View>
@@ -118,8 +154,16 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit }) => {
           <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }} />
         </MapboxGL.ShapeSource>
       </MapboxGL.MapView>
+      <Modal
+        isVisible={isModalVisible}
+        onSwipeComplete={onModalClose}
+        swipeDirection="up"
+        onBackdropPress={onModalClose}
+        text="Do you really wish to delete the current route?"
+        buttons={concludeModalButtons}
+      />
     </View>
   );
 };
 
-export default routeDetail;
+export default withNavigation(routeDetail);
