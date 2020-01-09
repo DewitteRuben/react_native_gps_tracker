@@ -4,7 +4,7 @@ import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton } from "../
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { GLOBAL } from "../../styles/global";
-import { prettyDistance, prettyDuration } from "../../utils/prettyText";
+import { prettyDistance, prettyDuration } from "../../utils/units";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { routeToFeature } from "../map/Utils";
 import * as GeoJSON from "@turf/helpers/lib/geojson";

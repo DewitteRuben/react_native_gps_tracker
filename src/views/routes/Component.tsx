@@ -9,7 +9,7 @@ import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { FlatList } from "react-native-gesture-handler";
 import { RouteData } from "../../redux/store/types";
 import { useNavigation } from "react-navigation-hooks";
-import { prettyDistance, prettyDuration } from "../../utils/prettyText";
+import { prettyDistance, prettyDuration } from "../../utils/units";
 import moment from "moment";
 
 interface Props {
