@@ -2,14 +2,17 @@ import React from "react";
 import { Text, StyleProp, TextStyle } from "react-native";
 import styles from "./style";
 
+type Variant = "h1" | "h2" | "h3" | "h4" | "h5" | "subtitle1" | "subtitle2";
+type Align = "inherit" | "left" | "center" | "right" | "justify";
+
 interface Props {
   bold?: boolean;
   style?: StyleProp<TextStyle>;
   text: string | number | null;
   green?: boolean;
   gray?: boolean;
-  variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "subtitle1" | "paragraph";
-  align?: "inherit" | "left" | "center" | "right" | "justify";
+  variant?: Variant;
+  align?: Align;
   fontSize?: number;
   onPress?: () => any;
 }

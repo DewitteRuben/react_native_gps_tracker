@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextStyle, StyleProp } from "react-native";
 
-export default StyleSheet.create({
+export default StyleSheet.create<any>({
   primaryText: {
     fontFamily: "Nunito-Regular",
     color: "#606060",
@@ -10,7 +10,7 @@ export default StyleSheet.create({
     color: "#30be76"
   },
   grayText: {
-    color: "#A8A8A8"
+    color: "#767676"
   },
   h1: {
     fontSize: 32
@@ -24,8 +24,11 @@ export default StyleSheet.create({
   h4: {
     fontSize: 16
   },
-  subtitle: {
-    fontSize: 11
+  subtitle1: {
+    fontSize: 14
+  },
+  subtitle2: {
+    fontSize: 12
   },
   boldText: {
     fontFamily: "Nunito-Bold",

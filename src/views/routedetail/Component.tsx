@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { CText as Text, CText, Spinner, Icon, Modal } from "../../components";
+import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton } from "../../components";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { GLOBAL } from "../../styles/global";
@@ -107,7 +107,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     <View style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 35 }}>
         <View style={{ paddingVertical: 20, flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
-          <Text text="Back" onPress={() => navigate("Routes")} />
+          <BackArrowButton onPress={() => navigate("Routes")} />
           <TouchableOpacity onPress={onModalOpen}>
             <Icon name="trash" size={21} type="FontAwesome" />
           </TouchableOpacity>

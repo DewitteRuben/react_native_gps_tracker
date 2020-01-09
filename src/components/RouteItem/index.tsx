@@ -34,7 +34,7 @@ const routeItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, d
         </View>
       </View>
       <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
-        <CText text={duration} />
+        <CText text={duration} variant="subtitle1" />
         <CText text={date} variant="subtitle1" />
       </View>
     </TouchableOpacity>

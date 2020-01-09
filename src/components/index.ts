@@ -10,6 +10,7 @@ import SaveRouteForm from "./SaveRouteForm";
 import Input from "./Input";
 import Dropdown from "./Dropdown";
 import Spinner from "./Spinner";
+import BackArrowButton from "./Back";
 
 export {
   Button,
@@ -23,5 +24,6 @@ export {
   SaveRouteForm,
   Input,
   Dropdown,
-  Spinner
+  Spinner,
+  BackArrowButton
 };
