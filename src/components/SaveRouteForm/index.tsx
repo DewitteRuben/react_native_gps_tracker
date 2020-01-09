@@ -105,7 +105,6 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
             label="Method"
             data={travelingMethod}
           />
-          {getHelperText("method")}
         </View>
         <Input
           editable={false}
