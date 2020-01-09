@@ -11,7 +11,7 @@ const backButton: React.FC<Props> = ({ size, onPress }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={{ flex: 0, justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}
+      style={{ flex: 0, justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: 50 }}
     >
       <Image style={{ width: 14, height: 14 }} source={require("src/assets/images/arrow-left.png")}></Image>
       <Text text="Back" variant="subtitle1" />

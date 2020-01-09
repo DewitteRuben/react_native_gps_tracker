@@ -5,6 +5,8 @@ import { RouteData } from "../../store/types";
 import { ACTION_TYPES, ThunkResult } from "../../constants/actionTypes";
 import { AsyncStorage } from "react-native";
 import uuidv4 from "uuid/v4";
+import update from "react-addons-update";
+
 import moment from "moment";
 
 const ROUTE_KEY = "STORE_ROUTES";
@@ -89,13 +91,40 @@ export const localLoadRoutes = (): ThunkResult<void> => async (dispatch, getStat
   }
 };
 
+export const localUpdateRoute = (routeData: RouteData): ThunkResult<void> => async (dispatch, getState) => {
+  if (!routeData.id) {
+    throw new Error("To update an existing route the updated route must have an id.");
+  }
+
+  const routes = getState().routes.savedRoutes;
+  const routeState = getState().routes.routeState;
+
+  if (!routes) {
+    throw new Error("Cannot update the as no current route exists.");
+  }
+
+  const index = routes.findIndex(route => route.id === routeData.id);
+  const updatedRoutes = update(routes, { [index]: { $set: routeData } });
+  dispatch(setPendingRouteState({ ...routeState, loading: true }));
+  dispatch(updateRoutesAction(updatedRoutes));
+  try {
+    await AsyncStorage.setItem(ROUTE_KEY, JSON.stringify(updatedRoutes));
+    dispatch(setPendingRouteState({ ...routeState, loading: false }));
+  } catch (error) {
+    // async error
+  }
+};
+
 export const localRemoveRouteById = (id: string): ThunkResult<void> => async (dispatch, getState) => {
   const routes = getState().routes.savedRoutes;
+  const routeState = getState().routes.routeState;
   if (routes && routes.length) {
     const updatedRoutes = routes.filter(route => route.id && route.id !== id);
+    dispatch(setPendingRouteState({ ...routeState, loading: true }));
     dispatch(updateRoutesAction(updatedRoutes));
     try {
       await AsyncStorage.setItem(ROUTE_KEY, JSON.stringify(updatedRoutes));
+      dispatch(setPendingRouteState({ ...routeState, loading: false }));
     } catch (error) {
       // async storage error
     }
