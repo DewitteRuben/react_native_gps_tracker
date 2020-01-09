@@ -4,10 +4,9 @@ import { CText as Text } from "../../components";
 
 interface Props {
   onPress?: () => void;
-  size?: "1x" | "2x" | "3x";
 }
 
-const backButton: React.FC<Props> = ({ size, onPress }) => {
+const backButton: React.FC<Props> = ({ onPress }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
