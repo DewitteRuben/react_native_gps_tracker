@@ -8,13 +8,13 @@ export interface DropdownData {
 }
 
 interface Props {
-  data: DropdownData[] | string[];
+  data: (DropdownData | string)[];
   label: string;
   defaultValue?: string;
   onChangeText?(item: DropdownData | string, itemIndex: number): void;
 }
 
-const dropdown: React.FC<Props> = memo(({ data, label, defaultValue, onChangeText }) => {
+const dropdown = memo<Props>(({ data, label, defaultValue, onChangeText }) => {
   useEffect(() => {
     if (onChangeText && !defaultValue) {
       onChangeText(data[0], 0);
@@ -28,13 +28,12 @@ const dropdown: React.FC<Props> = memo(({ data, label, defaultValue, onChangeTex
         onChangeText(selectedItem, itemIndex);
       }
     },
-    [onChangeText]
+    [onChangeText, data]
   );
 
   const pickerItems = React.useMemo(
     () =>
-      // typescript Call signatures of union types bug.. therefore any is used
-      (data as any).map((item: DropdownData | string, index: number) => {
+      data.map((item: DropdownData | string, index: number) => {
         const value = typeof item === "string" ? item : item.value;
         return <Picker.Item key={`i-${index}`} label={value} value={value} />;
       }),

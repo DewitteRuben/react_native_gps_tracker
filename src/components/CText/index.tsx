@@ -11,20 +11,22 @@ interface Props {
   text: string | number | null;
   green?: boolean;
   gray?: boolean;
+  white?: boolean;
   variant?: Variant;
   align?: Align;
   fontSize?: number;
   onPress?: () => any;
 }
 
-const CText: React.FC<Props> = ({ bold, green, gray, style, variant, text, align, fontSize, onPress }) => {
-  const { boldText, greenText, grayText } = styles;
+const CText: React.FC<Props> = ({ bold, green, gray, style, variant, text, align, fontSize, onPress, white }) => {
+  const { boldText, greenText, grayText, whiteText } = styles;
   return (
     <Text
       onPress={onPress}
       style={[
         bold ? boldText : styles.primaryText,
         green && greenText,
+        white && whiteText,
         variant && styles[variant],
         fontSize && { fontSize },
         gray && grayText,

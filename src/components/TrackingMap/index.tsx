@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo, useEffect } from "react";
 import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
@@ -7,15 +7,16 @@ import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { MapControls, Modal } from "..";
 import { GLOBAL } from "../../styles/global";
 import { useNavigation } from "react-navigation-hooks";
-import PreciseElapsedTime from "../../utils/timer";
 import { getModalButtons } from "../../utils/modal";
+import { useTimer } from "../../utils/time";
 
 let prevCoords = { longitude: 0, latitude: 0 };
-const timer = new PreciseElapsedTime();
 
-export interface Props {}
+export interface Props {
+  onTrackUpdate?: (distance: MapboxGL.Coordinates[], duration: number) => void;
+}
 
-const trackingMap: React.FC<Props> = React.memo(() => {
+const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
   const { navigate } = useNavigation();
   const hasPermission = useLocationPermission();
 
@@ -29,9 +30,19 @@ const trackingMap: React.FC<Props> = React.memo(() => {
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
 
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const timerCallback = (elapsedTime: number) => {
+    if (onTrackUpdate) {
+      onTrackUpdate(route, elapsedTime);
+    }
+  };
 
-  const onModalClose = useCallback(() => {
+  const { elapsedTime, start, stop, pause, isActive } = useTimer(timerCallback);
+
+  const onSaveModalClose = useCallback(() => {
+    setSaveModalVisibility(false);
+  }, []);
+
+  const onConcludeModalClose = useCallback(() => {
     setConcludeModalVisibility(false);
   }, []);
 
@@ -39,22 +50,25 @@ const trackingMap: React.FC<Props> = React.memo(() => {
     setLiveUpdate(!liveUpdate);
   }, [liveUpdate]);
 
-  const toggleTracking = useCallback(() => {
+  const toggleTracking = () => {
     if (!isTracking) {
-      timer.start();
+      start();
     } else {
-      setElapsedTime(elapsedTime + timer.getElapsedTime());
-      timer.stop();
+      pause();
     }
 
     setTracking(!isTracking);
-  }, [isTracking]);
+  };
 
-  const onTrackFinish = useCallback(() => {
+  const onTrackFinish = () => {
     if (route.length) {
+      if (isActive && isTracking) {
+        pause();
+        setTracking(false);
+      }
       setConcludeModalVisibility(true);
     }
-  }, [route]);
+  };
 
   const onRouteConclude = useCallback(() => {
     setConcludeModalVisibility(false);
@@ -75,18 +89,20 @@ const trackingMap: React.FC<Props> = React.memo(() => {
       return;
     }
 
-    const duration = timer.getElapsedTime();
-    timer.stop();
-
     clearRoute();
 
-    navigate("SaveRoute", { duration, distance: { start: startingLatLong, end: endLatLong }, route: currentRoute });
-  }, [route]);
+    navigate("SaveRoute", {
+      duration: elapsedTime,
+      distance: { start: startingLatLong, end: endLatLong },
+      route: currentRoute
+    });
+  }, [route, elapsedTime]);
 
   const clearRoute = useCallback(() => {
     setRoute([]);
     setGeoJsonFeature(routeToFeature([]));
     setTracking(false);
+    stop();
     if (liveUpdate) {
       fbClearRoute();
     }
@@ -137,10 +153,6 @@ const trackingMap: React.FC<Props> = React.memo(() => {
     setFollowUser(false);
   }, []);
 
-  const hasTracked = useMemo(() => {
-    return !!route.length;
-  }, [route]);
-
   return (
     <View style={GLOBAL.LAYOUT.container}>
       <MapboxGL.MapView
@@ -166,23 +178,23 @@ const trackingMap: React.FC<Props> = React.memo(() => {
       <MapControls
         isTracking={isTracking}
         liveUpdate={liveUpdate}
-        hasTracked={hasTracked}
+        hasTracked={!!route.length}
         onPressToggleLive={toggleLive}
         onPressTrack={toggleTracking}
         onPressFinish={onTrackFinish}
       />
       <Modal
         isVisible={isConcludeModalVisible}
-        onSwipeComplete={onModalClose}
+        onSwipeComplete={onConcludeModalClose}
         swipeDirection="up"
-        onBackdropPress={onModalClose}
+        onBackdropPress={onConcludeModalClose}
         text="Do you wish to conclude the current route?"
         buttons={concludeModalButtons}
       />
       <Modal
         isVisible={isSaveModalVisible}
         swipeDirection="up"
-        onBackdropPress={onModalClose}
+        onBackdropPress={onSaveModalClose}
         text="Do you wish to save the route?"
         buttons={saveModalButtons}
       />

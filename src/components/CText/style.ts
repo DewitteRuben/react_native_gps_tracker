@@ -30,6 +30,9 @@ export default StyleSheet.create<any>({
   subtitle2: {
     fontSize: 12
   },
+  whiteText: {
+    color: "#ffffff"
+  },
   boldText: {
     fontFamily: "Nunito-Bold",
     fontWeight: "700",

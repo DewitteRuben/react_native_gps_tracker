@@ -24,7 +24,8 @@ const LAYOUT = StyleSheet.create({
 
 const MAIN = {
   green: "#30be76",
-  gray: "#A8A8A8"
+  gray: "#A8A8A8",
+  white: "#FFFFFF"
 };
 
 const GLOBAL = {
