@@ -3,7 +3,7 @@ import Overlay from "./Overlay";
 import CText from "./CText";
 import CircleButton from "./CircleButton";
 import Icon from "./Icon";
-import MapControls from "./MapControls";
+import MapOverlay from "./MapOverlay";
 import Modal from "./Modal";
 import RouteItem from "./RouteItem";
 import SaveRouteForm from "./SaveRouteForm";
@@ -12,6 +12,9 @@ import Dropdown from "./Dropdown";
 import Spinner from "./Spinner";
 import BackArrowButton from "./Back";
 import LoadingOverlay from "./LoadingOverlay";
+import TrackingFAB from "./TrackFAB";
+import LocationFAB from "./LocationFAB";
+import WifiButton from "./WifiButton";
 
 export {
   Button,
@@ -19,7 +22,7 @@ export {
   CText,
   CircleButton,
   Icon,
-  MapControls,
+  MapOverlay,
   Modal,
   RouteItem,
   SaveRouteForm,
@@ -27,5 +30,8 @@ export {
   Dropdown,
   Spinner,
   BackArrowButton,
-  LoadingOverlay
+  LoadingOverlay,
+  WifiButton,
+  TrackingFAB,
+  LocationFAB
 };

@@ -4,7 +4,7 @@ import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
-import { MapControls, Modal } from "..";
+import { MapOverlay, Modal, TrackingFAB, LocationFAB, WifiButton } from "..";
 import { GLOBAL } from "../../styles/global";
 import { useNavigation } from "react-navigation-hooks";
 import { getModalButtons } from "../../utils/modal";
@@ -175,14 +175,16 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
           animated={true}
         />
       </MapboxGL.MapView>
-      <MapControls
-        isTracking={isTracking}
-        liveUpdate={liveUpdate}
-        hasTracked={!!route.length}
-        onPressToggleLive={toggleLive}
-        onPressTrack={toggleTracking}
-        onPressFinish={onTrackFinish}
-      />
+      <WifiButton onToggleLive={toggleLive} liveUpdate={liveUpdate} />
+      <MapOverlay>
+        <LocationFAB />
+        <TrackingFAB
+          onToggleTracking={toggleTracking}
+          onTrackFinish={onTrackFinish}
+          isTracking={isTracking}
+          hasTracked={!!route.length}
+        />
+      </MapOverlay>
       <Modal
         isVisible={isConcludeModalVisible}
         onSwipeComplete={onConcludeModalClose}
