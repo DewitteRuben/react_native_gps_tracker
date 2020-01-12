@@ -12,7 +12,7 @@ const button = StyleSheet.create({
     borderRadius: 6
   },
   block: {
-    width: "100%",
+    width: "100%"
   },
   primaryText: {
     fontSize: 18,

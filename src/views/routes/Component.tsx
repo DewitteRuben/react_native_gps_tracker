@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View, SafeAreaView } from "react-native";
-import { CText as Text, Icon, RouteItem, CText } from "../../components";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { FlatList } from "react-native-gesture-handler";
-import { RouteData } from "../../redux/store/types";
 import { useNavigation } from "react-navigation-hooks";
-import { prettyDistance, prettyDuration } from "../../utils/units";
 import moment from "moment";
+import { RouteData } from "../../redux/store/types";
+import { prettyDistance, prettyDuration } from "../../utils/units";
+import { CText as Text, Icon, RouteItem, CText } from "../../components";
 
 interface Props {
   routes: RouteData[];
@@ -27,7 +27,7 @@ interface NavigationBottomTabScreenComponent {
 
 interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomTabScreenComponent {}
 
-const routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
+const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
   const { navigate } = useNavigation();
 
   const viewRoute = (routeId: string) => () => navigate("RouteDetail", { routeId });
@@ -64,7 +64,7 @@ const routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
   );
 };
 
-routes.navigationOptions = {
+Routes.navigationOptions = {
   tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
     <Icon type="FontAwesome5" name="route" color={focused ? "#ffffff" : "#30be76"} size={23} />
   )
@@ -72,4 +72,4 @@ routes.navigationOptions = {
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>
 >;
 
-export default routes;
+export default Routes;

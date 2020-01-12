@@ -1,11 +1,11 @@
 import { createAppContainer } from "react-navigation";
-import { appNavigator } from "./../navigators/navigation";
 import { Provider, batch } from "react-redux";
 import React, { useEffect } from "react";
+import MapboxGL from "@react-native-mapbox-gl/maps";
+import { appNavigator } from "./navigation";
 import store from "../redux/store";
 import { getTrackingIdAction } from "../redux/actions/settings";
 import { localLoadRoutes } from "../redux/actions/routes";
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import config from "../config";
 
 const Navigation = createAppContainer(appNavigator);

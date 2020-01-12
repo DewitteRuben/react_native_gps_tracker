@@ -1,14 +1,13 @@
 import React, { useMemo, useState, useCallback, Dispatch, useEffect, useRef } from "react";
 import { View, Route } from "react-native";
-import { CText as Text, SaveRouteForm, Modal } from "../../components";
-import { GLOBAL } from "../../styles/global";
 import * as geometry from "spherical-geometry-js";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
-import { ISaveRouteForm } from "../../components/SaveRouteForm";
-import { RouteData, StoreState } from "../../redux/store/types";
 import { ThunkAction } from "redux-thunk";
-import { IRouteSaveState } from "../../redux/actions/routes";
+import { CText as Text, SaveRouteForm, Modal } from "../../components";
+import { GLOBAL } from "../../styles/global";
+import { ISaveRouteForm } from "../../components/SaveRouteForm";
+import { RouteData, StoreState, IRouteSaveState } from "../../redux/store/types";
 import { getModalButtons } from "../../utils/modal";
 
 interface Props {
@@ -25,7 +24,7 @@ const formKeyToPrettyName: { [key: string]: string } = {
   title: "Trip title"
 };
 
-const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clearLastId }) => {
+const SaveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clearLastId }) => {
   const { navigate } = useNavigation();
 
   const distance: { start: MapboxGL.Coordinates; end: MapboxGL.Coordinates } = useNavigationParam("distance");
@@ -40,7 +39,7 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     if (didMount.current) {
       clearLastId();
     }
-  }, []);
+  }, [clearLastId]);
 
   useEffect(() => {
     if (!didMount.current) {
@@ -52,7 +51,7 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     if (!loading && finished && id) {
       navigate("RouteDetail", { routeId: id });
     }
-  }, [routeState]);
+  }, [routeState, navigate]);
 
   const distanceInMeters = useMemo(() => {
     const { latitude: startLat, longitude: startLong } = distance.start;
@@ -62,7 +61,7 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
 
   const onModalClose = useCallback(() => setModalVisibility(false), []);
 
-  const modalButtons = useMemo(() => getModalButtons({ label: "Ok", callback: onModalClose }), []);
+  const modalButtons = useMemo(() => getModalButtons({ label: "Ok", callback: onModalClose }), [onModalClose]);
 
   const computeErrorMessages = (formData: ISaveRouteForm) =>
     Object.entries(formData).reduce((acc, cur) => {
@@ -85,12 +84,20 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
       return;
     }
 
-    const { distance, end, start, duration, title, method } = formData;
-    if (!(distance && end && start && duration && title && method)) {
+    const { distance: formDataDistance, end, start, duration: formDataDuration, title, method } = formData;
+    if (!(formDataDistance && end && start && formDataDuration && title && method)) {
       return;
     }
 
-    const routeData: RouteData = { distance, end, start, duration, title, method, coordinates: route };
+    const routeData: RouteData = {
+      distance: formDataDistance,
+      end,
+      start,
+      duration: formDataDuration,
+      title,
+      method,
+      coordinates: route
+    };
     saveRoute(routeData);
   };
 
@@ -111,4 +118,4 @@ const saveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     </>
   );
 };
-export default saveRoute;
+export default SaveRoute;

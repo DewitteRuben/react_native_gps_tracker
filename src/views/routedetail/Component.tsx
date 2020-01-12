@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { View, TouchableOpacity, BackHandler } from "react-native";
-import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOverlay } from "../../components";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
-import { RouteData, StoreState } from "../../redux/store/types";
-import { GLOBAL } from "../../styles/global";
-import { prettyDistance, prettyDuration } from "../../utils/units";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import { routeToFeature } from "../map/Utils";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
-
-// @ts-ignore
 import center from "@turf/center";
 import bbox from "@turf/bbox";
 import { ThunkAction } from "redux-thunk";
 import { withNavigation } from "react-navigation";
+import { routeToFeature } from "../map/Utils";
+import { prettyDistance, prettyDuration } from "../../utils/units";
+import { GLOBAL } from "../../styles/global";
+import { RouteData, StoreState } from "../../redux/store/types";
+import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOverlay } from "../../components";
 import { typeToIconMap, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { getModalButtons } from "../../utils/modal";
 
@@ -30,7 +28,7 @@ const useFilteredRoute = (routes: RouteData[], routeId: string) => {
   const [middlePoint, setMiddlePoint] = useState<GeoJSON.Position | null>(null);
 
   useEffect(() => {
-    const filteredRoutes = routes.filter(route => route.id && route.id === routeId);
+    const filteredRoutes = routes.filter(filteredRoute => filteredRoute.id && filteredRoute.id === routeId);
 
     if (!filteredRoutes.length) {
       return;
@@ -43,12 +41,12 @@ const useFilteredRoute = (routes: RouteData[], routeId: string) => {
     setRoute(routeWithId);
     setGeoJSON(geoJsonFeature);
     setMiddlePoint(point);
-  }, [routes]);
+  }, [routeId, routes]);
 
   return { route, geoJSON, middlePoint };
 };
 
-const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navigation }) => {
+const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navigation }) => {
   const { navigate } = navigation;
   const routeId = useNavigationParam("routeId");
   const { route, geoJSON, middlePoint } = useFilteredRoute(routes, routeId);
@@ -61,20 +59,20 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
   const onDeleteRoute = useCallback(() => {
     deleteRoute(routeId);
     setDeleted(true);
-  }, [routeId]);
+  }, [deleteRoute, routeId]);
 
   const concludeModalButtons = useMemo(
     () => getModalButtons({ label: "No", callback: onModalClose }, { label: "Yes", callback: onDeleteRoute }),
-    [routeId]
+    [onDeleteRoute, onModalClose]
   );
 
-  const backHandler = () => navigate("Routes");
+  const backHandler = useCallback(() => navigate("Routes"));
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backHandler);
 
     return () => BackHandler.removeEventListener("hardwareBackPress", backHandler);
-  }, []);
+  }, [backHandler]);
 
   if (!route || !geoJSON || deleted) {
     if (deleted) {
@@ -84,7 +82,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     return <LoadingOverlay />;
   }
 
-  const { title, end, duration, method, distance, date, id, start, coordinates } = route;
+  const { title, end, duration, method, distance, id, start, coordinates } = route;
 
   const startPoint = coordinates[0];
   const endPoint = coordinates[coordinates.length - 1];
@@ -146,7 +144,7 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           </View>
         </View>
       </View>
-      <MapboxGL.MapView style={GLOBAL.LAYOUT.container} animated={true}>
+      <MapboxGL.MapView style={GLOBAL.LAYOUT.container} animated>
         <MapboxGL.Camera ref={handleCameraRef} zoomLevel={11} centerCoordinate={middlePoint} followUserMode="normal" />
         <MapboxGL.PointAnnotation title="Start" id="start" coordinate={startCoords}>
           <MapboxGL.Callout title={start} />
@@ -170,4 +168,4 @@ const routeDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
   );
 };
 
-export default withNavigation(routeDetail);
+export default withNavigation(RouteDetail);

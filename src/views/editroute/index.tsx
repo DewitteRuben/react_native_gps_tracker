@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
+import { ThunkDispatch } from "redux-thunk";
 import Component from "./Component";
 import { StoreState, RouteData } from "../../redux/store/types";
 import { localUpdateRoute } from "../../redux/actions/routes";
-import { ThunkDispatch } from "redux-thunk";
 
 const getRoutesById = (state: StoreState) => (id: string) =>
   state.routes.savedRoutes.filter(route => route.id === id)[0];

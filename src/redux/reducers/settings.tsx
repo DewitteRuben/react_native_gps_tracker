@@ -1,6 +1,5 @@
-import { SettingsState } from "../store/types";
+import { SettingsState, ACTION_TYPES } from "../store/types";
 import { IUpdateDistanceUnitAction } from "../actions/settings";
-import { ACTION_TYPES } from "../constants/actionTypes";
 
 const initialState: SettingsState = {
   distanceUnit: "km",

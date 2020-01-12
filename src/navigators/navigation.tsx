@@ -1,6 +1,6 @@
 import { createSwitchNavigator } from "react-navigation";
-import { Home, Map, Routes, Settings, SaveRoute, RouteDetail, EditRoute } from "../views/index";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import { Home, Map, Routes, Settings, SaveRoute, RouteDetail, EditRoute } from "../views/index";
 
 export const MainTabs = createBottomTabNavigator(
   {

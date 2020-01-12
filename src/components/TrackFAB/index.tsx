@@ -1,6 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { View } from "react-native";
-import { CircleButton, Icon } from "..";
+import Icon from "../Icon";
+import CircleButton from "../CircleButton";
 
 interface Props {
   isTracking: boolean;
@@ -9,7 +10,7 @@ interface Props {
   onToggleTracking: () => void;
 }
 
-const trackFAB: React.FC<Props> = ({ isTracking, hasTracked, onTrackFinish, onToggleTracking }) => {
+const trackFAB = memo<Props>(({ isTracking, hasTracked, onTrackFinish, onToggleTracking }) => {
   return (
     <View style={{ flex: 0, flexDirection: "row", marginTop: 10 }}>
       <View>
@@ -36,6 +37,6 @@ const trackFAB: React.FC<Props> = ({ isTracking, hasTracked, onTrackFinish, onTo
       </View>
     </View>
   );
-};
+});
 
 export default trackFAB;

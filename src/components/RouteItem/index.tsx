@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import CText from "../CText";
-import { Icon } from "../../components";
+import Icon from "../Icon";
 import { TravelingMethod, typeToIconMap } from "../../utils/supportedTravelingMethods";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   onPress?: () => void;
 }
 
-const routeItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, duration, distance, onPress }) => {
+const RouteItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, duration, distance, onPress }) => {
   return (
     <TouchableOpacity style={styles.default} onPress={onPress}>
       <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
@@ -41,4 +41,4 @@ const routeItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, d
   );
 };
 
-export default routeItem;
+export default RouteItem;

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { View } from "react-native";
-import { Input, Button, Dropdown } from "../../components";
-import store from "../../redux/store";
 import { HelperText } from "react-native-paper";
+import Input from "../Input";
+import Button from "../Button";
+import store from "../../redux/store";
 import { prettyDuration, prettyDistance } from "../../utils/units";
 import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { toTitleCase } from "../../utils/string";
-import { DropdownData } from "../Dropdown";
+import Dropdown, { DropdownData } from "../Dropdown";
 
 interface Props {
   title?: string;
@@ -28,15 +29,11 @@ export interface ISaveRouteForm {
   [key: string]: string | undefined;
 }
 
-const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, method, start, end, onSubmit }) => {
+const SaveRouteForm = React.memo<Props>(({ title, distance, duration, method, start, end, onSubmit }) => {
   const [formState, setFormState] = useState<ISaveRouteForm>({ title, distance, duration, method, start, end });
   const [helperTextVisiblity, setHelperTextVisibility] = useState(false);
 
   const { distanceUnit } = store.getState().settings;
-
-  useEffect(() => {
-    setFormState({ ...formState, title, distance, duration, method, start, end });
-  }, []);
 
   const updateformState = useCallback(
     (propName: string) => {
@@ -62,7 +59,7 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
     );
 
   const travelingMethod = useMemo(
-    () => travelingMethodsArray.map(method => ({ label: toTitleCase(method), value: toTitleCase(method) })),
+    () => travelingMethodsArray.map(m => ({ label: toTitleCase(m), value: toTitleCase(m) })),
     []
   );
 
@@ -124,4 +121,4 @@ const saveRouteForm: React.FC<Props> = React.memo(({ title, distance, duration, 
   );
 });
 
-export default saveRouteForm;
+export default SaveRouteForm;

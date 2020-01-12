@@ -6,9 +6,6 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
 
-const mapContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Component);
+const mapContainer = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export default mapContainer;

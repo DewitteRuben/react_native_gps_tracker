@@ -1,6 +1,6 @@
 import { Action, ActionCreator } from "redux";
-import { ACTION_TYPES, ThunkResult } from "../../constants/actionTypes";
 import getUUID from "../../../utils/uuid";
+import { ACTION_TYPES, ThunkResult } from "../../store/types";
 
 export interface IUpdateDistanceUnitAction extends Action {
   payload: string;
@@ -24,5 +24,7 @@ export const getTrackingIdAction = (): ThunkResult<void> => async dispatch => {
   try {
     const trackingId = await getUUID();
     dispatch(updateTrackingIdAction(trackingId));
-  } catch (error) {}
+  } catch (error) {
+    //
+  }
 };

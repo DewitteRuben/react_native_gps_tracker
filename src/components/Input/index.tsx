@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
-import { CText as Text, Icon } from "../../components";
 import { TextInput } from "react-native-paper";
-import styles from "./styles";
 import { TextInputProps } from "react-native-paper/lib/typescript/src/components/TextInput/TextInput";
+import styles from "./styles";
 
-interface Props extends TextInputProps {}
+type Props = TextInputProps;
 
 const input: React.FC<Props> = ({
   label,

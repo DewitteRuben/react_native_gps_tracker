@@ -1,14 +1,14 @@
-import React, { useCallback, useState, useMemo, useEffect } from "react";
+import React, { useCallback, useState, useMemo, memo, useEffect } from "react";
 import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
+import * as GeoJSON from "@turf/helpers/lib/geojson";
+import { useNavigation } from "react-navigation-hooks";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
-import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { MapOverlay, Modal, TrackingFAB, LocationFAB, WifiButton } from "..";
-import { GLOBAL } from "../../styles/global";
-import { useNavigation } from "react-navigation-hooks";
 import { getModalButtons } from "../../utils/modal";
-import { useTimer } from "../../utils/time";
+import { GLOBAL } from "../../styles/global";
+import { PreciseTimer } from "../../utils/time";
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
@@ -16,7 +16,9 @@ export interface Props {
   onTrackUpdate?: (distance: MapboxGL.Coordinates[], duration: number) => void;
 }
 
-const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
+const preciseTimer = new PreciseTimer();
+
+const TrackingMap: React.FC<Props> = memo(({ onTrackUpdate }) => {
   const { navigate } = useNavigation();
   const hasPermission = useLocationPermission();
 
@@ -29,14 +31,16 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
   const [followUser, setFollowUser] = useState(false);
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
+  const [minDisplacement, setMinDisplacement] = useState(0);
 
-  const timerCallback = (elapsedTime: number) => {
-    if (onTrackUpdate) {
-      onTrackUpdate(route, elapsedTime);
-    }
-  };
-
-  const { elapsedTime, start, stop, pause, isActive } = useTimer(timerCallback);
+  const timerCallback = useCallback(
+    (elapsedTime: number) => {
+      if (onTrackUpdate) {
+        onTrackUpdate(route, elapsedTime);
+      }
+    },
+    [route, onTrackUpdate]
+  );
 
   const onSaveModalClose = useCallback(() => {
     setSaveModalVisibility(false);
@@ -50,30 +54,41 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
     setLiveUpdate(!liveUpdate);
   }, [liveUpdate]);
 
-  const toggleTracking = () => {
+  const toggleTracking = useCallback(() => {
     if (!isTracking) {
-      start();
+      preciseTimer.start(timerCallback);
     } else {
-      pause();
+      preciseTimer.pause();
     }
 
     setTracking(!isTracking);
-  };
+  }, [isTracking, timerCallback]);
 
-  const onTrackFinish = () => {
+  const onTrackFinish = useCallback(() => {
     if (route.length) {
-      if (isActive && isTracking) {
-        pause();
+      if (preciseTimer.isActive && isTracking) {
+        preciseTimer.pause();
         setTracking(false);
       }
       setConcludeModalVisibility(true);
     }
-  };
+  }, [isTracking, route.length]);
 
   const onRouteConclude = useCallback(() => {
     setConcludeModalVisibility(false);
     setSaveModalVisibility(true);
   }, []);
+
+  const clearRoute = useCallback(() => {
+    setRoute([]);
+    setGeoJsonFeature(routeToFeature([]));
+    setTracking(false);
+    preciseTimer.stop();
+    if (liveUpdate) {
+      fbClearRoute();
+    }
+    setSaveModalVisibility(false);
+  }, [liveUpdate]);
 
   const onRouteSave = useCallback(() => {
     if (!route.length) {
@@ -89,6 +104,8 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
       return;
     }
 
+    const elapsedTime = preciseTimer.getElapsedTime();
+
     clearRoute();
 
     navigate("SaveRoute", {
@@ -96,18 +113,7 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
       distance: { start: startingLatLong, end: endLatLong },
       route: currentRoute
     });
-  }, [route, elapsedTime]);
-
-  const clearRoute = useCallback(() => {
-    setRoute([]);
-    setGeoJsonFeature(routeToFeature([]));
-    setTracking(false);
-    stop();
-    if (liveUpdate) {
-      fbClearRoute();
-    }
-    setSaveModalVisibility(false);
-  }, [liveUpdate]);
+  }, [route, clearRoute, navigate]);
 
   const concludeModalButtons = useMemo(
     () =>
@@ -149,17 +155,25 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
     [isTracking, route, liveUpdate]
   );
 
-  const handleTouchMove = useCallback(() => {
-    setFollowUser(false);
+  const toggleFollowUser = () => {
+    setFollowUser(follow => !follow);
+  };
+
+  const onDidFinishRenderingMapFully = useCallback(() => {
+    setFollowUser(true);
+    setMinDisplacement(10);
   }, []);
+
+  const routeLength = useMemo(() => {
+    return !!route.length;
+  }, [route]);
 
   return (
     <View style={GLOBAL.LAYOUT.container}>
       <MapboxGL.MapView
         style={GLOBAL.LAYOUT.container}
-        animated={true}
-        onTouchMove={handleTouchMove}
-        userTrackingMode={MapboxGL.UserTrackingModes.Follow}
+        onDidFinishRenderingMapFully={onDidFinishRenderingMapFully}
+        animated
       >
         <MapboxGL.Camera zoomLevel={12} followZoomLevel={12} followUserLocation={followUser} followUserMode="normal" />
         {geojsonFeature && (
@@ -167,22 +181,22 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
             <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }} />
           </MapboxGL.ShapeSource>
         )}
-
         <MapboxGL.UserLocation
+          minDisplacement={minDisplacement}
           onUpdate={onUserlocationUpdate}
           visible={hasPermission}
           renderMode="normal"
-          animated={true}
+          animated
         />
       </MapboxGL.MapView>
       <WifiButton onToggleLive={toggleLive} liveUpdate={liveUpdate} />
       <MapOverlay>
-        <LocationFAB />
+        <LocationFAB isFollowing={followUser} onPress={toggleFollowUser} />
         <TrackingFAB
           onToggleTracking={toggleTracking}
           onTrackFinish={onTrackFinish}
           isTracking={isTracking}
-          hasTracked={!!route.length}
+          hasTracked={routeLength}
         />
       </MapOverlay>
       <Modal
@@ -204,4 +218,4 @@ const trackingMap: React.FC<Props> = React.memo(({ onTrackUpdate }) => {
   );
 });
 
-export default trackingMap;
+export default TrackingMap;

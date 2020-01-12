@@ -1,6 +1,8 @@
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
-import { CText as Text } from "../../components";
+import Text from "../CText";
+
+const backArrow = require("../..//assets/images/arrow-left.png");
 
 interface Props {
   onPress?: () => void;
@@ -12,7 +14,7 @@ const backButton: React.FC<Props> = ({ onPress }) => {
       onPress={onPress}
       style={{ flex: 0, justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: 50 }}
     >
-      <Image style={{ width: 14, height: 14 }} source={require("src/assets/images/arrow-left.png")}></Image>
+      <Image style={{ width: 14, height: 14 }} source={backArrow} />
       <Text text="Back" variant="subtitle1" />
     </TouchableOpacity>
   );

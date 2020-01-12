@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
+import { ThunkDispatch } from "redux-thunk";
+import { compose } from "redux";
 import Component from "./Component";
 import { StoreState, RouteData } from "../../redux/store/types";
-import { ThunkDispatch } from "redux-thunk";
 import { localSaveRoute, clearLastInsertId } from "../../redux/actions/routes";
-import { compose } from "redux";
 
 const mapStateToProps = (state: StoreState) => ({
   routeState: state.routes.routeState

@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Spinner } from "..";
+import Spinner from "../Spinner";
 
 const loadingOverlay: React.FC = () => {
   return (

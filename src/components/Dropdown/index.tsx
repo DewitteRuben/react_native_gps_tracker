@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Picker, View } from "react-native";
-import { Input } from "..";
+import shortid from "shortid";
+import Input from "../Input";
 
 export interface DropdownData {
   label: string;
@@ -14,7 +15,7 @@ interface Props {
   onChangeText?(item: DropdownData | string, itemIndex: number): void;
 }
 
-const dropdown = memo<Props>(({ data, label, defaultValue, onChangeText }) => {
+const Dropdown = memo<Props>(({ data, label, defaultValue, onChangeText }) => {
   useEffect(() => {
     if (onChangeText && !defaultValue) {
       onChangeText(data[0], 0);
@@ -33,9 +34,9 @@ const dropdown = memo<Props>(({ data, label, defaultValue, onChangeText }) => {
 
   const pickerItems = React.useMemo(
     () =>
-      data.map((item: DropdownData | string, index: number) => {
+      data.map((item: DropdownData | string) => {
         const value = typeof item === "string" ? item : item.value;
-        return <Picker.Item key={`i-${index}`} label={value} value={value} />;
+        return <Picker.Item key={shortid()} label={value} value={value} />;
       }),
     [data]
   );
@@ -54,4 +55,4 @@ const dropdown = memo<Props>(({ data, label, defaultValue, onChangeText }) => {
   );
 });
 
-export default dropdown;
+export default Dropdown;

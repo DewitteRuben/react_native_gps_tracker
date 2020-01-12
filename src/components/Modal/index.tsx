@@ -1,7 +1,10 @@
 import React from "react";
-import { Text, View, StyleProp, ViewStyle, NativeSyntheticEvent, NativeTouchEvent } from "react-native";
-import { Button, CText } from "..";
-import Modal, { ModalProps } from "react-native-modal";
+import { View } from "react-native";
+import RNModal, { ModalProps } from "react-native-modal";
+import shortid from "shortid";
+
+import CText from "../CText";
+import Button from "../Button";
 import styles from "./styles";
 
 export interface ButtonData {
@@ -19,7 +22,7 @@ const modal: React.FC<Props> = React.memo(
   ({ onSwipeComplete, swipeDirection, onBackdropPress, isVisible, text, buttons }) => {
     return (
       <View>
-        <Modal
+        <RNModal
           onSwipeComplete={onSwipeComplete}
           swipeDirection={swipeDirection}
           onBackdropPress={onBackdropPress}
@@ -33,14 +36,14 @@ const modal: React.FC<Props> = React.memo(
               {buttons.map((button, index) => (
                 <Button
                   text={button.text}
-                  key={`i-${index}`}
+                  key={shortid()}
                   onPress={button.onPress}
                   containerStyle={{ ...button.style, marginHorizontal: 5 }}
                 />
               ))}
             </View>
           </View>
-        </Modal>
+        </RNModal>
       </View>
     );
   }

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { View } from "react-native";
+import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { CText as Text } from "../../components";
+
+const COORD_PRECISION = 0.000001;
 
 const useLocationPermission = () => {
   const [hasPermission, setHasPermission] = useState(false);
@@ -58,7 +61,5 @@ const renderGpsDetails = (coords: MapboxGL.Coordinates) => (
     <Text text={coords.heading || 0} />
   </View>
 );
-
-const COORD_PRECISION = 0.000001;
 
 export { useLocationPermission, routeToFeature, renderGpsDetails, didCoordsUpdate };

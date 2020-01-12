@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import Component from "./Component";
 import { ThunkDispatch } from "redux-thunk";
 import { compose } from "redux";
+import Component from "./Component";
 import { StoreState } from "../../redux/store/types";
 import { localRemoveRouteById } from "../../redux/actions/routes";
 

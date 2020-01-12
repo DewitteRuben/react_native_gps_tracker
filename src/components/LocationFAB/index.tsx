@@ -1,12 +1,18 @@
-import React from "react";
-import { CircleButton, Icon } from "..";
+import React, { memo } from "react";
+import Icon from "../Icon";
+import CircleButton from "../CircleButton";
 
-const locationFAB: React.FC = () => {
+interface Props {
+  onPress: () => void;
+  isFollowing: boolean;
+}
+
+const locationFAB = memo<Props>(({ onPress, isFollowing }) => {
   return (
-    <CircleButton onPress={() => console.log("test")}>
-      <Icon type="MaterialIcons" color="rgba(0, 0, 0, 0.54);" size={32} name={"my-location"} />
+    <CircleButton onPress={onPress}>
+      <Icon type="MaterialIcons" color={isFollowing ? "red" : "rgba(0, 0, 0, 0.54);"} size={32} name="my-location" />
     </CircleButton>
   );
-};
+});
 
 export default locationFAB;

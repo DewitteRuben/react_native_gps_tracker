@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View } from "react-native";
-import { CText as Text, Icon, Dropdown } from "../../components";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
-import { GLOBAL } from "../../styles/global";
+// eslint-disable-next-line import/no-unresolved
 import { DropDownData } from "react-native-material-dropdown";
+import { GLOBAL } from "../../styles/global";
+import { CText as Text, Icon, Dropdown } from "../../components";
 import { IUpdateDistanceUnitAction } from "../../redux/actions/settings";
 
 interface NavigationBottomTabScreenComponent {
@@ -26,12 +27,15 @@ interface Props {
   updateDistanceUnit: (unit: string) => IUpdateDistanceUnitAction;
 }
 
-const settings: NavigationBottomTabScreenFC = (props: Props) => {
+const Settings: NavigationBottomTabScreenFC = (props: Props) => {
   const { distanceUnit, updateDistanceUnit, trackingId } = props;
 
-  const handleDropdownChange = useCallback((item: DropDownData, itemIndex: number) => {
-    updateDistanceUnit(item.value);
-  }, []);
+  const handleDropdownChange = useCallback(
+    (item: DropDownData) => {
+      updateDistanceUnit(item.value);
+    },
+    [updateDistanceUnit]
+  );
 
   const distanceUnitsData = React.useMemo(
     () => [
@@ -46,7 +50,7 @@ const settings: NavigationBottomTabScreenFC = (props: Props) => {
       <Text text="Settings" bold variant="h2" />
       <Text text={`Tracking ID: ${trackingId}`} />
       <Dropdown
-        label={"Distance unit"}
+        label="Distance unit"
         onChangeText={handleDropdownChange}
         data={distanceUnitsData}
         defaultValue={distanceUnit}
@@ -55,7 +59,7 @@ const settings: NavigationBottomTabScreenFC = (props: Props) => {
   );
 };
 
-settings.navigationOptions = {
+Settings.navigationOptions = {
   tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
     <Icon type="FontAwesome" name="cog" color={focused ? "#ffffff" : "#30be76"} size={23} />
   )
@@ -63,4 +67,4 @@ settings.navigationOptions = {
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>
 >;
 
-export default settings;
+export default Settings;

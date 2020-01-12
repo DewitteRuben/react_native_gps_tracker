@@ -10,13 +10,10 @@ export interface Props {
   block?: boolean;
 }
 
-const button = (props: Props) => (
-  <TouchableOpacity
-    style={[styles.primary, props.block ? styles.block : null, props.containerStyle]}
-    onPress={props.onPress}
-  >
-    <Text style={[styles.primaryText, props.style]}>{props.text}</Text>
+const Button: React.FC<Props> = ({ block, onPress, style, text, containerStyle }) => (
+  <TouchableOpacity style={[styles.primary, block ? styles.block : null, containerStyle]} onPress={onPress}>
+    <Text style={[styles.primaryText, style]}>{text}</Text>
   </TouchableOpacity>
 );
 
-export default button;
+export default Button;

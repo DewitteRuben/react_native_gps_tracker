@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { View } from "react-native";
 
@@ -9,7 +9,7 @@ interface Props {
   onToggleLive: () => void;
 }
 
-const wifiButton: React.FC<Props> = ({ liveUpdate, onToggleLive }) => {
+const wifiButton = memo<Props>(({ liveUpdate, onToggleLive }) => {
   return (
     <View style={{ position: "absolute", zIndex: 10, top: 0, right: -8 }}>
       <Icon.Button
@@ -21,6 +21,6 @@ const wifiButton: React.FC<Props> = ({ liveUpdate, onToggleLive }) => {
       />
     </View>
   );
-};
+});
 
 export default wifiButton;

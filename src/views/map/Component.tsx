@@ -1,33 +1,34 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { View } from "react-native";
-import { CText as Text, Button, CircleButton, Icon } from "../../components";
-import TrackingMap from "../../components/TrackingMap";
-import {
-  NavigationStackScreenComponent,
-  NavigationStackScreenProps,
-  NavigationStackOptions,
-  NavigationStackProp
-} from "react-navigation-stack";
+import { NavigationStackOptions, NavigationStackProp } from "react-navigation-stack";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
-import { GLOBAL } from "../../styles/global";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import moment from "moment";
-import prettyMilliseconds from "pretty-ms";
+import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
+import { NavigationBottomTabOptions } from "react-navigation-tabs";
+import { CText as Text, Icon } from "../../components";
+import TrackingMap from "../../components/TrackingMap";
+import { GLOBAL } from "../../styles/global";
 import { durationToTime } from "../../utils/time";
 
-interface Props extends NavigationStackScreenProps {
-  // your props...
+interface NavigationBottomTabScreenComponent {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationBottomTabOptions,
+    NavigationTabProp<NavigationRoute, NavigationParams>,
+    unknown
+  >;
 }
 
-const map: NavigationStackScreenComponent<Props> = () => {
+interface NavigationBottomTabScreenFC extends React.FC, NavigationBottomTabScreenComponent {}
+
+const Map: NavigationBottomTabScreenFC = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
 
   const onTrackUpdate = (distance: MapboxGL.Coordinates[], duration: number) => {
     setElapsedTime(duration);
   };
 
-  const formattedTime = useMemo(() => durationToTime(elapsedTime), [elapsedTime]);
+  const formattedTime = durationToTime(elapsedTime);
 
   return (
     <View style={GLOBAL.LAYOUT.container}>
@@ -63,7 +64,7 @@ const map: NavigationStackScreenComponent<Props> = () => {
   );
 };
 
-map.navigationOptions = {
+Map.navigationOptions = {
   tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
     <Icon type="Foundation" name="map" color={focused ? "#ffffff" : "#30be76"} size={23} />
   )
@@ -71,4 +72,4 @@ map.navigationOptions = {
   NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, NavigationParams>, unknown>
 >;
 
-export default map;
+export default Map;

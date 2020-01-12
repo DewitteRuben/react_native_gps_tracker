@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { SaveRouteForm, CText as Text, Spinner, BackArrowButton, LoadingOverlay } from "../../components";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, BackHandler } from "react-native";
-import { GLOBAL } from "../../styles/global";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
-import { RouteData, StoreState } from "../../redux/store/types";
 import { ThunkAction } from "redux-thunk";
+import { SaveRouteForm, CText as Text, Spinner, BackArrowButton, LoadingOverlay } from "../../components";
+import { GLOBAL } from "../../styles/global";
+import { RouteData, StoreState } from "../../redux/store/types";
 import { ISaveRouteForm } from "../../components/SaveRouteForm";
 
 interface Props {
@@ -12,10 +12,18 @@ interface Props {
   updateRoute: (routeData: RouteData) => ThunkAction<void, StoreState, undefined, any>;
 }
 
-const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
+const EditRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
   const { navigate } = useNavigation();
   const routeId = useNavigationParam("routeId");
   const [updatedRoute, setUpdatedRoute] = useState<RouteData>();
+
+  const backHandler = useCallback(() => navigate("RouteDetail", { routeId }), [navigate, routeId]);
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+
+    return () => BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  }, [backHandler]);
 
   if (!routeId) {
     navigate("Routes");
@@ -24,13 +32,6 @@ const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
 
   const route = getRoutesById(routeId);
   const { duration, distance, start, title, end, method, coordinates, id } = route;
-  const backHandler = () => navigate("RouteDetail", { routeId: id });
-
-  useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", backHandler);
-
-    return () => BackHandler.removeEventListener("hardwareBackPress", backHandler);
-  }, []);
 
   const handleSaveRoute = (routeDetails: ISaveRouteForm) => {
     setUpdatedRoute({ ...routeDetails, coordinates, id } as RouteData);
@@ -61,4 +62,4 @@ const editRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
   );
 };
 
-export default editRoute;
+export default EditRoute;

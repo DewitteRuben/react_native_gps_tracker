@@ -1,56 +1,66 @@
-import { useEffect, useState, useCallback } from "react";
 import moment from "moment";
 
-const useTimer = (callback: (elapsedTime: number) => void) => {
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-  const [initTime, setInitTime] = useState(Date.now());
-  const [stopped, setStopped] = useState(false);
+const interval = 1000;
 
-  const start = useCallback(() => {
-    setStopped(false);
-    setIsActive(true);
-    setInitTime(Date.now() - elapsedTime);
-  }, [elapsedTime]);
+export class PreciseTimer {
+  public isActive: boolean;
 
-  const pause = useCallback(() => {
-    setIsActive(false);
-  }, []);
+  private initTime: number;
 
-  const reset = useCallback(() => {
-    setInitTime(Date.now());
-    setElapsedTime(0);
-    setIsActive(false);
-    callback(0);
-  }, []);
+  private timer: number;
 
-  const stop = useCallback(() => {
-    reset();
-    setStopped(true);
-  }, []);
+  public elapsedTime: number;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isActive) {
-        const timeDiff = Date.now() - initTime;
-        setElapsedTime(timeDiff);
-        callback(timeDiff);
+  private paused: boolean;
+
+  constructor() {
+    this.elapsedTime = 0;
+    this.isActive = false;
+  }
+
+  private step(cb: (dt: number) => void) {
+    return () => {
+      if (this.isActive) {
+        const timeDiff = Date.now() - this.initTime;
+        this.elapsedTime = timeDiff;
+        cb(timeDiff);
       }
-    }, 1000 / 60);
+    };
+  }
 
-    if (stopped) {
-      clearInterval(interval);
+  public start(cb: (dt: number) => void) {
+    this.isActive = true;
+
+    if (this.paused) {
+      this.initTime = Date.now() - this.elapsedTime;
+    } else {
+      this.initTime = Date.now();
     }
 
-    return () => clearInterval(interval);
-  }, [isActive, initTime, stopped]);
+    this.timer = setInterval(this.step(cb), interval);
+  }
 
-  return { elapsedTime, start, pause, stop, isActive };
-};
+  public stop() {
+    if (this.timer) {
+      this.isActive = false;
+      this.elapsedTime = 0;
+      clearInterval(this.timer);
+    }
+  }
+
+  public pause() {
+    this.isActive = false;
+    this.paused = true;
+  }
+
+  getElapsedTime() {
+    return this.elapsedTime;
+  }
+}
 
 const durationToMoment = (duration: number) => moment.duration(duration);
 const momentToTime = (mm: moment.Duration) => [mm.hours(), mm.minutes(), mm.seconds()];
 const formatTime = (time: number[]) => time.map(item => item.toString().padStart(2, "0")).join(":");
 const durationToTime = (ms: number) => formatTime(momentToTime(durationToMoment(ms)));
 
-export { useTimer, durationToTime };
+export { durationToTime };

@@ -4,7 +4,7 @@ import store from "../redux/store";
 
 export const fbUpdateLastCoords = async (coords: MapboxGL.Coordinates) => {
   try {
-    const trackingId = store.getState().settings.trackingId;
+    const { trackingId } = store.getState().settings;
     const ref = database().ref(`users/${trackingId}/last`);
     await ref.set(coords);
   } catch (error) {
@@ -14,7 +14,7 @@ export const fbUpdateLastCoords = async (coords: MapboxGL.Coordinates) => {
 
 export const fbUpdateCoords = async (coords: MapboxGL.Coordinates[]) => {
   try {
-    const trackingId = store.getState().settings.trackingId;
+    const { trackingId } = store.getState().settings;
     const ref = database().ref(`users/${trackingId}/full`);
     await ref.set(coords);
   } catch (error) {
@@ -24,7 +24,7 @@ export const fbUpdateCoords = async (coords: MapboxGL.Coordinates[]) => {
 
 export const fbClearRoute = async () => {
   try {
-    const trackingId = store.getState().settings.trackingId;
+    const { trackingId } = store.getState().settings;
     const ref = database().ref(`users/${trackingId}/full`);
     await ref.set(null);
   } catch (error) {
