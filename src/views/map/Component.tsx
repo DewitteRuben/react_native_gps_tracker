@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { View } from "react-native";
 import { NavigationStackOptions, NavigationStackProp } from "react-navigation-stack";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
@@ -6,10 +6,12 @@ import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/types
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
+import * as geometry from "spherical-geometry-js";
 import { CText as Text, Icon } from "../../components";
 import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";
 import { durationToTime } from "../../utils/time";
+import { prettyDistance } from "../../utils/units";
 
 interface NavigationBottomTabScreenComponent {
   navigationOptions?: NavigationScreenConfig<
@@ -19,16 +21,30 @@ interface NavigationBottomTabScreenComponent {
   >;
 }
 
-interface NavigationBottomTabScreenFC extends React.FC, NavigationBottomTabScreenComponent {}
+interface Props {
+  distanceUnit: string;
+}
 
-const Map: NavigationBottomTabScreenFC = () => {
+interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomTabScreenComponent {}
+
+const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [elapsedDistance, setElapsedDistance] = useState(0);
 
-  const onTrackUpdate = (distance: MapboxGL.Coordinates[], duration: number) => {
+  const onTimerUpdate = (duration: number) => {
     setElapsedTime(duration);
   };
 
+  const onRouteUpdate = (route: MapboxGL.Coordinates[]) => {
+    const start = route[0];
+    const end = route[route.length - 1];
+
+    const distance = geometry.computeDistanceBetween([start.latitude, start.longitude], [end.latitude, end.longitude]);
+    setElapsedDistance(distance);
+  };
+
   const formattedTime = durationToTime(elapsedTime);
+  const formattedDistance = prettyDistance(elapsedDistance.toString(), distanceUnit);
 
   return (
     <View style={GLOBAL.LAYOUT.container}>
@@ -45,8 +61,7 @@ const Map: NavigationBottomTabScreenFC = () => {
       >
         <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
           <View style={{ flex: 0, alignItems: "center" }}>
-            <Text variant="h3" white text="1.023,0" />
-            <Text variant="h3" white text="km" />
+            <Text variant="h3" white text={formattedDistance} />
           </View>
         </View>
         <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
@@ -59,7 +74,7 @@ const Map: NavigationBottomTabScreenFC = () => {
           </View>
         </View>
       </View>
-      <TrackingMap onTrackUpdate={onTrackUpdate} />
+      <TrackingMap onTimerUpdate={onTimerUpdate} onRouteUpdate={onRouteUpdate} />
     </View>
   );
 };

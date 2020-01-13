@@ -13,12 +13,13 @@ import { PreciseTimer } from "../../utils/time";
 let prevCoords = { longitude: 0, latitude: 0 };
 
 export interface Props {
-  onTrackUpdate?: (distance: MapboxGL.Coordinates[], duration: number) => void;
+  onTimerUpdate?: (duration: number) => void;
+  onRouteUpdate?: (route: MapboxGL.Coordinates[]) => void;
 }
 
 const preciseTimer = new PreciseTimer();
 
-const TrackingMap: React.FC<Props> = memo(({ onTrackUpdate }) => {
+const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate }) => {
   const { navigate } = useNavigation();
   const hasPermission = useLocationPermission();
 
@@ -35,11 +36,11 @@ const TrackingMap: React.FC<Props> = memo(({ onTrackUpdate }) => {
 
   const timerCallback = useCallback(
     (elapsedTime: number) => {
-      if (onTrackUpdate) {
-        onTrackUpdate(route, elapsedTime);
+      if (onTimerUpdate) {
+        onTimerUpdate(elapsedTime);
       }
     },
-    [route, onTrackUpdate]
+    [onTimerUpdate]
   );
 
   const onSaveModalClose = useCallback(() => {
@@ -143,6 +144,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTrackUpdate }) => {
             fbUpdateLastCoords(location.coords);
             fbUpdateCoords(newRoute);
           }
+          onRouteUpdate(newRoute);
           setRoute(newRoute);
           setTimeout(() => {
             setGeoJsonFeature(routeToFeature(newRoute));
@@ -152,7 +154,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTrackUpdate }) => {
         prevCoords = location.coords;
       }
     },
-    [isTracking, route, liveUpdate]
+    [isTracking, route, liveUpdate, onRouteUpdate]
   );
 
   const toggleFollowUser = () => {

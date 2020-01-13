@@ -1,8 +1,11 @@
 import { connect } from "react-redux";
 
 import Component from "./Component";
+import { StoreState } from "../../redux/store/types";
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: StoreState) => ({
+  distanceUnit: state.settings.distanceUnit
+});
 
 const mapDispatchToProps = () => ({});
 
