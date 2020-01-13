@@ -63,4 +63,7 @@ const momentToTime = (mm: moment.Duration) => [mm.hours(), mm.minutes(), mm.seco
 const formatTime = (time: number[]) => time.map(item => item.toString().padStart(2, "0")).join(":");
 const durationToTime = (ms: number) => formatTime(momentToTime(durationToMoment(ms)));
 
-export { durationToTime };
+const msPerMeterToUnitPerHour = (distance: number, duration: number, distanceUnit: string) =>
+  (distance / duration) * (distanceUnit === "km" ? 3600 : 2236.93629);
+
+export { durationToTime, msPerMeterToUnitPerHour };

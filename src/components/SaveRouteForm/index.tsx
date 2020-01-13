@@ -4,7 +4,7 @@ import { HelperText } from "react-native-paper";
 import Input from "../Input";
 import Button from "../Button";
 import store from "../../redux/store";
-import { prettyDuration, prettyDistance } from "../../utils/units";
+import { prettyDuration, metersToUnit } from "../../utils/units";
 import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { toTitleCase } from "../../utils/string";
 import Dropdown, { DropdownData } from "../Dropdown";
@@ -106,7 +106,7 @@ const SaveRouteForm = React.memo<Props>(({ title, distance, duration, method, st
         <Input
           editable={false}
           label="Distance"
-          value={prettyDistance(distance || "0", distanceUnit)}
+          value={`${metersToUnit(distance || "0", distanceUnit)} ${distanceUnit}`}
           onChangeText={updateformState("distance")}
         />
         <Input

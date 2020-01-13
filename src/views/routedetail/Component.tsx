@@ -8,7 +8,7 @@ import bbox from "@turf/bbox";
 import { ThunkAction } from "redux-thunk";
 import { withNavigation } from "react-navigation";
 import { routeToFeature } from "../map/Utils";
-import { prettyDistance, prettyDuration } from "../../utils/units";
+import { prettyDuration, metersToUnit } from "../../utils/units";
 import { GLOBAL } from "../../styles/global";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOverlay } from "../../components";
@@ -66,7 +66,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     [onDeleteRoute, onModalClose]
   );
 
-  const backHandler = useCallback(() => navigate("Routes"));
+  const backHandler = useCallback(() => navigate("Routes"), []);
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backHandler);
@@ -136,7 +136,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           </View>
           <View style={{ flex: 0, width: 108, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="FontAwesome5" size={24} name="route" />
-            <Text text={prettyDistance(distance, distanceUnit)} />
+            <Text text={`${metersToUnit(distance, distanceUnit)} ${distanceUnit}`} />
           </View>
           <View style={{ flex: 0, width: 70, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="Feather" size={24} name="clock" />

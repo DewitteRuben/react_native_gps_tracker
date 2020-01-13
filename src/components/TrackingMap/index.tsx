@@ -15,11 +15,12 @@ let prevCoords = { longitude: 0, latitude: 0 };
 export interface Props {
   onTimerUpdate?: (duration: number) => void;
   onRouteUpdate?: (route: MapboxGL.Coordinates[]) => void;
+  onTrackToggle?: (tracking: boolean) => void;
 }
 
 const preciseTimer = new PreciseTimer();
 
-const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate }) => {
+const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTrackToggle }) => {
   const { navigate } = useNavigation();
   const hasPermission = useLocationPermission();
 
@@ -33,6 +34,10 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate }) => 
   const [liveUpdate, setLiveUpdate] = useState(true);
   const [isTracking, setTracking] = useState(false);
   const [minDisplacement, setMinDisplacement] = useState(0);
+
+  useEffect(() => {
+    onTrackToggle(isTracking);
+  }, [isTracking, onTrackToggle]);
 
   const timerCallback = useCallback(
     (elapsedTime: number) => {

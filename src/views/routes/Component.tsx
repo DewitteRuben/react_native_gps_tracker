@@ -9,7 +9,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "react-navigation-hooks";
 import moment from "moment";
 import { RouteData } from "../../redux/store/types";
-import { prettyDistance, prettyDuration } from "../../utils/units";
+import { prettyDuration, metersToUnit } from "../../utils/units";
 import { CText as Text, Icon, RouteItem, CText } from "../../components";
 
 interface Props {
@@ -52,7 +52,7 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
                 startPoint={start}
                 endPoint={end}
                 date={moment(date!).format("LLL")}
-                distance={prettyDistance(distance, distanceUnit)}
+                distance={`${metersToUnit(distance, distanceUnit)} ${distanceUnit}`}
                 duration={prettyDuration(duration)}
               />
             );

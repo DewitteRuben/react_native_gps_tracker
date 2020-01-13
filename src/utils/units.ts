@@ -21,9 +21,8 @@ const distanceUnitMap: { [key: string]: (m: number) => number } = {
   miles: metersToMiles
 };
 
-export const prettyDistance = (distance: string, distanceUnit: string) => {
-  const value = distanceUnitMap[distanceUnit](parseFloat(distance)).toFixed(4);
-  return `${value} ${distanceUnit}`;
+export const metersToUnit = (distance: string, distanceUnit: string) => {
+  return distanceUnitMap[distanceUnit](parseFloat(distance)).toFixed(2);
 };
 
 export const prettyDuration = (duration: string) => prettyMilliseconds(parseFloat(duration));
