@@ -13,12 +13,15 @@ export class PreciseTimer {
 
   private paused: boolean;
 
+  private cb: (dt: number) => void;
+
   constructor() {
     this.elapsedTime = 0;
     this.isActive = false;
   }
 
   private step(cb: (dt: number) => void) {
+    this.cb = cb;
     return () => {
       if (this.isActive) {
         const timeDiff = Date.now() - this.initTime;
@@ -44,6 +47,7 @@ export class PreciseTimer {
     if (this.timer) {
       this.isActive = false;
       this.elapsedTime = 0;
+      this.cb(0);
       clearInterval(this.timer);
     }
   }

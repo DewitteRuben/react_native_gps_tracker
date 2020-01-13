@@ -6,7 +6,7 @@ import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/types
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
-import * as geometry from "spherical-geometry-js";
+import { computeDistanceBetween, convertLatLng } from "spherical-geometry-js";
 import { CText as Text, Icon } from "../../components";
 import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";
@@ -61,7 +61,9 @@ const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
     const start = route[0];
     const end = route[route.length - 1];
 
-    const distance = geometry.computeDistanceBetween([start.latitude, start.longitude], [end.latitude, end.longitude]);
+    const from = { lat: start.latitude, long: start.longitude };
+    const to = { lat: end.latitude, long: end.longitude };
+    const distance = computeDistanceBetween(from, to);
     setElapsedDistance(distance);
   };
 

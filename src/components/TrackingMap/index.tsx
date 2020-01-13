@@ -141,7 +141,6 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
         prevCoords = location.coords;
       }
 
-      setFollowUser(true);
       if (didCoordsUpdate(prevCoords, location.coords)) {
         if (isTracking) {
           const newRoute = [...route, ...(route.length < 2 ? [prevCoords] : []), location.coords];
@@ -167,7 +166,6 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
   };
 
   const onDidFinishRenderingMapFully = useCallback(() => {
-    setFollowUser(true);
     setMinDisplacement(10);
   }, []);
 
