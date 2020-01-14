@@ -1,10 +1,8 @@
 import { ActionCreator } from "redux";
 
 import { AsyncStorage } from "react-native";
-import uuidv4 from "uuid/v4";
 import update from "react-addons-update";
 
-import moment from "moment";
 import {
   IPendingRouteStateAction,
   ACTION_TYPES,
@@ -37,11 +35,7 @@ export const localSaveRoute = (route: RouteData): ThunkResult<void> => async (di
     const routes = getState().routes.savedRoutes;
     const { routeState } = getState().routes;
     const routeCopy = route;
-    routeCopy.id = uuidv4();
-    routeCopy.date = moment().toISOString();
 
-    if (!routeCopy.id) throw new Error("No id has been set for the route");
-    if (!routeCopy.date) throw new Error("No date has been set for this route");
     if (!routeCopy.coordinates.length) throw new Error("No coordinates found in the route details");
 
     dispatch(setPendingRouteState({ ...routeState, loading: true, finished: false }));
@@ -80,10 +74,6 @@ export const localLoadRoutes = (): ThunkResult<void> => async (dispatch, getStat
 };
 
 export const localUpdateRoute = (routeData: RouteData): ThunkResult<void> => async (dispatch, getState) => {
-  if (!routeData.id) {
-    throw new Error("To update an existing route the updated route must have an id.");
-  }
-
   const routes = getState().routes.savedRoutes;
   const { routeState } = getState().routes;
 

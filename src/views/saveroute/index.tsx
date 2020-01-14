@@ -8,7 +8,6 @@ import { localSaveRoute, clearLastInsertId } from "../../redux/actions/routes";
 
 const mapStateToProps = (state: StoreState) => ({
   routeState: state.routes.routeState,
-  distanceUnit: state.settings.distanceUnit
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({

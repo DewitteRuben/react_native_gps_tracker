@@ -46,18 +46,18 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
             const { title, method, start, end, distance, duration, id, date } = item;
             return (
               <RouteItem
-                onPress={viewRoute(id!)}
+                onPress={viewRoute(id)}
                 title={title}
                 type={method}
                 startPoint={start}
                 endPoint={end}
-                date={moment(date!).format("LLL")}
+                date={moment(date).format("LLL")}
                 distance={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
                 duration={prettyDuration(duration)}
               />
             );
           }}
-          keyExtractor={item => item.id!}
+          keyExtractor={item => item.id}
         />
       </View>
     </>

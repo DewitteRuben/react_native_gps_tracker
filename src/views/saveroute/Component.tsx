@@ -4,6 +4,8 @@ import * as geometry from "spherical-geometry-js";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { ThunkAction } from "redux-thunk";
+import uuidv4 from "uuid/v4";
+import moment from "moment";
 import { CText as Text, SaveRouteForm, Modal } from "../../components";
 import { GLOBAL } from "../../styles/global";
 import { ISaveRouteForm } from "../../components/SaveRouteForm";
@@ -11,7 +13,6 @@ import { RouteData, StoreState, IRouteSaveState } from "../../redux/store/types"
 import { getModalButtons } from "../../utils/modal";
 
 interface Props {
-  distanceUnit: string;
   saveRoute: (route: RouteData) => ThunkAction<void, StoreState, undefined, any>;
   clearLastId: () => ThunkAction<void, StoreState, undefined, any>;
   routeState: IRouteSaveState;
@@ -24,7 +25,7 @@ const formKeyToPrettyName: { [key: string]: string } = {
   title: "Trip title"
 };
 
-const SaveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clearLastId }) => {
+const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
   const { navigate } = useNavigation();
 
   const distance: { start: MapboxGL.Coordinates; end: MapboxGL.Coordinates } = useNavigationParam("distance");
@@ -48,7 +49,7 @@ const SaveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     }
 
     const { loading, finished, lastInsertId: id } = routeState;
-    if (!loading && finished && id) {
+    if (!loading && finished) {
       navigate("RouteDetail", { routeId: id });
     }
   }, [routeState, navigate]);
@@ -95,6 +96,8 @@ const SaveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     const routeData: RouteData = {
       distance: formDataDistance,
       end,
+      id: uuidv4(),
+      date: moment().toISOString(),
       start,
       duration: formDataDuration,
       title,
@@ -108,12 +111,7 @@ const SaveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     <>
       <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
         <Text text="Save route" bold variant="h2" />
-        <SaveRouteForm
-          distance={distanceInMeters}
-          onSubmit={onRouteSave}
-          distanceUnit={distanceUnit}
-          duration={duration}
-        />
+        <SaveRouteForm distance={distanceInMeters} onSubmit={onRouteSave} duration={duration} />
       </View>
       <Modal
         isVisible={isModalVisible}

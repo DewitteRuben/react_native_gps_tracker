@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from "react";
+import { connect } from "react-redux";
 import { View } from "react-native";
 import { HelperText } from "react-native-paper";
 import Input from "../Input";
@@ -7,6 +8,7 @@ import { prettyDuration, metersToUnit } from "../../utils/units";
 import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { toTitleCase } from "../../utils/string";
 import Dropdown, { DropdownData } from "../Dropdown";
+import { StoreState } from "../../redux/store/types";
 
 interface Props {
   title?: string;
@@ -30,7 +32,6 @@ export interface ISaveRouteForm {
 
 const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, start, end, onSubmit, distanceUnit }) => {
   const [formState, setFormState] = useState<ISaveRouteForm>({ title, distance, duration, method, start, end });
-  const [helperTextVisiblity, setHelperTextVisibility] = useState(false);
 
   const updateformState = useCallback((propName: string) => {
     return (value: string) => {
@@ -39,18 +40,18 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
   }, []);
 
   const onPress = () => {
-    setHelperTextVisibility(true);
     if (onSubmit) {
       onSubmit(formState);
     }
   };
 
-  const getHelperText = (propName: string) =>
-    helperTextVisiblity && (
-      <HelperText type="error" visible={!formState[propName]}>
+  const getHelperText = (propName: string) => {
+    return (
+      <HelperText type="error" visible={!formState[propName]?.length}>
         Required
       </HelperText>
     );
+  };
 
   const travelingMethod = useMemo(
     () => travelingMethodsArray.map(m => ({ label: toTitleCase(m), value: toTitleCase(m) })),
@@ -64,7 +65,7 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
         <View>
           <Input
             label="Trip title"
-            error={helperTextVisiblity && !formState.title?.length}
+            error={!formState.title?.length}
             value={formState.title}
             onChangeText={updateformState("title")}
           />
@@ -73,7 +74,7 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
         <View>
           <Input
             label="Startpoint name"
-            error={helperTextVisiblity && !formState.start?.length}
+            error={!formState.start?.length}
             value={formState.start}
             onChangeText={updateformState("start")}
           />
@@ -82,7 +83,7 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
         <View>
           <Input
             label="Endpoint name"
-            error={helperTextVisiblity && !formState.end?.length}
+            error={!formState.end?.length}
             value={formState.end}
             onChangeText={updateformState("end")}
           />
@@ -114,4 +115,8 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
   );
 };
 
-export default SaveRouteForm;
+const mapStateToProps = (state: StoreState) => ({
+  distanceUnit: state.settings.distanceUnit
+});
+
+export default connect(mapStateToProps, null)(SaveRouteForm);

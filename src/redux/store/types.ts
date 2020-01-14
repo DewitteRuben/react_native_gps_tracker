@@ -35,8 +35,8 @@ export interface IRouteSaveState {
 }
 
 export interface RouteData extends RouteDetail {
-  id?: string;
-  date?: string;
+  id: string;
+  date: string;
   coordinates: MapboxGL.Coordinates[];
 }
 

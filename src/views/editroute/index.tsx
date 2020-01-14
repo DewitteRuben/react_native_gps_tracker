@@ -9,7 +9,8 @@ const getRoutesById = (state: StoreState) => (id: string) =>
   state.routes.savedRoutes.filter(route => route.id === id)[0];
 
 const mapStateToProps = (state: StoreState) => ({
-  getRoutesById: getRoutesById(state)
+  getRoutesById: getRoutesById(state),
+  distanceUnit: state.settings.distanceUnit
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
