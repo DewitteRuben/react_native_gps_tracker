@@ -3,7 +3,6 @@ import { View, InteractionManager } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { useNavigation } from "react-navigation-hooks";
-import { computeDistanceBetween } from "spherical-geometry-js";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import { MapOverlay, Modal, TrackingFAB, LocationFAB, WifiButton } from "..";
@@ -11,6 +10,7 @@ import { getModalButtons } from "../../utils/modal";
 import { GLOBAL } from "../../styles/global";
 import { PreciseTimer } from "../../utils/time";
 import { computeRouteDistance } from "../../utils/units";
+import { ROUTES } from "../../navigators/navigation";
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
@@ -109,7 +109,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
 
     clearRoute();
 
-    navigate("SaveRoute", {
+    navigate(ROUTES.SAVE_ROUTE, {
       duration: elapsedTime,
       distance: computedDistance,
       route: currentRoute

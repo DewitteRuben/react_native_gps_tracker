@@ -7,6 +7,7 @@ import { GLOBAL } from "../../styles/global";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { ISaveRouteForm } from "../../components/SaveRouteForm";
 import styles from "./styles";
+import { ROUTES } from "../../navigators/navigation";
 
 interface Props {
   getRoutesById: (id: string) => RouteData;
@@ -18,7 +19,7 @@ const EditRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
   const routeId = useNavigationParam("routeId");
   const [updatedRoute, setUpdatedRoute] = useState<RouteData>();
 
-  const backHandler = useCallback(() => navigate("RouteDetail", { routeId }), [navigate, routeId]);
+  const backHandler = useCallback(() => navigate(ROUTES.ROUTE_DETAIL, { routeId }), [navigate, routeId]);
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backHandler);
@@ -27,7 +28,7 @@ const EditRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
   }, [backHandler]);
 
   if (!routeId) {
-    navigate("Routes");
+    navigate(ROUTES.TAB_ROUTES);
     return <LoadingOverlay />;
   }
 
@@ -40,7 +41,7 @@ const EditRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
 
   if (updatedRoute) {
     updateRoute(updatedRoute);
-    navigate("RouteDetail", { routeId: id });
+    navigate(ROUTES.ROUTE_DETAIL, { routeId: id });
     return <LoadingOverlay />;
   }
 

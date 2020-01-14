@@ -11,6 +11,7 @@ import { GLOBAL } from "../../styles/global";
 import { ISaveRouteForm } from "../../components/SaveRouteForm";
 import { RouteData, StoreState, IRouteSaveState } from "../../redux/store/types";
 import { getModalButtons } from "../../utils/modal";
+import { ROUTES } from "../../navigators/navigation";
 
 interface Props {
   saveRoute: (route: RouteData) => ThunkAction<void, StoreState, undefined, any>;
@@ -51,7 +52,7 @@ const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
 
     const { loading, finished, lastInsertId: id } = routeState;
     if (!loading && finished) {
-      navigate("RouteDetail", { routeId: id });
+      navigate(ROUTES.ROUTE_DETAIL, { routeId: id });
     }
   }, [routeState, navigate]);
 

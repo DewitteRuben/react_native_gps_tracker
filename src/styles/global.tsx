@@ -51,7 +51,8 @@ const MAIN = {
   white: "#FFFFFF",
   lighterWhite: "#FAFAFA",
   lightGray: "#CCCCCC",
-  buttonGray: "rgba(0, 0, 0, 0.54);"
+  buttonGray: "rgba(0, 0, 0, 0.54);",
+  lightGreen: "#26985F"
 };
 
 const MAP = {

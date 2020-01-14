@@ -13,6 +13,7 @@ import { prettyDuration, metersToUnit } from "../../utils/units";
 import { CText as Text, Icon, RouteItem, CText } from "../../components";
 import styles from "./styles";
 import { GLOBAL } from "../../styles/global";
+import { ROUTES } from "../../navigators/navigation";
 
 interface Props {
   routes: RouteData[];
@@ -32,7 +33,7 @@ interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomT
 const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
   const { navigate } = useNavigation();
 
-  const viewRoute = (routeId: string) => () => navigate("RouteDetail", { routeId });
+  const viewRoute = (routeId: string) => () => navigate(ROUTES.ROUTE_DETAIL, { routeId });
 
   return (
     <>

@@ -7,13 +7,14 @@ import Overlay from "../../components/Overlay";
 import { CText } from "../../components";
 import { GLOBAL } from "../../styles/global";
 import styles from "./styles";
+import { ROUTES } from "../../navigators/navigation";
 
 const headerImage = require("../../assets/images/header-travel.jpg");
 
 const Home: NavigationStackScreenComponent = () => {
   const { navigate } = useNavigation();
 
-  const goToApp = () => navigate("Map");
+  const goToApp = () => navigate(ROUTES.TAB_MAP);
 
   return (
     <View style={GLOBAL.LAYOUT.container}>

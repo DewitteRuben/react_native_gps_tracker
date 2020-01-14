@@ -15,6 +15,7 @@ import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOve
 import { typeToIconMap, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { getModalButtons } from "../../utils/modal";
 import styles from "./styles";
+import { ROUTES } from "../../navigators/navigation";
 
 interface Props {
   routes: RouteData[];
@@ -67,7 +68,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     [onDeleteRoute, onModalClose]
   );
 
-  const backHandler = useCallback(() => navigate("Routes"), [navigate]);
+  const backHandler = useCallback(() => navigate(ROUTES.TAB_MAP), [navigate]);
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backHandler);
@@ -77,7 +78,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
 
   if (!route || !geoJSON || deleted) {
     if (deleted) {
-      navigate("Routes");
+      navigate(ROUTES.TAB_ROUTES);
     }
 
     return <LoadingOverlay />;
@@ -108,7 +109,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
         <View style={[styles.topContainer, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
           <BackArrowButton onPress={backHandler} />
           <View style={[styles.actionsContainer, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
-            <TouchableOpacity onPress={() => navigate("EditRoute", { routeId: id })}>
+            <TouchableOpacity onPress={() => navigate(ROUTES.EDIT_ROUTE, { routeId: id })}>
               <Icon name="pencil" size={21} type="FontAwesome" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onModalOpen}>
