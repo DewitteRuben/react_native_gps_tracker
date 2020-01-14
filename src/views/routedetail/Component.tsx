@@ -66,7 +66,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     [onDeleteRoute, onModalClose]
   );
 
-  const backHandler = useCallback(() => navigate("Routes"), []);
+  const backHandler = useCallback(() => navigate("Routes"), [navigate]);
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backHandler);
@@ -101,7 +101,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 35 }}>
+      <View style={{ paddingHorizontal: 25 }}>
         <View style={{ paddingVertical: 20, flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
           <BackArrowButton onPress={backHandler} />
           <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between", width: 60 }}>
@@ -130,17 +130,20 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
             }
           ]}
         >
-          <View style={{ flex: 0, width: 60, flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="FontAwesome5" size={24} name={typeToIconMap[method.toLowerCase() as TravelingMethod]} />
-            <Text text={method} />
+            <Text style={{ marginLeft: 5 }} text={method} />
           </View>
-          <View style={{ flex: 0, width: 108, flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="FontAwesome5" size={24} name="route" />
-            <Text text={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`} />
+            <Text
+              style={{ marginLeft: 5 }}
+              text={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
+            />
           </View>
-          <View style={{ flex: 0, width: 70, flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="Feather" size={24} name="clock" />
-            <Text text={prettyDuration(duration)} />
+            <Text style={{ marginLeft: 5 }} text={prettyDuration(duration)} />
           </View>
         </View>
       </View>
