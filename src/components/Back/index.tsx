@@ -13,10 +13,7 @@ interface Props {
 
 const backButton: React.FC<Props> = ({ onPress, style }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[GLOBAL.LAYOUT.justifySpaceBetween, GLOBAL.LAYOUT.alignCenter, GLOBAL.LAYOUT.flexRow]}
-    >
+    <TouchableOpacity onPress={onPress} style={[GLOBAL.LAYOUT.alignCenter, GLOBAL.LAYOUT.flexRow, style]}>
       <Image style={styles.arrow} source={backArrow} />
       <Text text="Back" variant="subtitle1" />
     </TouchableOpacity>
