@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { HelperText } from "react-native-paper";
 import Input from "../Input";
 import Button from "../Button";
-import store from "../../redux/store";
 import { prettyDuration, metersToUnit } from "../../utils/units";
 import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { toTitleCase } from "../../utils/string";
@@ -16,6 +15,7 @@ interface Props {
   method?: TravelingMethod;
   start?: string;
   end?: string;
+  distanceUnit?: string;
   onSubmit?: (routeDetails: ISaveRouteForm) => void;
 }
 
@@ -28,11 +28,9 @@ export interface ISaveRouteForm {
   end?: string;
 }
 
-const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, start, end, onSubmit }) => {
+const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, start, end, onSubmit, distanceUnit }) => {
   const [formState, setFormState] = useState<ISaveRouteForm>({ title, distance, duration, method, start, end });
   const [helperTextVisiblity, setHelperTextVisibility] = useState(false);
-
-  const { distanceUnit } = store.getState().settings;
 
   const updateformState = useCallback((propName: string) => {
     return (value: string) => {

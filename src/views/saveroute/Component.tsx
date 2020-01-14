@@ -108,7 +108,12 @@ const SaveRoute: React.FC<Props> = ({ distanceUnit, saveRoute, routeState, clear
     <>
       <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
         <Text text="Save route" bold variant="h2" />
-        <SaveRouteForm distance={distanceInMeters} onSubmit={onRouteSave} duration={duration} />
+        <SaveRouteForm
+          distance={distanceInMeters}
+          onSubmit={onRouteSave}
+          distanceUnit={distanceUnit}
+          duration={duration}
+        />
       </View>
       <Modal
         isVisible={isModalVisible}
