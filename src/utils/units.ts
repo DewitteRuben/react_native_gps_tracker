@@ -1,5 +1,4 @@
 import prettyMilliseconds from "pretty-ms";
-import { RouteData } from "../redux/store/types";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { computeDistanceBetween } from "spherical-geometry-js";
 
