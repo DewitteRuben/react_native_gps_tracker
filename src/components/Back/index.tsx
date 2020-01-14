@@ -1,20 +1,23 @@
 import React from "react";
-import { Image, TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity, ViewProps, StyleProp } from "react-native";
 import Text from "../CText";
+import styles from "./styles";
+import { GLOBAL } from "../../styles/global";
 
 const backArrow = require("../..//assets/images/arrow-left.png");
 
 interface Props {
   onPress?: () => void;
+  style?: StyleProp<ViewProps>;
 }
 
-const backButton: React.FC<Props> = ({ onPress }) => {
+const backButton: React.FC<Props> = ({ onPress, style }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={{ flex: 0, justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: 50 }}
+      style={[GLOBAL.LAYOUT.justifySpaceBetween, GLOBAL.LAYOUT.alignCenter, GLOBAL.LAYOUT.flexRow]}
     >
-      <Image style={{ width: 14, height: 14 }} source={backArrow} />
+      <Image style={styles.arrow} source={backArrow} />
       <Text text="Back" variant="subtitle1" />
     </TouchableOpacity>
   );

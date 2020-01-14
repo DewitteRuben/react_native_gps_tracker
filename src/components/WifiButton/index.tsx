@@ -1,8 +1,9 @@
 import React, { memo } from "react";
 
-import { View } from "react-native";
-
 import Icon from "react-native-vector-icons/Feather";
+import { TouchableOpacity } from "react-native";
+import { GLOBAL } from "../../styles/global";
+import styles from "./styles";
 
 interface Props {
   liveUpdate: boolean;
@@ -11,15 +12,9 @@ interface Props {
 
 const wifiButton = memo<Props>(({ liveUpdate, onToggleLive }) => {
   return (
-    <View style={{ position: "absolute", zIndex: 10, top: 0, right: -8 }}>
-      <Icon.Button
-        name={liveUpdate ? "wifi" : "wifi-off"}
-        size={30}
-        onPress={onToggleLive}
-        color="rgba(0, 0, 0, 0.54);"
-        backgroundColor="#FAFAFA"
-      />
-    </View>
+    <TouchableOpacity style={styles.mainContainer} onPress={onToggleLive}>
+      <Icon name={liveUpdate ? "wifi" : "wifi-off"} size={30} color={GLOBAL.MAIN.buttonGray} />
+    </TouchableOpacity>
   );
 });
 

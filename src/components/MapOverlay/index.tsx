@@ -1,10 +1,11 @@
 import * as React from "react";
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
+import styles from "./styles";
 
 const mapOverlay: React.FC = ({ children }) => {
   return (
-    <View style={{ zIndex: 100, position: "absolute", bottom: 20, right: 15 }}>
-      <View style={{ flex: 0, alignItems: "flex-end" }}>{children}</View>
+    <View style={styles.overlayContainer}>
+      <View style={styles.buttonContainer}>{children}</View>
     </View>
   );
 };

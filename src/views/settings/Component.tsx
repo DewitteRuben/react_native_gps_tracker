@@ -60,8 +60,8 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
 };
 
 Settings.navigationOptions = {
-  tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
-    <Icon type="FontAwesome" name="cog" color={focused ? "#ffffff" : "#30be76"} size={23} />
+  tabBarIcon: ({ focused }: RenderIconProps) => (
+    <Icon type="FontAwesome" name="cog" color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green} size={23} />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>

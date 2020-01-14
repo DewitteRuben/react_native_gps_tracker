@@ -6,6 +6,7 @@ import shortid from "shortid";
 import CText from "../CText";
 import Button from "../Button";
 import styles from "./styles";
+import { GLOBAL } from "../../styles/global";
 
 export interface ButtonData {
   onPress: () => any;
@@ -29,7 +30,7 @@ const modal: React.FC<Props> = React.memo(
           isVisible={isVisible}
         >
           <View style={styles.container}>
-            <View style={{ flex: 1, justifyContent: "center" }}>
+            <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.justifyCenter]}>
               <CText text={text} />
             </View>
             <View style={styles.content}>

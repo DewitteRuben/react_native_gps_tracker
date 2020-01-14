@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import Icon from "../Icon";
 import CircleButton from "../CircleButton";
+import { GLOBAL } from "../../styles/global";
 
 interface Props {
   onPress: () => void;
@@ -10,7 +11,12 @@ interface Props {
 const locationFAB = memo<Props>(({ onPress, isFollowing }) => {
   return (
     <CircleButton onPress={onPress}>
-      <Icon type="MaterialIcons" color={isFollowing ? "red" : "rgba(0, 0, 0, 0.54);"} size={32} name="my-location" />
+      <Icon
+        type="MaterialIcons"
+        color={isFollowing ? GLOBAL.MAIN.green : GLOBAL.MAIN.buttonGray}
+        size={32}
+        name="my-location"
+      />
     </CircleButton>
   );
 });

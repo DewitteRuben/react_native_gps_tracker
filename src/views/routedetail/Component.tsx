@@ -14,6 +14,7 @@ import { RouteData, StoreState } from "../../redux/store/types";
 import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOverlay } from "../../components";
 import { typeToIconMap, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { getModalButtons } from "../../utils/modal";
+import styles from "./styles";
 
 interface Props {
   routes: RouteData[];
@@ -99,12 +100,14 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     }
   };
 
+  const parsedIconName = typeToIconMap[method.toLowerCase() as TravelingMethod];
+
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 25 }}>
-        <View style={{ paddingVertical: 20, flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
+    <View style={GLOBAL.LAYOUT.container}>
+      <View style={styles.mainContainer}>
+        <View style={[styles.topContainer, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
           <BackArrowButton onPress={backHandler} />
-          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between", width: 60 }}>
+          <View style={[styles.actionsContainer, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
             <TouchableOpacity onPress={() => navigate("EditRoute", { routeId: id })}>
               <Icon name="pencil" size={21} type="FontAwesome" />
             </TouchableOpacity>
@@ -114,36 +117,24 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           </View>
         </View>
         <Text text={title} bold variant="h2" />
-        <View style={{ flex: 0, justifyContent: "space-between", flexDirection: "row", marginVertical: 10 }}>
+        <View style={[styles.fromToContainer, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
           <Text variant="h3" text={`From ${start}`} />
           <Text variant="h3" text={`To ${end}`} />
         </View>
         <View
-          style={[
-            GLOBAL.LAYOUT.shadow,
-            {
-              padding: 15,
-              marginBottom: 35,
-              flex: 0,
-              flexDirection: "row",
-              justifyContent: "space-between"
-            }
-          ]}
+          style={[GLOBAL.LAYOUT.shadow, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween, styles.infoContainer]}
         >
-          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
-            <Icon type="FontAwesome5" size={24} name={typeToIconMap[method.toLowerCase() as TravelingMethod]} />
-            <Text style={{ marginLeft: 5 }} text={method} />
+          <View style={[GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
+            <Icon style={styles.icon} type="FontAwesome5" size={24} name={parsedIconName} />
+            <Text text={method} />
           </View>
-          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
-            <Icon type="FontAwesome5" size={24} name="route" />
-            <Text
-              style={{ marginLeft: 5 }}
-              text={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
-            />
+          <View style={[GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
+            <Icon style={styles.icon} type="FontAwesome5" size={24} name="route" />
+            <Text text={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`} />
           </View>
-          <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between" }}>
-            <Icon type="Feather" size={24} name="clock" />
-            <Text style={{ marginLeft: 5 }} text={prettyDuration(duration)} />
+          <View style={[GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
+            <Icon style={styles.icon} type="Feather" size={24} name="clock" />
+            <Text text={prettyDuration(duration)} />
           </View>
         </View>
       </View>
@@ -156,7 +147,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           <MapboxGL.Callout title={end} />
         </MapboxGL.PointAnnotation>
         <MapboxGL.ShapeSource id="routeSource" shape={geoJSON}>
-          <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }} />
+          <MapboxGL.LineLayer id="routeLine" style={GLOBAL.MAP.line} />
         </MapboxGL.ShapeSource>
       </MapboxGL.MapView>
       <Modal

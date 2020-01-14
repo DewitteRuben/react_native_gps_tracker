@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 
 const circleButton = StyleSheet.create({
   primary: {
-    flex: 0,
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",

@@ -11,6 +11,7 @@ import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";
 import { durationToTime, msPerMeterToUnitPerHour } from "../../utils/time";
 import { metersToUnit } from "../../utils/units";
+import styles from "./styles";
 
 interface NavigationBottomTabScreenComponent {
   navigationOptions?: NavigationScreenConfig<
@@ -79,28 +80,18 @@ const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
 
   return (
     <View style={GLOBAL.LAYOUT.container}>
-      <View
-        style={{
-          width: "100%",
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          backgroundColor: GLOBAL.MAIN.green,
-          flex: 0,
-          flexDirection: "row",
-          justifyContent: "space-between"
-        }}
-      >
-        <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-          <View style={{ flex: 0, alignItems: "center" }}>
+      <View style={styles.topBar}>
+        <View style={styles.barContainer}>
+          <View style={GLOBAL.LAYOUT.alignCenter}>
             <Text variant="h3" white text={formattedDistance} />
             <Text variant="h3" white text={distanceUnit} />
           </View>
         </View>
-        <View style={{ flex: 0, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <View style={styles.barContainer}>
           <Text variant="h1" white text={formattedTime} />
         </View>
-        <View style={{ flex: 0, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-          <View style={{ flex: 0, alignItems: "center" }}>
+        <View style={styles.barContainer}>
+          <View style={GLOBAL.LAYOUT.alignCenter}>
             <Text variant="h3" white text={distancePerHour.toFixed(2)} />
             <Text variant="h3" white text={`${distanceUnit}/h`} />
           </View>
@@ -112,8 +103,8 @@ const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
 };
 
 Map.navigationOptions = {
-  tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
-    <Icon type="Foundation" name="map" color={focused ? "#ffffff" : "#30be76"} size={23} />
+  tabBarIcon: ({ focused }: RenderIconProps) => (
+    <Icon type="Foundation" name="map" color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green} size={23} />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, NavigationParams>, unknown>

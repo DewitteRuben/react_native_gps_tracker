@@ -6,6 +6,7 @@ import { SaveRouteForm, CText as Text, Spinner, BackArrowButton, LoadingOverlay 
 import { GLOBAL } from "../../styles/global";
 import { RouteData, StoreState } from "../../redux/store/types";
 import { ISaveRouteForm } from "../../components/SaveRouteForm";
+import styles from "./styles";
 
 interface Props {
   getRoutesById: (id: string) => RouteData;
@@ -45,7 +46,7 @@ const EditRoute: React.FC<Props> = ({ getRoutesById, updateRoute }) => {
 
   return (
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
-      <View style={{ paddingVertical: 20 }}>
+      <View style={styles.backArrowContainer}>
         <BackArrowButton onPress={backHandler} />
       </View>
       <Text text="Edit route" bold variant="h2" />

@@ -183,7 +183,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
         <MapboxGL.Camera zoomLevel={12} followZoomLevel={12} followUserLocation={followUser} followUserMode="normal" />
         {geojsonFeature && (
           <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
-            <MapboxGL.LineLayer id="routeLine" style={{ lineWidth: 3, lineColor: "#F7455D" }} />
+            <MapboxGL.LineLayer id="routeLine" style={GLOBAL.MAP.line} />
           </MapboxGL.ShapeSource>
         )}
         <MapboxGL.UserLocation

@@ -11,6 +11,8 @@ import moment from "moment";
 import { RouteData } from "../../redux/store/types";
 import { prettyDuration, metersToUnit } from "../../utils/units";
 import { CText as Text, Icon, RouteItem, CText } from "../../components";
+import styles from "./styles";
+import { GLOBAL } from "../../styles/global";
 
 interface Props {
   routes: RouteData[];
@@ -34,16 +36,18 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
 
   return (
     <>
-      <View style={{ paddingHorizontal: 20 }}>
-        <CText bold variant="h2" text="Saved Routes" style={{ marginBottom: 15 }} />
+      <View style={styles.titleContainer}>
+        <CText bold variant="h2" text="Saved Routes" />
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={GLOBAL.LAYOUT.container}>
         <FlatList
           data={routes}
-          contentContainerStyle={{ padding: 20 }}
-          ItemSeparatorComponent={() => <View style={{ margin: 10 }} />}
+          contentContainerStyle={styles.contentContainer}
+          ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
           renderItem={({ item }) => {
             const { title, method, start, end, distance, duration, id, date } = item;
+            const formattedDate = moment(date).format("LLL");
+
             return (
               <RouteItem
                 onPress={viewRoute(id)}
@@ -51,7 +55,7 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
                 type={method}
                 startPoint={start}
                 endPoint={end}
-                date={moment(date).format("LLL")}
+                date={formattedDate}
                 distance={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
                 duration={prettyDuration(duration)}
               />
@@ -65,8 +69,8 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
 };
 
 Routes.navigationOptions = {
-  tabBarIcon: ({ focused, horizontal, tintColor }: RenderIconProps) => (
-    <Icon type="FontAwesome5" name="route" color={focused ? "#ffffff" : "#30be76"} size={23} />
+  tabBarIcon: ({ focused }: RenderIconProps) => (
+    <Icon type="FontAwesome5" name="route" color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green} size={23} />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>

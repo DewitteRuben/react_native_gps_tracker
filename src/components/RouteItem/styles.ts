@@ -1,19 +1,13 @@
 import { StyleSheet, Platform, ColorPropType, AdSupportIOS } from "react-native";
 
 const card = StyleSheet.create({
-  default: {
-    flex: 0,
-    padding: 15,
-    shadowColor: "#000",
-    backgroundColor: "#ffffff",
-    shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7
-  }
+  container: {
+    padding: 15
+  },
+  firstContainer: { flexDirection: "row", justifyContent: "space-between" },
+  middleContainer: { flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 5 },
+  lastContainer: { flexDirection: "row", justifyContent: "space-between" },
+  travelInfo: { marginBottom: 10 }
 });
 
 export default card;

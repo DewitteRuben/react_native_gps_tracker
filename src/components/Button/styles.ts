@@ -2,7 +2,6 @@ import { StyleSheet, Platform, ColorPropType } from "react-native";
 
 const button = StyleSheet.create({
   primary: {
-    flex: 0,
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",

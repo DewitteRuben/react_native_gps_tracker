@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Picker, View } from "react-native";
 import shortid from "shortid";
 import Input from "../Input";
+import { GLOBAL } from "../../styles/global";
+import styles from "./styles";
 
 export interface DropdownData {
   label: string;
@@ -42,13 +44,9 @@ const Dropdown = memo<Props>(({ data, label, defaultValue, onChangeText }) => {
   );
 
   return (
-    <View style={{ position: "relative" }}>
+    <View style={GLOBAL.LAYOUT.relativePos}>
       <Input label={label} value=" " editable={false} />
-      <Picker
-        style={{ position: "absolute", top: 17, left: 4, right: 0, zIndex: 100 }}
-        onValueChange={handleValueChange}
-        selectedValue={defaultValue}
-      >
+      <Picker style={styles.picker} onValueChange={handleValueChange} selectedValue={defaultValue}>
         {pickerItems}
       </Picker>
     </View>
