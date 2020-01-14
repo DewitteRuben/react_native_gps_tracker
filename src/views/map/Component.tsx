@@ -6,7 +6,6 @@ import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/types
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
-import { computeDistanceBetween } from "spherical-geometry-js";
 import { CText as Text, Icon } from "../../components";
 import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";
@@ -53,19 +52,13 @@ const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
   const [distancePerHour, setDistancePerHour] = useState(0);
   const [tracking, setTracking] = useState(false);
 
-  const onTimerUpdate = (duration: number) => {
+  const onTimerUpdate = useCallback((duration: number) => {
     setElapsedTime(duration);
-  };
+  }, []);
 
-  const onRouteUpdate = (route: MapboxGL.Coordinates[]) => {
-    const start = route[0];
-    const end = route[route.length - 1];
-
-    const from = { lat: start.latitude, long: start.longitude };
-    const to = { lat: end.latitude, long: end.longitude };
-    const distance = computeDistanceBetween(from, to);
+  const onRouteUpdate = useCallback((route: MapboxGL.Coordinates[], distance: number) => {
     setElapsedDistance(distance);
-  };
+  }, []);
 
   const formattedTime = durationToTime(elapsedTime);
 

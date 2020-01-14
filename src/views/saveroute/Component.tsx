@@ -28,9 +28,10 @@ const formKeyToPrettyName: { [key: string]: string } = {
 const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
   const { navigate } = useNavigation();
 
-  const distance: { start: MapboxGL.Coordinates; end: MapboxGL.Coordinates } = useNavigationParam("distance");
+  const distance: number = useNavigationParam("distance");
   const duration: number = useNavigationParam("duration");
   const route: MapboxGL.Coordinates[] = useNavigationParam("route");
+
   const didMount = useRef(false);
 
   const [isModalVisible, setModalVisibility] = useState(false);
@@ -53,15 +54,6 @@ const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
       navigate("RouteDetail", { routeId: id });
     }
   }, [routeState, navigate]);
-
-  const distanceInMeters = useMemo(() => {
-    const { start } = distance;
-    const { end } = distance;
-
-    const from = { lat: start.latitude, long: start.longitude };
-    const to = { lat: end.latitude, long: end.longitude };
-    return geometry.computeDistanceBetween(from, to);
-  }, [distance]);
 
   const onModalClose = useCallback(() => setModalVisibility(false), []);
 
@@ -111,7 +103,7 @@ const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
     <>
       <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
         <Text text="Save route" bold variant="h2" />
-        <SaveRouteForm distance={distanceInMeters} onSubmit={onRouteSave} duration={duration} />
+        <SaveRouteForm distance={distance} onSubmit={onRouteSave} duration={duration} />
       </View>
       <Modal
         isVisible={isModalVisible}

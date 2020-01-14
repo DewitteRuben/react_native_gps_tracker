@@ -3,6 +3,7 @@ import { View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { useNavigation } from "react-navigation-hooks";
+import { computeDistanceBetween } from "spherical-geometry-js";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import { MapOverlay, Modal, TrackingFAB, LocationFAB, WifiButton } from "..";
@@ -14,7 +15,7 @@ let prevCoords = { longitude: 0, latitude: 0 };
 
 export interface Props {
   onTimerUpdate?: (duration: number) => void;
-  onRouteUpdate?: (route: MapboxGL.Coordinates[]) => void;
+  onRouteUpdate?: (route: MapboxGL.Coordinates[], distance: number) => void;
   onTrackToggle?: (tracking: boolean) => void;
 }
 
@@ -26,6 +27,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
 
   const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
   const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
+  const [computedDistance, setComputedDistance] = useState(0);
 
   const [isConcludeModalVisible, setConcludeModalVisibility] = useState(false);
   const [isSaveModalVisible, setSaveModalVisibility] = useState(false);
@@ -102,24 +104,16 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
     }
 
     const currentRoute = route.map(e => ({ ...e })); // deep copy
-
-    const startingLatLong = currentRoute[0];
-    const endLatLong = currentRoute[currentRoute.length - 1];
-
-    if (!(startingLatLong && endLatLong)) {
-      return;
-    }
-
     const elapsedTime = preciseTimer.getElapsedTime();
 
     clearRoute();
 
     navigate("SaveRoute", {
       duration: elapsedTime,
-      distance: { start: startingLatLong, end: endLatLong },
+      distance: computedDistance,
       route: currentRoute
     });
-  }, [route, clearRoute, navigate]);
+  }, [route, clearRoute, navigate, computedDistance]);
 
   const concludeModalButtons = useMemo(
     () =>
@@ -148,7 +142,19 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
             fbUpdateLastCoords(location.coords);
             fbUpdateCoords(newRoute);
           }
-          onRouteUpdate(newRoute);
+
+          const start = newRoute[0];
+          const end = newRoute[newRoute.length - 1];
+
+          let distance = computedDistance;
+          if (start && end) {
+            const from = { lat: start.latitude, long: start.longitude };
+            const to = { lat: end.latitude, long: end.longitude };
+            distance = computeDistanceBetween(from, to);
+          }
+
+          onRouteUpdate(newRoute, distance);
+          setComputedDistance(distance);
           setRoute(newRoute);
           setTimeout(() => {
             setGeoJsonFeature(routeToFeature(newRoute));
@@ -158,7 +164,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
         prevCoords = location.coords;
       }
     },
-    [isTracking, route, liveUpdate, onRouteUpdate]
+    [isTracking, route, liveUpdate, onRouteUpdate, computedDistance]
   );
 
   const toggleFollowUser = () => {
