@@ -5,11 +5,10 @@ import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/types
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
-// eslint-disable-next-line import/no-unresolved
-import { DropDownData } from "react-native-material-dropdown";
 import { GLOBAL } from "../../styles/global";
 import { CText as Text, Icon, Dropdown } from "../../components";
 import { IUpdateDistanceUnitAction } from "../../redux/actions/settings";
+import { DropDownData } from "../../components/Dropdown/types";
 
 interface NavigationBottomTabScreenComponent {
   navigationOptions?: NavigationScreenConfig<
@@ -31,8 +30,12 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
   const { distanceUnit, updateDistanceUnit, trackingId } = props;
 
   const handleDropdownChange = useCallback(
-    (item: DropDownData) => {
-      updateDistanceUnit(item.value);
+    (item: DropDownData | string) => {
+      if (typeof item === "string") {
+        updateDistanceUnit(item);
+      } else {
+        updateDistanceUnit(item.value);
+      }
     },
     [updateDistanceUnit]
   );
