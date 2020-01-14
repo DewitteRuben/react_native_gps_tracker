@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, memo, useEffect } from "react";
-import { View } from "react-native";
+import { View, InteractionManager } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { useNavigation } from "react-navigation-hooks";
@@ -10,6 +10,7 @@ import { MapOverlay, Modal, TrackingFAB, LocationFAB, WifiButton } from "..";
 import { getModalButtons } from "../../utils/modal";
 import { GLOBAL } from "../../styles/global";
 import { PreciseTimer } from "../../utils/time";
+import { computeRouteDistance } from "../../utils/units";
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
@@ -142,23 +143,16 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
             fbUpdateLastCoords(location.coords);
             fbUpdateCoords(newRoute);
           }
+          setRoute(newRoute);
+          const geoJSONFeature = routeToFeature(newRoute);
 
-          const start = newRoute[0];
-          const end = newRoute[newRoute.length - 1];
+          setTimeout(() => {
+            setGeoJsonFeature(geoJSONFeature);
+          }, 1000);
 
-          let distance = computedDistance;
-          if (start && end) {
-            const from = { lat: start.latitude, long: start.longitude };
-            const to = { lat: end.latitude, long: end.longitude };
-            distance = computeDistanceBetween(from, to);
-          }
-
+          const distance = computeRouteDistance(newRoute) || computedDistance;
           onRouteUpdate(newRoute, distance);
           setComputedDistance(distance);
-          setRoute(newRoute);
-          setTimeout(() => {
-            setGeoJsonFeature(routeToFeature(newRoute));
-          }, 1000);
         }
 
         prevCoords = location.coords;

@@ -1,4 +1,7 @@
 import prettyMilliseconds from "pretty-ms";
+import { RouteData } from "../redux/store/types";
+import MapboxGL from "@react-native-mapbox-gl/maps";
+import { computeDistanceBetween } from "spherical-geometry-js";
 
 const YARDS_IN_METERS = 1.093613;
 const METERS_IN_KILOMETERS = 1000;
@@ -26,3 +29,14 @@ export const metersToUnit = (distance: number, distanceUnit: string) => {
 };
 
 export const prettyDuration = (duration: number) => prettyMilliseconds(duration);
+
+export const computeRouteDistance = (route: MapboxGL.Coordinates[]) => {
+  const start = route[0];
+  const end = route[route.length - 1];
+  if (start && end) {
+    const from = { lat: start.latitude, long: start.longitude };
+    const to = { lat: end.latitude, long: end.longitude };
+    return computeDistanceBetween(from, to);
+  }
+  return 0;
+};
