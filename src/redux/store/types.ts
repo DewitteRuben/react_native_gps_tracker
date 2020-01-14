@@ -20,8 +20,8 @@ export interface RouteState {
 
 export interface RouteDetail {
   title: string;
-  distance: string;
-  duration: string;
+  distance: number;
+  duration: number;
   method: TravelingMethod;
   start: string;
   end: string;

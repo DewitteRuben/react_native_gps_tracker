@@ -6,7 +6,7 @@ import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/types
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
-import { computeDistanceBetween, convertLatLng } from "spherical-geometry-js";
+import { computeDistanceBetween } from "spherical-geometry-js";
 import { CText as Text, Icon } from "../../components";
 import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";
@@ -69,7 +69,7 @@ const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
 
   const formattedTime = durationToTime(elapsedTime);
 
-  const formattedDistance = useMemo(() => metersToUnit(elapsedDistance.toString(), distanceUnit), [
+  const formattedDistance = useMemo(() => metersToUnit(elapsedDistance, distanceUnit).toFixed(2), [
     distanceUnit,
     elapsedDistance
   ]);

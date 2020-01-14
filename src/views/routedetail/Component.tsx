@@ -136,7 +136,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           </View>
           <View style={{ flex: 0, width: 108, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="FontAwesome5" size={24} name="route" />
-            <Text text={`${metersToUnit(distance, distanceUnit)} ${distanceUnit}`} />
+            <Text text={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`} />
           </View>
           <View style={{ flex: 0, width: 70, flexDirection: "row", justifyContent: "space-between" }}>
             <Icon type="Feather" size={24} name="clock" />

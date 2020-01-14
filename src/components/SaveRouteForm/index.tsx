@@ -11,8 +11,8 @@ import Dropdown, { DropdownData } from "../Dropdown";
 
 interface Props {
   title?: string;
-  distance?: string;
-  duration?: string;
+  distance?: number;
+  duration?: number;
   method?: TravelingMethod;
   start?: string;
   end?: string;
@@ -21,28 +21,24 @@ interface Props {
 
 export interface ISaveRouteForm {
   title?: string;
-  distance?: string;
-  duration?: string;
+  distance?: number;
+  duration?: number;
   method?: TravelingMethod;
   start?: string;
   end?: string;
-  [key: string]: string | undefined;
 }
 
-const SaveRouteForm = React.memo<Props>(({ title, distance, duration, method, start, end, onSubmit }) => {
+const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, start, end, onSubmit }) => {
   const [formState, setFormState] = useState<ISaveRouteForm>({ title, distance, duration, method, start, end });
   const [helperTextVisiblity, setHelperTextVisibility] = useState(false);
 
   const { distanceUnit } = store.getState().settings;
 
-  const updateformState = useCallback(
-    (propName: string) => {
-      return (value: string) => {
-        setFormState({ ...formState, [propName]: value });
-      };
-    },
-    [formState]
-  );
+  const updateformState = useCallback((propName: string) => {
+    return (value: string) => {
+      setFormState((state: ISaveRouteForm) => ({ ...state, [propName]: value }));
+    };
+  }, []);
 
   const onPress = () => {
     setHelperTextVisibility(true);
@@ -53,7 +49,7 @@ const SaveRouteForm = React.memo<Props>(({ title, distance, duration, method, st
 
   const getHelperText = (propName: string) =>
     helperTextVisiblity && (
-      <HelperText type="error" visible={!formState[propName]?.length}>
+      <HelperText type="error" visible={!formState[propName]}>
         Required
       </HelperText>
     );
@@ -64,7 +60,6 @@ const SaveRouteForm = React.memo<Props>(({ title, distance, duration, method, st
   );
 
   const handleDropDown = (item: DropdownData) => updateformState("method")(item.value);
-
   return (
     <>
       <View style={{ marginBottom: 20 }}>
@@ -106,19 +101,19 @@ const SaveRouteForm = React.memo<Props>(({ title, distance, duration, method, st
         <Input
           editable={false}
           label="Distance"
-          value={`${metersToUnit(distance || "0", distanceUnit)} ${distanceUnit}`}
+          value={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
           onChangeText={updateformState("distance")}
         />
         <Input
           editable={false}
           label="Duration"
-          value={prettyDuration(duration || "0")}
+          value={prettyDuration(duration)}
           onChangeText={updateformState("duration")}
         />
       </View>
       <Button text="Save route" block onPress={onPress} />
     </>
   );
-});
+};
 
 export default SaveRouteForm;
