@@ -12,8 +12,12 @@ const useLocationPermission = () => {
 
   useEffect(() => {
     const requestPermissions = async () => {
-      const hasBeenGranted = await MapboxGL.requestAndroidLocationPermissions();
-      setHasPermission(hasBeenGranted);
+      try {
+        const hasBeenGranted = await MapboxGL.requestAndroidLocationPermissions();
+        setHasPermission(hasBeenGranted);
+      } catch (error) {
+        setHasPermission(false);
+      }
     };
 
     requestPermissions();
