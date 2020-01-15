@@ -38,6 +38,9 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
   const [isTracking, setTracking] = useState(false);
   const [minDisplacement, setMinDisplacement] = useState(0);
 
+  const [lastPosition, setLastPosition] = useState<MapboxGL.Coordinates>();
+  const [camera, setCamera] = useState<MapboxGL.Camera>();
+
   useEffect(() => {
     onTrackToggle(isTracking);
   }, [isTracking, onTrackToggle]);
@@ -130,20 +133,25 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
     [clearRoute, onRouteSave]
   );
 
+  useEffect(() => {
+    if (camera && followUser && lastPosition) {
+      const { longitude, latitude } = lastPosition;
+      camera.moveTo([longitude, latitude], 1000);
+    }
+  }, [followUser, camera, lastPosition]);
+
   const onUserlocationUpdate = useCallback(
     (location: MapboxGL.Location) => {
       if (prevCoords.longitude === 0 && prevCoords.latitude === 0) {
         prevCoords = location.coords;
       }
 
+      setLastPosition(location.coords);
       if (didCoordsUpdate(prevCoords, location.coords)) {
         if (isTracking) {
           const newRoute = [...route, ...(route.length < 2 ? [prevCoords] : []), location.coords];
-          if (liveUpdate) {
-            fbUpdateLastCoords(location.coords);
-            fbUpdateCoords(newRoute);
-          }
           setRoute(newRoute);
+
           const geoJSONFeature = routeToFeature(newRoute);
 
           setTimeout(() => {
@@ -153,6 +161,11 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
           const distance = computeRouteDistance(newRoute) || computedDistance;
           onRouteUpdate(newRoute, distance);
           setComputedDistance(distance);
+
+          if (liveUpdate) {
+            fbUpdateLastCoords(location.coords);
+            fbUpdateCoords(newRoute);
+          }
         }
 
         prevCoords = location.coords;
@@ -161,26 +174,43 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
     [isTracking, route, liveUpdate, onRouteUpdate, computedDistance]
   );
 
-  const toggleFollowUser = () => {
+  const toggleFollowUser = useCallback(() => {
     setFollowUser(follow => !follow);
-  };
+  }, []);
 
   const onDidFinishRenderingMapFully = useCallback(() => {
-    setMinDisplacement(10);
+    setMinDisplacement(5);
   }, []);
 
   const routeLength = useMemo(() => {
     return !!route.length;
   }, [route]);
 
+  const handleCameraRef = useCallback((ref: MapboxGL.Camera) => {
+    setCamera(ref);
+  }, []);
+
+  const onTouchMove = useCallback(() => {
+    if (followUser) {
+      setFollowUser(false);
+    }
+  }, [followUser]);
+
   return (
     <View style={GLOBAL.LAYOUT.container}>
       <MapboxGL.MapView
         style={GLOBAL.LAYOUT.container}
+        onTouchMove={onTouchMove}
         onDidFinishRenderingMapFully={onDidFinishRenderingMapFully}
         animated
       >
-        <MapboxGL.Camera zoomLevel={12} followZoomLevel={12} followUserLocation={followUser} followUserMode="normal" />
+        <MapboxGL.Camera
+          followUserMode="normal"
+          followUserLocation={false}
+          ref={handleCameraRef}
+          zoomLevel={12}
+          followZoomLevel={12}
+        />
         {geojsonFeature && (
           <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
             <MapboxGL.LineLayer id="routeLine" style={GLOBAL.MAP.line} />
