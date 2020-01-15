@@ -1,6 +1,7 @@
 import prettyMilliseconds from "pretty-ms";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { computeDistanceBetween } from "spherical-geometry-js";
+import _ from "lodash";
 
 const YARDS_IN_METERS = 1.093613;
 const METERS_IN_KILOMETERS = 1000;
@@ -24,7 +25,7 @@ const distanceUnitMap: { [key: string]: (m: number) => number } = {
 };
 
 export const metersToUnit = (distance: number, distanceUnit: string) => {
-  return distanceUnitMap[distanceUnit](distance);
+  return _.round(distanceUnitMap[distanceUnit](distance), 2);
 };
 
 export const prettyDuration = (duration: number) => prettyMilliseconds(duration);

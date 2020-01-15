@@ -1,4 +1,5 @@
 import moment from "moment";
+import _ from "lodash";
 
 const interval = 1000;
 
@@ -67,7 +68,11 @@ const momentToTime = (mm: moment.Duration) => [mm.hours(), mm.minutes(), mm.seco
 const formatTime = (time: number[]) => time.map(item => item.toString().padStart(2, "0")).join(":");
 const durationToTime = (ms: number) => formatTime(momentToTime(durationToMoment(ms)));
 
-const msPerMeterToUnitPerHour = (distance: number, duration: number, distanceUnit: string) =>
-  (distance / duration) * (distanceUnit === "km" ? 3600 : 2236.93629);
+const msPerMeterToUnitPerHour = (distance: number, duration: number, distanceUnit: string, precision = 2) => {
+  if (!distance && !duration) {
+    return _.round(0, precision);
+  }
+  return _.round((distance / duration) * (distanceUnit === "km" ? 3600 : 2236.93629), precision);
+};
 
 export { durationToTime, msPerMeterToUnitPerHour };

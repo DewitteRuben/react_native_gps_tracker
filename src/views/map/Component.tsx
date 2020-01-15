@@ -49,8 +49,8 @@ const useInterval = (callback: () => void, delay: number) => {
 
 const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [elapsedDistance, setElapsedDistance] = useState(0);
-  const [distancePerHour, setDistancePerHour] = useState(0);
+  const [elapsedDistance, setElapsedDistance] = useState(0.0);
+  const [distancePerHour, setDistancePerHour] = useState(0.0);
   const [tracking, setTracking] = useState(false);
 
   const onTimerUpdate = useCallback((duration: number) => {
@@ -63,10 +63,7 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit }) => {
 
   const formattedTime = durationToTime(elapsedTime);
 
-  const formattedDistance = useMemo(() => metersToUnit(elapsedDistance, distanceUnit).toFixed(2), [
-    distanceUnit,
-    elapsedDistance
-  ]);
+  const formattedDistance = useMemo(() => metersToUnit(elapsedDistance, distanceUnit), [distanceUnit, elapsedDistance]);
 
   const onTrackToggle = useCallback((t: boolean) => {
     setTracking(t);
@@ -92,7 +89,7 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit }) => {
         </View>
         <View style={styles.barContainer}>
           <View style={GLOBAL.LAYOUT.alignCenter}>
-            <Text variant="h3" white text={distancePerHour.toFixed(2)} />
+            <Text variant="h3" white text={distancePerHour} />
             <Text variant="h3" white text={`${distanceUnit}/h`} />
           </View>
         </View>

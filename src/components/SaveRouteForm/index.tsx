@@ -100,7 +100,7 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
         <Input
           editable={false}
           label="Distance"
-          value={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
+          value={`${metersToUnit(distance, distanceUnit)} ${distanceUnit}`}
           onChangeText={updateformState("distance")}
         />
         <Input

@@ -57,7 +57,7 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
                 startPoint={start}
                 endPoint={end}
                 date={formattedDate}
-                distance={`${metersToUnit(distance, distanceUnit).toFixed(2)} ${distanceUnit}`}
+                distance={`${metersToUnit(distance, distanceUnit)} ${distanceUnit}`}
                 duration={prettyDuration(duration)}
               />
             );
