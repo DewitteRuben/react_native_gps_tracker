@@ -47,7 +47,7 @@ const useInterval = (callback: () => void, delay: number) => {
   }, [delay]);
 };
 
-const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
+const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [elapsedDistance, setElapsedDistance] = useState(0);
   const [distancePerHour, setDistancePerHour] = useState(0);
@@ -100,7 +100,7 @@ const Map: NavigationBottomTabScreenFC = ({ distanceUnit }) => {
       <TrackingMap onTrackToggle={onTrackToggle} onTimerUpdate={onTimerUpdate} onRouteUpdate={onRouteUpdate} />
     </View>
   );
-};
+});
 
 Map.navigationOptions = {
   tabBarIcon: ({ focused }: RenderIconProps) => (
