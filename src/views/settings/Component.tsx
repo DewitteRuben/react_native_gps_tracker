@@ -58,7 +58,7 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
         data={distanceUnitsData}
         defaultValue={distanceUnit}
       />
-      <WebRTC />
+      <WebRTC userId={trackingId} />
     </View>
   );
 };

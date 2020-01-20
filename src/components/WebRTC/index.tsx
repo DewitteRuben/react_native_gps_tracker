@@ -6,12 +6,18 @@ import { useMediaDevice, useMediaStream, useSocket, useRTCPeerConnection } from 
 
 const config = { iceServers: [{ url: "stun:stun.l.google.com:19302" }] };
 
+interface Props {
+  userId: string;
+}
+
 const deviceSelector = { facing: "front" };
-const WebRTC: React.FC = () => {
+const WebRTC: React.FC<Props> = ({ userId }) => {
   const device = useMediaDevice(deviceSelector);
   const mediaStream = useMediaStream(true, device?.deviceId);
 
   const socket = useSocket("http://10.0.2.2:80");
+  socket.emit("auth", userId);
+
   const { pc, remoteStream } = useRTCPeerConnection(config, socket);
 
   return (
