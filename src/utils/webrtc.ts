@@ -56,7 +56,7 @@ const useMediaDevice = (pObject: Partial<MediaDevice>) => {
     };
 
     asyncGetDevices();
-  }, []);
+  }, [pObject]);
 
   return mediaDevice;
 };
@@ -75,7 +75,7 @@ const useMediaStream = (front?: boolean, deviceId?: string) => {
     };
 
     getDeviceStream();
-  }, []);
+  }, [front, deviceId]);
 
   return deviceStream;
 };
