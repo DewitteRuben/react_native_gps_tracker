@@ -15,6 +15,7 @@ import LoadingOverlay from "./LoadingOverlay";
 import TrackingFAB from "./TrackFAB";
 import LocationFAB from "./LocationFAB";
 import WifiButton from "./WifiButton";
+import WebRTC from "./WebRTC";
 
 export {
   Button,
@@ -33,5 +34,6 @@ export {
   LoadingOverlay,
   WifiButton,
   TrackingFAB,
-  LocationFAB
+  LocationFAB,
+  WebRTC
 };

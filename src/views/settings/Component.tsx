@@ -6,7 +6,7 @@ import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { GLOBAL } from "../../styles/global";
-import { CText as Text, Icon, Dropdown } from "../../components";
+import { CText as Text, Icon, Dropdown, WebRTC } from "../../components";
 import { IUpdateDistanceUnitAction } from "../../redux/actions/settings";
 import { DropDownData } from "../../components/Dropdown/types";
 
