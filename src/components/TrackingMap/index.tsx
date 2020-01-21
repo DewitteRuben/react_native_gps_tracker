@@ -148,6 +148,10 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
 
       setLastPosition(location.coords);
       if (didCoordsUpdate(prevCoords, location.coords)) {
+        if (liveUpdate) {
+          fbUpdateLastCoords(location.coords);
+        }
+
         if (isTracking) {
           const newRoute = [...route, ...(route.length < 2 ? [prevCoords] : []), location.coords];
           setRoute(newRoute);
@@ -163,7 +167,6 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
           setComputedDistance(distance);
 
           if (liveUpdate) {
-            fbUpdateLastCoords(location.coords);
             fbUpdateCoords(newRoute);
           }
         }

@@ -15,7 +15,7 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
   const device = useMediaDevice(deviceSelector);
   const mediaStream = useMediaStream(true, device?.deviceId);
 
-  const socket = useSocket("http://10.0.2.2:80");
+  const socket = useSocket("http://192.168.1.32:80");
   socket.emit("auth", userId);
 
   const { pc, remoteStream } = useRTCPeerConnection(config, socket);
