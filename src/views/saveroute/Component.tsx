@@ -109,7 +109,6 @@ const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
       <Modal
         isVisible={isModalVisible}
         onSwipeComplete={onModalClose}
-        swipeDirection="up"
         onBackdropPress={onModalClose}
         text={modalValidationMessage}
         buttons={modalButtons}

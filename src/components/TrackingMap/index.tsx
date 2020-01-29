@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useMemo, memo, useEffect } from "react";
-import whyDidYouRender from "@welldone-software/why-did-you-render";
 import { View, InteractionManager } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
@@ -12,12 +11,6 @@ import { GLOBAL } from "../../styles/global";
 import { PreciseTimer } from "../../utils/time";
 import { computeRouteDistance } from "../../utils/units";
 import { ROUTES } from "../../navigators/navigation";
-
-whyDidYouRender(React, {
-  logOnDifferentValues: true,
-  titleColor: "green",
-  diffNameColor: "darkturquoise"
-});
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
@@ -207,62 +200,60 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
   }, [followUser]);
 
   return (
-    <View style={GLOBAL.LAYOUT.container}>
-      <MapboxGL.MapView
-        style={GLOBAL.LAYOUT.container}
-        onTouchMove={onTouchMove}
-        onDidFinishRenderingMapFully={onDidFinishRenderingMapFully}
-        animated
-      >
-        <MapboxGL.Camera
-          followUserMode="normal"
-          followUserLocation={false}
-          ref={handleCameraRef}
-          zoomLevel={12}
-          followZoomLevel={12}
-        />
-        {geojsonFeature && (
-          <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
-            <MapboxGL.LineLayer id="routeLine" style={GLOBAL.MAP.line} />
-          </MapboxGL.ShapeSource>
-        )}
-        <MapboxGL.UserLocation
-          minDisplacement={minDisplacement}
-          onUpdate={onUserlocationUpdate}
-          visible={hasPermission}
-          renderMode="normal"
+    <>
+      <View style={GLOBAL.LAYOUT.container}>
+        <MapboxGL.MapView
+          style={GLOBAL.LAYOUT.container}
+          onTouchMove={onTouchMove}
+          onDidFinishRenderingMapFully={onDidFinishRenderingMapFully}
           animated
-        />
-      </MapboxGL.MapView>
-      <WifiButton onToggleLive={toggleLive} liveUpdate={liveUpdate} />
-      <MapOverlay>
-        <LocationFAB isFollowing={followUser} onPress={toggleFollowUser} />
-        <TrackingFAB
-          onToggleTracking={toggleTracking}
-          onTrackFinish={onTrackFinish}
-          isTracking={isTracking}
-          hasTracked={routeLength}
-        />
-      </MapOverlay>
+        >
+          <MapboxGL.Camera
+            followUserMode="normal"
+            followUserLocation={false}
+            ref={handleCameraRef}
+            zoomLevel={12}
+            followZoomLevel={12}
+          />
+          {geojsonFeature && (
+            <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
+              <MapboxGL.LineLayer id="routeLine" style={GLOBAL.MAP.line} />
+            </MapboxGL.ShapeSource>
+          )}
+          <MapboxGL.UserLocation
+            minDisplacement={minDisplacement}
+            onUpdate={onUserlocationUpdate}
+            visible={hasPermission}
+            renderMode="normal"
+            animated
+          />
+        </MapboxGL.MapView>
+        <WifiButton onToggleLive={toggleLive} liveUpdate={liveUpdate} />
+        <MapOverlay>
+          <LocationFAB isFollowing={followUser} onPress={toggleFollowUser} />
+          <TrackingFAB
+            onToggleTracking={toggleTracking}
+            onTrackFinish={onTrackFinish}
+            isTracking={isTracking}
+            hasTracked={routeLength}
+          />
+        </MapOverlay>
+      </View>
       <Modal
         isVisible={isConcludeModalVisible}
         onSwipeComplete={onConcludeModalClose}
-        swipeDirection="up"
         onBackdropPress={onConcludeModalClose}
         text="Do you wish to conclude the current route?"
         buttons={concludeModalButtons}
       />
       <Modal
         isVisible={isSaveModalVisible}
-        swipeDirection="up"
         onBackdropPress={onSaveModalClose}
         text="Do you wish to save the route?"
         buttons={saveModalButtons}
       />
-    </View>
+    </>
   );
 });
-
-TrackingMap.whyDidYouRender = true;
 
 export default TrackingMap;

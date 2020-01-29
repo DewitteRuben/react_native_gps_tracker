@@ -154,7 +154,6 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
       <Modal
         isVisible={isModalVisible}
         onSwipeComplete={onModalClose}
-        swipeDirection="up"
         onBackdropPress={onModalClose}
         text="Do you really wish to delete the current route?"
         buttons={concludeModalButtons}

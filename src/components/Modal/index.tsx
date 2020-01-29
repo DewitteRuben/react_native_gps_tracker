@@ -19,35 +19,33 @@ interface Props extends Partial<ModalProps> {
   text: string;
 }
 
-const modal: React.FC<Props> = React.memo(
-  ({ onSwipeComplete, swipeDirection, onBackdropPress, isVisible, text, buttons }) => {
-    return (
-      <View>
-        <RNModal
-          onSwipeComplete={onSwipeComplete}
-          swipeDirection={swipeDirection}
-          onBackdropPress={onBackdropPress}
-          isVisible={isVisible}
-        >
-          <View style={styles.container}>
-            <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.justifyCenter]}>
-              <CText text={text} />
-            </View>
-            <View style={styles.content}>
-              {buttons.map((button, index) => (
-                <Button
-                  text={button.text}
-                  key={shortid()}
-                  onPress={button.onPress}
-                  containerStyle={{ ...button.style, marginHorizontal: 5 }}
-                />
-              ))}
-            </View>
-          </View>
-        </RNModal>
+const modal: React.FC<Props> = React.memo(({ onSwipeComplete, onBackdropPress, isVisible, text, buttons }) => {
+  return (
+    <RNModal
+      onSwipeComplete={onSwipeComplete}
+      useNativeDriver
+      animationIn="zoomIn"
+      hideModalContentWhileAnimating
+      onBackdropPress={onBackdropPress}
+      isVisible={isVisible}
+    >
+      <View style={styles.container}>
+        <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.justifyCenter]}>
+          <CText text={text} />
+        </View>
+        <View style={styles.content}>
+          {buttons.map((button, index) => (
+            <Button
+              text={button.text}
+              key={shortid()}
+              onPress={button.onPress}
+              containerStyle={{ ...button.style, marginHorizontal: 5 }}
+            />
+          ))}
+        </View>
       </View>
-    );
-  }
-);
+    </RNModal>
+  );
+});
 
 export default modal;

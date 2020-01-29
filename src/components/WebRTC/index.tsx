@@ -1,5 +1,4 @@
 import React, { useMemo, memo, useEffect, useState, useCallback } from "react";
-import whyDidYouRender from "@welldone-software/why-did-you-render";
 import { View } from "react-native";
 import { RTCView } from "react-native-webrtc";
 import Button from "../Button";
@@ -7,12 +6,6 @@ import { useMediaDevice, useMediaStream, useSocket, useRTCPeerConnection } from 
 import { GLOBAL } from "../../styles/global";
 import { Modal } from "..";
 import { getModalButtons } from "../../utils/modal";
-
-whyDidYouRender(React, {
-  logOnDifferentValues: true,
-  titleColor: "green",
-  diffNameColor: "darkturquoise"
-});
 
 const config = { iceServers: [{ url: "stun:stun.l.google.com:19302" }] };
 
@@ -79,7 +72,6 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
       <Modal
         isVisible={isModalVisible}
         onSwipeComplete={onModalClose}
-        swipeDirection="up"
         onBackdropPress={onModalClose}
         text="A call is being requested, do you wish to establish a connection?"
         buttons={modalButtons}
@@ -87,7 +79,5 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
     </>
   );
 };
-
-WebRTC.whyDidYouRender = true;
 
 export default WebRTC;
