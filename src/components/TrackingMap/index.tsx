@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, memo, useEffect } from "react";
+import whyDidYouRender from "@welldone-software/why-did-you-render";
 import { View, InteractionManager } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";

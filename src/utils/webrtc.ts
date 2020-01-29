@@ -51,7 +51,7 @@ const useMediaDevice = (pObject: Partial<MediaDevice>) => {
         const deviceSources = await mediaDevices.enumerateDevices();
         setDevice(deviceSources.filter(matchesKeysAndValues(pObject))[0]);
       } catch (error) {
-        setDevice(undefined);
+        console.log(error);
       }
     };
 
