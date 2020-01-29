@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, memo, useEffect } from "react";
+import whyDidYouRender from "@welldone-software/why-did-you-render";
 import { View, InteractionManager } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
@@ -11,6 +12,12 @@ import { GLOBAL } from "../../styles/global";
 import { PreciseTimer } from "../../utils/time";
 import { computeRouteDistance } from "../../utils/units";
 import { ROUTES } from "../../navigators/navigation";
+
+whyDidYouRender(React, {
+  logOnDifferentValues: true,
+  titleColor: "green",
+  diffNameColor: "darkturquoise"
+});
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
@@ -255,5 +262,7 @@ const TrackingMap: React.FC<Props> = memo(({ onTimerUpdate, onRouteUpdate, onTra
     </View>
   );
 });
+
+TrackingMap.whyDidYouRender = true;
 
 export default TrackingMap;

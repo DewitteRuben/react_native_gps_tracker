@@ -65,16 +65,23 @@ const useMediaStream = (front?: boolean, deviceId?: string) => {
   const [deviceStream, setDeviceStream] = useState<MediaStream>();
 
   useEffect(() => {
+    let didCancel = false;
     const getDeviceStream = async () => {
       try {
-        const stream = await mediaDevices.getUserMedia(getMediaDeviceConfig(front, deviceId));
-        setDeviceStream(stream);
+        if (!didCancel && front && deviceId) {
+          const stream = await mediaDevices.getUserMedia(getMediaDeviceConfig(front, deviceId));
+          setDeviceStream(stream);
+        }
       } catch (error) {
         setDeviceStream(undefined);
       }
     };
 
     getDeviceStream();
+
+    return () => {
+      didCancel = true;
+    };
   }, [front, deviceId]);
 
   return deviceStream;
@@ -104,23 +111,29 @@ const onnegotiationneeded = (pc: RTCPeerConnection, socket: SocketIOClient.Socke
   }
 };
 
-const useRTCPeerConnection = (connConfig: RTCPeerConnectionConfiguration, socket: SocketIOClient.Socket) => {
+const useRTCPeerConnection = (
+  connConfig: RTCPeerConnectionConfiguration,
+  socket: SocketIOClient.Socket,
+  stream: MediaStream
+) => {
   const [remoteStream, setRemoteStream] = useState();
   const [pc, setPc] = useState(new RTCPeerConnection(connConfig));
+  const [connectionState, setConnectionState] = useState<RTCIceConnectionState>();
+
+  pc.onicecandidate = ({ candidate }) => socket.emit("message", { candidate });
+  pc.onaddstream = event => setRemoteStream(event.stream);
+  pc.oniceconnectionstatechange = event => setConnectionState(event.target.iceConnectionState);
 
   useEffect(() => {
     pc.onnegotiationneeded = onnegotiationneeded(pc, socket);
-    pc.onicecandidate = ({ candidate }) => socket.emit("message", { candidate });
-    pc.onaddstream = event => {
-      setRemoteStream(event.stream);
-    };
-
     socket.on("message", handleWebRTCMessage(socket, pc));
 
-    return () => socket.off("message", handleWebRTCMessage(socket, pc));
-  }, [pc, socket]);
+    return () => {
+      socket.off("message");
+    };
+  }, [pc, socket, stream, remoteStream]);
 
-  return { pc, remoteStream };
+  return { pc, remoteStream, connectionState };
 };
 
 export { useRTCPeerConnection, useMediaStream, useMediaDevice, useSocket };
