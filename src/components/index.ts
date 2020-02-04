@@ -16,6 +16,7 @@ import TrackingFAB from "./TrackFAB";
 import LocationFAB from "./LocationFAB";
 import WifiButton from "./WifiButton";
 import WebRTC from "./WebRTC";
+import Checkbox from "./Checkbox";
 
 export {
   Button,
@@ -35,5 +36,6 @@ export {
   WifiButton,
   TrackingFAB,
   LocationFAB,
-  WebRTC
+  WebRTC,
+  Checkbox
 };
