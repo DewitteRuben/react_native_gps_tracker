@@ -30,6 +30,12 @@ interface NavigationBottomTabScreenComponent {
 
 interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomTabScreenComponent {}
 
+const emptyList = () => (
+  <View>
+    <Text text="No saved routes have been found." />
+  </View>
+);
+
 const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
   const { navigate } = useNavigation();
 
@@ -42,6 +48,7 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
       </View>
       <View style={GLOBAL.LAYOUT.container}>
         <FlatList
+          ListEmptyComponent={emptyList}
           data={routes}
           contentContainerStyle={styles.contentContainer}
           ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}

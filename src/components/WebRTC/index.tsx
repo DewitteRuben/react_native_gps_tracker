@@ -1,20 +1,21 @@
 import React, { useMemo, memo, useEffect, useState, useCallback } from "react";
 import { View } from "react-native";
 import { RTCView } from "react-native-webrtc";
-import Button from "../Button";
+import { connect } from "react-redux";
 import { useMediaDevice, useMediaStream, useSocket, useRTCPeerConnection } from "../../utils/webrtc";
 import { GLOBAL } from "../../styles/global";
 import { Modal } from "..";
 import { getModalButtons } from "../../utils/modal";
+import { StoreState } from "../../redux/store/types";
 
 const config = { iceServers: [{ url: "stun:stun.l.google.com:19302" }] };
 
 interface Props {
-  userId: string;
+  trackingId: string;
 }
 
 const deviceSelector = { facing: "front" };
-const WebRTC: React.FC<Props> = ({ userId }) => {
+const WebRTC: React.FC<Props> = ({ trackingId }) => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const [callAccepted, setAccepted] = useState(false);
 
@@ -28,13 +29,10 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
   }, []);
 
   const onCallAccept = useCallback(() => {
-    if (pc.getLocalStreams().length) {
-      pc.removeStream(mediaStream);
-    }
-    pc.addStream(mediaStream);
+    socket.emit("peer", { action: "established" });
     setAccepted(true);
     setModalVisibility(false);
-  }, [pc, mediaStream]);
+  }, [socket]);
 
   const modalButtons = useMemo(
     () =>
@@ -49,8 +47,8 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
   );
 
   useEffect(() => {
-    socket.emit("auth", userId);
-  }, [socket, userId]);
+    socket.emit("peer", { action: "join", data: trackingId });
+  }, [socket, trackingId]);
 
   useEffect(() => {
     socket.on("establish", () => {
@@ -63,10 +61,25 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    socket.on("established", () => {
+      if (pc.getLocalStreams().length) {
+        pc.removeStream(mediaStream);
+      }
+      pc.addStream(mediaStream);
+    });
+
+    return () => {
+      socket.off("established");
+    };
+  }, [socket, pc, mediaStream]);
+
   return (
     <>
-      <View style={GLOBAL.LAYOUT.container}>
-        {mediaStream && <RTCView style={{ flex: 1 }} streamURL={mediaStream.toURL()} />}
+      <View style={{ position: "absolute", zIndex: 50, left: 0, bottom: 30, width: 100, height: 100 }}>
+        {mediaStream && <RTCView style={GLOBAL.LAYOUT.container} streamURL={mediaStream.toURL()} />}
+      </View>
+      <View style={{ position: "absolute", zIndex: 50, right: 20, top: 30, width: 200, height: 200 }}>
         {remoteStream && callAccepted && <RTCView style={GLOBAL.LAYOUT.container} streamURL={remoteStream.toURL()} />}
       </View>
       <Modal
@@ -80,4 +93,10 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
   );
 };
 
-export default WebRTC;
+const mapStateToProps = (state: StoreState) => ({
+  trackingId: state.settings.trackingId
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WebRTC);
