@@ -11,6 +11,7 @@ export interface StoreState {
 export interface SettingsState {
   distanceUnit: string;
   trackingId: string;
+  webRTC: boolean;
 }
 
 export interface RouteState {
@@ -56,6 +57,7 @@ export type ThunkResult<R> = ThunkAction<R, StoreState, undefined, any>;
 export const ACTION_TYPES = {
   UPDATE_DISTANCE_UNIT: "UPDATE_DISTANCE_UNIT",
   UPDATE_TRACKING_ID: "UPDATE_TRACKING_ID",
+  UPDATE_WEBRTC_STATE: "UPDATE_WEBRTC_STATE",
   UPDATE_ROUTES: "UPDATE_ROUTES",
   ADD_ROUTES: "ADD_ROUTES",
   SET_ROUTE_SAVING_STATE: "SET_ROUTE_SAVING_STATE"

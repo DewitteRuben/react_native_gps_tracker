@@ -7,27 +7,24 @@ import styles from "./styles";
 
 interface Props {
   label?: string;
-  onCheck?: (checked: boolean) => void;
+  onPress?: (checked: boolean) => void;
+  checked?: boolean;
 }
 
-const Checkbox: React.FC<Props> = ({ label, onCheck }) => {
-  const [isWebRTCEnabled, setWebRTC] = useState(false);
-  const handleCheckState = useCallback(() => setWebRTC(prevState => !prevState), []);
+const Checkbox: React.FC<Props> = ({ label, onPress, checked = false }) => {
+  const [isChecked, setChecked] = useState(checked);
+  const handleCheckState = useCallback(() => setChecked(prevState => !prevState), []);
 
   useEffect(() => {
-    if (onCheck) {
-      onCheck(isWebRTCEnabled);
+    if (onPress) {
+      onPress(isChecked);
     }
-  }, [onCheck, isWebRTCEnabled]);
+  }, [onPress, isChecked]);
 
   return (
     <View style={styles.checkboxContainer}>
-      {label && <Text text={label} style={styles.checkboxInput} />}
-      <RNPCheckbox
-        onPress={handleCheckState}
-        color={GLOBAL.MAIN.green}
-        status={isWebRTCEnabled ? "checked" : "unchecked"}
-      />
+      {label && <Text text={label} onPress={handleCheckState} style={styles.checkboxInput} />}
+      <RNPCheckbox onPress={handleCheckState} color={GLOBAL.MAIN.green} status={isChecked ? "checked" : "unchecked"} />
     </View>
   );
 };

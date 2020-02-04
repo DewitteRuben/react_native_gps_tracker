@@ -15,7 +15,7 @@ interface Props {
   variant?: Variant;
   align?: Align;
   fontSize?: number;
-  onPress?: () => void;
+  onPress?: (...params) => void;
 }
 
 const CText: React.FC<Props> = ({ bold, green, gray, style, variant, text, align, fontSize, onPress, white }) => {

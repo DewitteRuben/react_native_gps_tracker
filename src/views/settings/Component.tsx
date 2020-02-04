@@ -7,7 +7,7 @@ import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { GLOBAL } from "../../styles/global";
 import { CText as Text, Icon, Dropdown, Checkbox } from "../../components";
-import { IUpdateDistanceUnitAction } from "../../redux/actions/settings";
+import { IUpdateDistanceUnitAction, IUpdateWebRTCStateAction } from "../../redux/actions/settings";
 import { DropDownData } from "../../components/Dropdown/types";
 
 interface NavigationBottomTabScreenComponent {
@@ -23,11 +23,13 @@ interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomT
 interface Props {
   distanceUnit: string;
   trackingId: string;
+  webRTC: boolean;
   updateDistanceUnit: (unit: string) => IUpdateDistanceUnitAction;
+  updateWebRTCState: (webRTCState: boolean) => IUpdateWebRTCStateAction;
 }
 
 const Settings: NavigationBottomTabScreenFC = (props: Props) => {
-  const { distanceUnit, updateDistanceUnit, trackingId } = props;
+  const { distanceUnit, updateDistanceUnit, trackingId, webRTC } = props;
 
   const handleDropdownChange = useCallback(
     (item: DropDownData | string) => {
@@ -58,7 +60,7 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
         data={distanceUnitsData}
         defaultValue={distanceUnit}
       />
-      <Checkbox label="Enable WebRTC [EXPERIMENTAL]" />
+      <Checkbox checked={webRTC} label="Enable WebRTC [EXPERIMENTAL]" />
     </View>
   );
 };
