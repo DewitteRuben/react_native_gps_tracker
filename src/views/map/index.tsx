@@ -4,7 +4,8 @@ import Component from "./Component";
 import { StoreState } from "../../redux/store/types";
 
 const mapStateToProps = (state: StoreState) => ({
-  distanceUnit: state.settings.distanceUnit
+  distanceUnit: state.settings.distanceUnit,
+  webRTC: state.settings.webRTC
 });
 
 const mapDispatchToProps = () => ({});

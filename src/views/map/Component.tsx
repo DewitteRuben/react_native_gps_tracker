@@ -23,6 +23,7 @@ interface NavigationBottomTabScreenComponent {
 
 interface Props {
   distanceUnit: string;
+  webRTC: boolean;
 }
 
 interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomTabScreenComponent {}
@@ -47,7 +48,7 @@ const useInterval = (callback: () => void, delay: number) => {
   }, [delay]);
 };
 
-const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit }) => {
+const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [elapsedDistance, setElapsedDistance] = useState(0.0);
   const [distancePerHour, setDistancePerHour] = useState(0.0);
@@ -95,7 +96,7 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit }) => {
         </View>
       </View>
       <TrackingMap onTrackToggle={onTrackToggle} onTimerUpdate={onTimerUpdate} onRouteUpdate={onRouteUpdate} />
-      <WebRTC />
+      {webRTC && <WebRTC />}
     </View>
   );
 });
