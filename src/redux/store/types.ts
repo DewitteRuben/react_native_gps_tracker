@@ -55,6 +55,7 @@ export interface IPendingRouteStateAction extends Action {
 
 export type ThunkResult<R> = ThunkAction<R, StoreState, undefined, any>;
 export const ACTION_TYPES = {
+  UPDATE_SETTINGS_STATE: "UPDATE_SETTINGS_STATE",
   UPDATE_DISTANCE_UNIT: "UPDATE_DISTANCE_UNIT",
   UPDATE_TRACKING_ID: "UPDATE_TRACKING_ID",
   UPDATE_WEBRTC_STATE: "UPDATE_WEBRTC_STATE",
