@@ -68,7 +68,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
     [onDeleteRoute, onModalClose]
   );
 
-  const backHandler = useCallback(() => navigate(ROUTES.TAB_MAP), [navigate]);
+  const backHandler = useCallback(() => navigate(ROUTES.TAB_ROUTES), [navigate]);
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backHandler);

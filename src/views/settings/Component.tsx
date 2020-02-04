@@ -9,6 +9,7 @@ import { GLOBAL } from "../../styles/global";
 import { CText as Text, Icon, Dropdown, Checkbox } from "../../components";
 import { IUpdateDistanceUnitAction, IUpdateWebRTCStateAction } from "../../redux/actions/settings";
 import { DropDownData } from "../../components/Dropdown/types";
+import styles from "./styles";
 
 interface NavigationBottomTabScreenComponent {
   navigationOptions?: NavigationScreenConfig<
@@ -58,17 +59,21 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
   );
 
   return (
-    <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
-      <Text text="Settings" bold variant="h2" />
-      <Text text={`Tracking ID: ${trackingId}`} />
-      <Checkbox checked={webRTC} onPress={handleToggleWebRTC} label="Enable WebRTC [EXPERIMENTAL]" />
-      <Dropdown
-        label="Distance unit"
-        onChangeText={handleDropdownChange}
-        data={distanceUnitsData}
-        defaultValue={distanceUnit}
-      />
-    </View>
+    <>
+      <View style={styles.titleContainer}>
+        <Text text="Settings" bold variant="h2" />
+      </View>
+      <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
+        <Text text={`Tracking ID: ${trackingId}`} />
+        <Checkbox checked={webRTC} onPress={handleToggleWebRTC} label="Enable WebRTC [EXPERIMENTAL]" />
+        <Dropdown
+          label="Distance unit"
+          onChangeText={handleDropdownChange}
+          data={distanceUnitsData}
+          defaultValue={distanceUnit}
+        />
+      </View>
+    </>
   );
 };
 
