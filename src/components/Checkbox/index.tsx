@@ -11,7 +11,7 @@ interface Props {
   checked?: boolean;
 }
 
-const Checkbox: React.FC<Props> = ({ label, onPress, checked = false }) => {
+const Checkbox: React.FC<Props> = ({ label, onPress, checked }) => {
   const [isChecked, setChecked] = useState(checked);
   const handleCheckState = useCallback(() => setChecked(prevState => !prevState), []);
 

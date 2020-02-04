@@ -29,7 +29,7 @@ interface Props {
 }
 
 const Settings: NavigationBottomTabScreenFC = (props: Props) => {
-  const { distanceUnit, updateDistanceUnit, trackingId, webRTC } = props;
+  const { distanceUnit, updateDistanceUnit, trackingId, webRTC, updateWebRTCState } = props;
 
   const handleDropdownChange = useCallback(
     (item: DropDownData | string) => {
@@ -40,6 +40,13 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
       }
     },
     [updateDistanceUnit]
+  );
+
+  const handleToggleWebRTC = useCallback(
+    (checked: boolean) => {
+      updateWebRTCState(checked);
+    },
+    [updateWebRTCState]
   );
 
   const distanceUnitsData = React.useMemo(
@@ -54,13 +61,13 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
     <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.containerPadding]}>
       <Text text="Settings" bold variant="h2" />
       <Text text={`Tracking ID: ${trackingId}`} />
+      <Checkbox checked={webRTC} onPress={handleToggleWebRTC} label="Enable WebRTC [EXPERIMENTAL]" />
       <Dropdown
         label="Distance unit"
         onChangeText={handleDropdownChange}
         data={distanceUnitsData}
         defaultValue={distanceUnit}
       />
-      <Checkbox checked={webRTC} label="Enable WebRTC [EXPERIMENTAL]" />
     </View>
   );
 };

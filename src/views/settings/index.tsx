@@ -14,7 +14,7 @@ const mapStateToProps = (state: StoreState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
   updateDistanceUnit: (unit: string) => dispatch(updateDistanceUnitAction(unit)),
-  UpdateWebRTCState: (state: boolean) => dispatch(updateWebRTCStateAction(state))
+  updateWebRTCState: (state: boolean) => dispatch(updateWebRTCStateAction(state))
 });
 
 export default compose<React.ComponentType<any>>(connect(mapStateToProps, mapDispatchToProps))(Component);
