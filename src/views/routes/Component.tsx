@@ -32,7 +32,7 @@ interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomT
 
 const emptyList = () => (
   <View>
-    <Text text="No saved routes have been found." />
+    <Text text="No routes have been saved yet." />
   </View>
 );
 

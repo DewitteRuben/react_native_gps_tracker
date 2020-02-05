@@ -3,7 +3,7 @@ import { View } from "react-native";
 import RNModal, { ModalProps } from "react-native-modal";
 import shortid from "shortid";
 
-import CText from "../CText";
+import { CText as Text } from "..";
 import Button from "../Button";
 import styles from "./styles";
 import { GLOBAL } from "../../styles/global";
@@ -31,7 +31,7 @@ const modal: React.FC<Props> = React.memo(({ onSwipeComplete, onBackdropPress, i
     >
       <View style={styles.container}>
         <View style={[GLOBAL.LAYOUT.container, GLOBAL.LAYOUT.justifyCenter]}>
-          <CText text={text} />
+          <Text align="center" text={text} />
         </View>
         <View style={styles.content}>
           {buttons.map((button, index) => (

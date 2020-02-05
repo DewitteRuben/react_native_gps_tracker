@@ -27,7 +27,7 @@ const Home: NavigationStackScreenComponent = () => {
       </Overlay>
       <View style={styles.titleContainer}>
         <Text variant="h1" bold text="Welcome!" />
-        <Text text="Read more about tracker or click 'Start tracking' to begin!" />
+        <Text align="left" text="Read more about the gps tracker or tap the 'Start tracking' button to begin!" />
       </View>
       <View style={[GLOBAL.LAYOUT.flexCenter, styles.mainContainer]}>
         <Button text="Start tracking" block onPress={goToApp} />
