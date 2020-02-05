@@ -1,7 +1,7 @@
 import { Action, ActionCreator } from "redux";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, Settings } from "react-native";
 import getUUID from "../../../utils/uuid";
-import { ACTION_TYPES, ThunkResult, SettingsState } from "../../store/types";
+import { ACTION_TYPES, ThunkResult, SettingsState, StoreState } from "../../store/types";
 
 const SETTINGS_KEY = "STORE_SETTINGS";
 
@@ -65,7 +65,7 @@ export const localUpdateWebRTCState = (webRTC: boolean): ThunkResult<void> => as
   if (webRTC === undefined || webRTC === null) throw new Error("No distance unit was passed.");
   const { settings } = getState();
   try {
-    AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...settings, webRTC }));
+    await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...settings, webRTC }));
     dispatch(updateWebRTCStateAction(webRTC));
   } catch (error) {
     //
@@ -75,6 +75,30 @@ export const localUpdateWebRTCState = (webRTC: boolean): ThunkResult<void> => as
 export const localInitSettings = (): ThunkResult<void> => async (dispatch, getState) => {
   const { settings } = getState();
   return AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+};
+
+export const updateSettings = ({
+  defaultZoom,
+  distanceUnit,
+  minDisplacement,
+  trackingId,
+  webRTC
+}: Partial<SettingsState>): ThunkResult<void> => async (dispatch, getState) => {
+  const { settings } = getState();
+  try {
+    const newSettings = {
+      ...settings,
+      defaultZoom: defaultZoom ?? settings.defaultZoom,
+      distanceUnit: distanceUnit ?? settings.distanceUnit,
+      minDisplacement: minDisplacement ?? settings.minDisplacement,
+      trackingId: trackingId ?? settings.trackingId,
+      webRTC: webRTC ?? settings.webRTC
+    };
+    await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(newSettings));
+    dispatch(updateSettingsState(newSettings));
+  } catch (error) {
+    //
+  }
 };
 
 export const localLoadSettings = (): ThunkResult<void> => async (dispatch, getState) => {

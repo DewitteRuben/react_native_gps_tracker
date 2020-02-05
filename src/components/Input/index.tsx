@@ -14,7 +14,8 @@ const input: React.FC<Props> = ({
   value,
   defaultValue,
   editable,
-  error
+  error,
+  keyboardType
 }) => (
   <TextInput
     theme={{
@@ -23,6 +24,7 @@ const input: React.FC<Props> = ({
         disabled: styles.primary.color
       }
     }}
+    keyboardType={keyboardType}
     error={error}
     editable={editable}
     disabled={disabled}

@@ -23,6 +23,8 @@ interface NavigationBottomTabScreenComponent {
 
 interface Props {
   distanceUnit: string;
+  minDisplacement: number;
+  defaultZoom: number;
   webRTC: boolean;
 }
 
@@ -31,12 +33,10 @@ interface NavigationBottomTabScreenFC extends React.FC<Props>, NavigationBottomT
 const useInterval = (callback: () => void, delay: number) => {
   const savedCallback = useRef<any>();
 
-  // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
 
-  // Set up the interval.
   useEffect(() => {
     function tick() {
       savedCallback.current();
@@ -48,7 +48,7 @@ const useInterval = (callback: () => void, delay: number) => {
   }, [delay]);
 };
 
-const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC }) => {
+const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC, minDisplacement, defaultZoom }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [elapsedDistance, setElapsedDistance] = useState(0.0);
   const [distancePerHour, setDistancePerHour] = useState(0.0);
@@ -95,7 +95,13 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC }) =
           </View>
         </View>
       </View>
-      <TrackingMap onTrackToggle={onTrackToggle} onTimerUpdate={onTimerUpdate} onRouteUpdate={onRouteUpdate} />
+      <TrackingMap
+        onTrackToggle={onTrackToggle}
+        onTimerUpdate={onTimerUpdate}
+        onRouteUpdate={onRouteUpdate}
+        minDisplacement={minDisplacement}
+        defaultZoom={defaultZoom}
+      />
       {webRTC && <WebRTC />}
     </View>
   );

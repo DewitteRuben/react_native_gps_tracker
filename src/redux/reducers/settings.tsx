@@ -9,7 +9,9 @@ import {
 const initialState: SettingsState = {
   distanceUnit: "km",
   trackingId: "",
-  webRTC: false
+  webRTC: false,
+  defaultZoom: 12,
+  minDisplacement: 5
 };
 
 export default (

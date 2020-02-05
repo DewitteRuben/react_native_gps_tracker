@@ -5,6 +5,8 @@ import { StoreState } from "../../redux/store/types";
 
 const mapStateToProps = (state: StoreState) => ({
   distanceUnit: state.settings.distanceUnit,
+  minDisplacement: state.settings.minDisplacement,
+  defaultZoom: state.settings.defaultZoom,
   webRTC: state.settings.webRTC
 });
 

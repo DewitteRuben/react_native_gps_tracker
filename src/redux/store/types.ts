@@ -12,6 +12,8 @@ export interface SettingsState {
   distanceUnit: string;
   trackingId: string;
   webRTC: boolean;
+  minDisplacement: number;
+  defaultZoom: number;
 }
 
 export interface RouteState {
