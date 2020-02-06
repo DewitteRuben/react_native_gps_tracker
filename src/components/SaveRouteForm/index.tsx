@@ -9,6 +9,8 @@ import { travelingMethodsArray, TravelingMethod } from "../../utils/supportedTra
 import { toTitleCase } from "../../utils/string";
 import Dropdown, { DropdownData } from "../Dropdown";
 import { StoreState } from "../../redux/store/types";
+import styles from "./styles";
+import { GLOBAL } from "../../styles/global";
 
 interface Props {
   title?: string;
@@ -61,7 +63,7 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
   const handleDropDown = (item: DropdownData) => updateformState("method")(item.value);
   return (
     <>
-      <View style={{ marginBottom: 20 }}>
+      <View style={styles.mainContainer}>
         <View>
           <Input
             label="Trip title"
@@ -71,23 +73,25 @@ const SaveRouteForm: React.FC<Props> = ({ title, distance, duration, method, sta
           />
           {getHelperText("title")}
         </View>
-        <View>
-          <Input
-            label="Startpoint name"
-            error={!formState.start?.length}
-            value={formState.start}
-            onChangeText={updateformState("start")}
-          />
-          {getHelperText("start")}
-        </View>
-        <View>
-          <Input
-            label="Endpoint name"
-            error={!formState.end?.length}
-            value={formState.end}
-            onChangeText={updateformState("end")}
-          />
-          {getHelperText("end")}
+        <View style={GLOBAL.LAYOUT.flexRow}>
+          <View style={[GLOBAL.LAYOUT.container, styles.inputSpacing]}>
+            <Input
+              label="Startpoint"
+              error={!formState.start?.length}
+              value={formState.start}
+              onChangeText={updateformState("start")}
+            />
+            {getHelperText("start")}
+          </View>
+          <View style={GLOBAL.LAYOUT.container}>
+            <Input
+              label="Endpoint"
+              error={!formState.end?.length}
+              value={formState.end}
+              onChangeText={updateformState("end")}
+            />
+            {getHelperText("end")}
+          </View>
         </View>
         <View>
           <Dropdown
