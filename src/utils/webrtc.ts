@@ -107,15 +107,11 @@ const onnegotiationneeded = (pc: RTCPeerConnection, socket: SocketIOClient.Socke
     await pc.setLocalDescription(await pc.createOffer());
     socket.emit("message", { description: pc.localDescription });
   } catch (err) {
-    console.error(err);
+    //
   }
 };
 
-const useRTCPeerConnection = (
-  connConfig: RTCPeerConnectionConfiguration,
-  socket: SocketIOClient.Socket,
-  stream: MediaStream
-) => {
+const useRTCPeerConnection = (connConfig: RTCPeerConnectionConfiguration, socket: SocketIOClient.Socket) => {
   const [remoteStream, setRemoteStream] = useState();
   const [pc, setPc] = useState(new RTCPeerConnection(connConfig));
   const [connectionState, setConnectionState] = useState<RTCIceConnectionState>();
@@ -126,12 +122,20 @@ const useRTCPeerConnection = (
 
   useEffect(() => {
     pc.onnegotiationneeded = onnegotiationneeded(pc, socket);
+
     socket.on("message", handleWebRTCMessage(socket, pc));
+    socket.on("clear", () => {
+      pc.close();
+      setRemoteStream(null);
+      setConnectionState(undefined);
+      setPc(new RTCPeerConnection(connConfig));
+    });
 
     return () => {
       socket.off("message");
+      socket.off("clear");
     };
-  }, [pc, socket, stream, remoteStream]);
+  }, [pc, socket, remoteStream, connConfig]);
 
   return { pc, remoteStream, connectionState };
 };

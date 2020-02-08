@@ -22,7 +22,7 @@ const WebRTC: React.FC<Props> = ({ trackingId }) => {
   const device = useMediaDevice(deviceSelector);
   const mediaStream = useMediaStream(true, device?.deviceId);
   const socket = useSocket("http://10.0.2.2:80");
-  const { remoteStream, pc } = useRTCPeerConnection(config, socket, mediaStream);
+  const { remoteStream, pc } = useRTCPeerConnection(config, socket);
 
   const onModalClose = useCallback(() => {
     setModalVisibility(false);
