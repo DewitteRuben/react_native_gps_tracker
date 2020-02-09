@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from "react";
 
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
+import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 import { CText as Text } from "../../components";
 
 const COORD_PRECISION = 0.000001;
 
+type LocationStatus = "already-enabled" | "enabled" | "disabled";
+
 const useLocationPermission = () => {
   const [hasPermission, setHasPermission] = useState(false);
+  const [locationStatus, setLocationStatus] = useState<LocationStatus>();
 
   useEffect(() => {
     const requestPermissions = async () => {
       try {
         const hasBeenGranted = await MapboxGL.requestAndroidLocationPermissions();
+        if (hasBeenGranted) {
+          const status = await RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+            interval: 10000,
+            fastInterval: 5000
+          });
+          setLocationStatus(status);
+        }
         setHasPermission(hasBeenGranted);
       } catch (error) {
         setHasPermission(false);
+        setLocationStatus("disabled");
       }
     };
 
     requestPermissions();
   }, []);
 
-  return hasPermission;
+  return { hasPermission, locationStatus };
 };
 
 const routeToFeature = (route: MapboxGL.Coordinates[]) => {

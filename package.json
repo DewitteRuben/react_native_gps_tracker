@@ -34,6 +34,7 @@
     "react": "^16.12.0",
     "react-addons-update": "^15.6.2",
     "react-native": "^0.61.5",
+    "react-native-android-location-enabler": "^1.2.0",
     "react-native-gesture-handler": "^1.5.3",
     "react-native-modal": "^11.5.3",
     "react-native-navigation": "^2.29.0",

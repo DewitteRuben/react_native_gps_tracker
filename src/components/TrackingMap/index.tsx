@@ -27,7 +27,7 @@ const preciseTimer = new PreciseTimer();
 const TrackingMap: React.FC<Props> = memo(
   ({ onTimerUpdate, onRouteUpdate, onTrackToggle, defaultZoom, minDisplacement }) => {
     const { navigate } = useNavigation();
-    const hasPermission = useLocationPermission();
+    const { hasPermission, locationStatus } = useLocationPermission();
 
     const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
     const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
@@ -148,10 +148,10 @@ const TrackingMap: React.FC<Props> = memo(
     }, [followUser, camera, lastPosition, defaultZoom]);
 
     useEffect(() => {
-      if (hasPermission) {
+      if (hasPermission && (locationStatus === "enabled" || locationStatus === "already-enabled")) {
         setFollowUser(true);
       }
-    }, [hasPermission]);
+    }, [hasPermission, locationStatus]);
 
     const onUserlocationUpdate = useCallback(
       (location: MapboxGL.Location) => {
