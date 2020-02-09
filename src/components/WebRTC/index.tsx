@@ -7,6 +7,7 @@ import { GLOBAL } from "../../styles/global";
 import { Modal } from "..";
 import { getModalButtons } from "../../utils/modal";
 import { StoreState } from "../../redux/store/types";
+import styles from "./styles";
 
 const config = { iceServers: [{ url: "stun:stun.l.google.com:19302" }] };
 
@@ -21,7 +22,7 @@ const WebRTC: React.FC<Props> = ({ trackingId }) => {
 
   const device = useMediaDevice(deviceSelector);
   const mediaStream = useMediaStream(true, device?.deviceId);
-  const socket = useSocket("http://10.0.2.2:80");
+  const socket = useSocket("https://gpsapp-server.herokuapp.com/");
   const { remoteStream, pc } = useRTCPeerConnection(config, socket);
 
   const onModalClose = useCallback(() => {
@@ -76,10 +77,10 @@ const WebRTC: React.FC<Props> = ({ trackingId }) => {
 
   return (
     <>
-      <View style={{ position: "absolute", zIndex: 50, left: 0, bottom: 30, width: 100, height: 100 }}>
+      <View style={styles.localStream}>
         {mediaStream && <RTCView style={GLOBAL.LAYOUT.container} streamURL={mediaStream.toURL()} />}
       </View>
-      <View style={{ position: "absolute", zIndex: 50, right: 20, top: 30, width: 200, height: 200 }}>
+      <View style={styles.remoteStream}>
         {remoteStream && callAccepted && <RTCView style={GLOBAL.LAYOUT.container} streamURL={remoteStream.toURL()} />}
       </View>
       <Modal
