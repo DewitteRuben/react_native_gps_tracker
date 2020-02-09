@@ -138,14 +138,11 @@ const TrackingMap: React.FC<Props> = memo(
     );
 
     useEffect(() => {
-      if (camera) {
-        if (followUser && lastPosition) {
-          const { longitude, latitude } = lastPosition;
-          camera.moveTo([longitude, latitude], 1000);
-        }
-        camera.zoomTo(defaultZoom, 0); // Setting duration to 0 ensures zoom is done after move (bug)
+      if (camera && followUser && lastPosition) {
+        const { longitude, latitude } = lastPosition;
+        camera.moveTo([longitude, latitude], 1000);
       }
-    }, [followUser, camera, lastPosition, defaultZoom]);
+    }, [followUser, camera, lastPosition]);
 
     useEffect(() => {
       if (hasPermission && (locationStatus === "enabled" || locationStatus === "already-enabled")) {

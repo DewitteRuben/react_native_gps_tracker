@@ -25,7 +25,6 @@
     "@turf/bbox": "^6.0.1",
     "@turf/center": "^6.0.1",
     "@turf/helpers": "^6.1.4",
-    "@welldone-software/why-did-you-render": "^3.5.0",
     "jetifier": "^1.6.5",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -54,8 +53,7 @@
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.15",
     "socket.io-client": "^2.3.0",
-    "spherical-geometry-js": "^2.0.0",
-    "uuid": "^3.3.3"
+    "spherical-geometry-js": "^2.0.0"
   },
   "license": "MIT",
   "devDependencies": {
