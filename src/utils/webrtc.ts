@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import {
   mediaDevices,
   MediaStreamConstraints,
   MediaStream,
   RTCPeerConnectionConfiguration,
-  RTCPeerConnection
+  RTCPeerConnection,
+  RTCSignalingState,
+  RTCIceConnectionState
 } from "react-native-webrtc";
 
 export interface MediaDevice {
@@ -91,53 +93,113 @@ const handleWebRTCMessage = (socket: SocketIOClient.Socket, pc: RTCPeerConnectio
   description,
   candidate
 }) => {
-  if (description) {
-    await pc.setRemoteDescription(description);
-    if (description.type === "offer") {
-      await pc.setLocalDescription(await pc.createAnswer());
-      socket.emit("message", { description: pc.localDescription });
+  try {
+    if (description) {
+      if (description.type === "offer") {
+        await pc.setLocalDescription(await pc.createAnswer());
+        socket.emit("message", { description: pc.localDescription });
+      } else if (description.type === "answer") {
+        if (pc.signalingState !== "stable") {
+          await pc.setRemoteDescription(description);
+        }
+      }
+    } else if (candidate && candidate.candidate && candidate.candidate.length > 0) {
+      await pc.addIceCandidate(candidate);
     }
-  } else if (candidate) {
-    await pc.addIceCandidate(candidate);
+  } catch (error) {
+    console.error(error);
   }
 };
 
-const onnegotiationneeded = (pc: RTCPeerConnection, socket: SocketIOClient.Socket) => async () => {
-  try {
+export interface RTCConnectionData {
+  signalState: RTCSignalingState;
+  iceConnectionState: RTCIceConnectionState;
+}
+
+const initialConnectionState: RTCConnectionData = { iceConnectionState: "new", signalState: "stable" };
+
+const useRTCPeerConnection = (
+  connConfig: RTCPeerConnectionConfiguration,
+  socket: SocketIOClient.Socket,
+  stream?: MediaStream
+) => {
+  const [remoteStream, setRemoteStream] = useState();
+  const [pc, setPc] = useState<RTCPeerConnection>();
+  const [connectionData, setConnectionData] = useState<RTCConnectionData>(initialConnectionState);
+
+  const createPeerConnection = useCallback(() => {
+    if (pc) return; // only create pc if it doesn't exist
+
+    const peerConnection = new RTCPeerConnection(connConfig);
+    peerConnection.onicecandidate = ({ candidate }) => socket.emit("message", { candidate });
+
+    if (stream) {
+      peerConnection.addStream(stream);
+    }
+
+    peerConnection.onaddstream = event => setRemoteStream(event.stream);
+
+    setPc(peerConnection);
+  }, [stream, socket, connConfig, pc]);
+
+  const createOffer = useCallback(async () => {
+    if (!pc) {
+      return;
+    }
     await pc.setLocalDescription(await pc.createOffer());
     socket.emit("message", { description: pc.localDescription });
-  } catch (err) {
-    //
-  }
-};
+  }, [pc, socket]);
 
-const useRTCPeerConnection = (connConfig: RTCPeerConnectionConfiguration, socket: SocketIOClient.Socket) => {
-  const [remoteStream, setRemoteStream] = useState();
-  const [pc, setPc] = useState(new RTCPeerConnection(connConfig));
-  const [connectionState, setConnectionState] = useState<RTCIceConnectionState>();
+  const close = useCallback(
+    (remote?: boolean) => {
+      if (!pc) {
+        return;
+      }
+      pc.close();
 
-  pc.onicecandidate = ({ candidate }) => socket.emit("message", { candidate });
-  pc.onaddstream = event => setRemoteStream(event.stream);
-  pc.oniceconnectionstatechange = event => setConnectionState(event.target.iceConnectionState);
+      console.log(remote);
+      if (!remote) {
+        socket.emit("peer", { action: "clear" });
+      }
+
+      setRemoteStream(undefined);
+      setPc(undefined);
+    },
+    [pc, socket]
+  );
 
   useEffect(() => {
-    pc.onnegotiationneeded = onnegotiationneeded(pc, socket);
+    if (pc && socket) {
+      socket.on("message", handleWebRTCMessage(socket, pc));
+      socket.on("clear", () => {
+        close(true);
+      });
 
-    socket.on("message", handleWebRTCMessage(socket, pc));
-    socket.on("clear", () => {
-      pc.close();
-      setRemoteStream(null);
-      setConnectionState(undefined);
-      setPc(new RTCPeerConnection(connConfig));
-    });
+      pc.onsignalingstatechange = () => {
+        setConnectionData(prevState => ({ ...prevState, signalState: pc.signalingState }));
+      };
+
+      pc.oniceconnectionstatechange = event => {
+        const { iceConnectionState } = event.target;
+        if (iceConnectionState === "disconnected" || iceConnectionState === "failed") {
+          close();
+        }
+
+        setConnectionData(prevState => ({ ...prevState, iceConnectionState }));
+      };
+
+      pc.onnegotiationneeded = () => {
+        createOffer();
+      };
+    }
 
     return () => {
       socket.off("message");
       socket.off("clear");
     };
-  }, [pc, socket, remoteStream, connConfig]);
+  }, [pc, socket, close, createOffer]);
 
-  return { pc, remoteStream, connectionState };
+  return { createOffer, close, remoteStream, connectionData, createPeerConnection, pc };
 };
 
 export { useRTCPeerConnection, useMediaStream, useMediaDevice, useSocket };
