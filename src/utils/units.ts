@@ -40,3 +40,14 @@ export const computeRouteDistance = (route: MapboxGL.Coordinates[]) => {
   }
   return 0;
 };
+
+export const computeLastDistance = (route: MapboxGL.Coordinates[]) => {
+  const start = route[route.length - 1];
+  const end = route[route.length - 2];
+  if (start && end) {
+    const from = { lat: start.latitude, long: start.longitude };
+    const to = { lat: end.latitude, long: end.longitude };
+    return computeDistanceBetween(from, to);
+  }
+  return 0;
+};

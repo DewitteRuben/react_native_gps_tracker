@@ -74,7 +74,7 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC, min
     if (tracking) {
       setDistancePerHour(msPerMeterToUnitPerHour(elapsedDistance, elapsedTime, distanceUnit));
     }
-  }, 5000);
+  }, 2000);
 
   return (
     <View style={GLOBAL.LAYOUT.container}>

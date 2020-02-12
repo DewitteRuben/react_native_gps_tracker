@@ -9,7 +9,7 @@ import { MapOverlay, Modal, TrackingFAB, LocationFAB, IconButton } from "..";
 import { getModalButtons } from "../../utils/modal";
 import { GLOBAL } from "../../styles/global";
 import { PreciseTimer } from "../../utils/time";
-import { computeRouteDistance } from "../../utils/units";
+import { computeLastDistance } from "../../utils/units";
 import { ROUTES } from "../../navigators/navigation";
 import styles from "./styles";
 
@@ -173,9 +173,9 @@ const TrackingMap: React.FC<Props> = memo(
               setGeoJsonFeature(geoJSONFeature);
             }, 1000);
 
-            const distance = computeRouteDistance(newRoute) || computedDistance;
-            onRouteUpdate(newRoute, distance);
-            setComputedDistance(distance);
+            const distanceDifferential = computeLastDistance(newRoute) || computedDistance;
+            onRouteUpdate(newRoute, computedDistance + distanceDifferential);
+            setComputedDistance(prevDistance => prevDistance + distanceDifferential);
 
             if (liveUpdate) {
               fbUpdateCoords(newRoute);
