@@ -5,12 +5,13 @@ import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { useNavigation } from "react-navigation-hooks";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
-import { MapOverlay, Modal, TrackingFAB, LocationFAB, WifiButton } from "..";
+import { MapOverlay, Modal, TrackingFAB, LocationFAB, IconButton } from "..";
 import { getModalButtons } from "../../utils/modal";
 import { GLOBAL } from "../../styles/global";
 import { PreciseTimer } from "../../utils/time";
 import { computeRouteDistance } from "../../utils/units";
 import { ROUTES } from "../../navigators/navigation";
+import styles from "./styles";
 
 let prevCoords = { longitude: 0, latitude: 0 };
 
@@ -230,7 +231,6 @@ const TrackingMap: React.FC<Props> = memo(
               followUserLocation={false}
               ref={handleCameraRef}
               zoomLevel={defaultZoom}
-              followZoomLevel={defaultZoom}
             />
             {geojsonFeature && (
               <MapboxGL.ShapeSource id="routeSource" shape={geojsonFeature}>
@@ -245,7 +245,12 @@ const TrackingMap: React.FC<Props> = memo(
               animated
             />
           </MapboxGL.MapView>
-          <WifiButton onToggleLive={toggleLive} liveUpdate={liveUpdate} />
+          <IconButton
+            name={liveUpdate ? "wifi" : "wifi-off"}
+            style={styles.wifiButton}
+            type="Feather"
+            onPress={toggleLive}
+          />
           <MapOverlay>
             <LocationFAB isFollowing={followUser} onPress={toggleFollowUser} />
             <TrackingFAB
