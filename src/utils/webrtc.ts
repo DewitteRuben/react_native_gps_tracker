@@ -157,7 +157,6 @@ const useRTCPeerConnection = (
       }
       pc.close();
 
-      console.log(remote);
       if (!remote) {
         socket.emit("peer", { action: "clear" });
       }
