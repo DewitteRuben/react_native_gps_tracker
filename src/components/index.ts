@@ -14,7 +14,6 @@ import BackArrowButton from "./Back";
 import LoadingOverlay from "./LoadingOverlay";
 import TrackingFAB from "./TrackFAB";
 import LocationFAB from "./LocationFAB";
-import WifiButton from "./WifiButton";
 import WebRTC from "./WebRTC";
 import Checkbox from "./Checkbox";
 import IconButton from "./IconButton";
@@ -34,7 +33,6 @@ export {
   Spinner,
   BackArrowButton,
   LoadingOverlay,
-  WifiButton,
   TrackingFAB,
   LocationFAB,
   WebRTC,
