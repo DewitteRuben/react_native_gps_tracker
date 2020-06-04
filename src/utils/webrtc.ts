@@ -123,7 +123,7 @@ const useRTCPeerConnection = (
   socket: SocketIOClient.Socket,
   stream?: MediaStream
 ) => {
-  const [remoteStream, setRemoteStream] = useState();
+  const [remoteStream, setRemoteStream] = useState<MediaStream>();
   const [pc, setPc] = useState<RTCPeerConnection>();
   const [connectionData, setConnectionData] = useState<RTCConnectionData>(initialConnectionState);
 
