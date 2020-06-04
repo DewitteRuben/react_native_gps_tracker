@@ -4,7 +4,7 @@ import * as geometry from "spherical-geometry-js";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { ThunkAction } from "redux-thunk";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { CText as Text, SaveRouteForm, Modal, BackArrowButton } from "../../components";
 import { GLOBAL } from "../../styles/global";

@@ -53,7 +53,8 @@
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.15",
     "socket.io-client": "^2.3.0",
-    "spherical-geometry-js": "^2.0.0"
+    "spherical-geometry-js": "^2.0.0",
+    "uuid": "3.4.0"
   },
   "license": "MIT",
   "devDependencies": {
