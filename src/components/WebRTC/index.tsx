@@ -8,8 +8,9 @@ import { Modal, CircleButton, Icon, MapOverlay } from "..";
 import { getModalButtons } from "../../utils/modal";
 import { StoreState } from "../../redux/store/types";
 import styles from "./styles";
+import envConfig from "../../utils/env";
 
-const config = { iceServers: [{ url: "stun:stun.l.google.com:19302" }] };
+const config = { iceServers: envConfig.ICE_SERVERS };
 
 interface Props {
   trackingId: string;
@@ -27,7 +28,7 @@ const WebRTC: React.FC<Props> = ({ trackingId }) => {
 
   const device = useMediaDevice(deviceSelector);
   const mediaStream = useMediaStream(true, device?.deviceId);
-  const socket = useSocket("http://10.0.2.2:80/");
+  const socket = useSocket(envConfig.SIGNALING_SERVER);
   const { remoteStream, createPeerConnection, createOffer, close, connectionData } = useRTCPeerConnection(
     config,
     socket,
