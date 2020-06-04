@@ -6,6 +6,19 @@ Read more about this project and its development on my [website](https://www.rub
 
 ## Setup
 
+### Mapbox
+
+The Gps tracker uses [React Native Mapbox](https://github.com/react-native-mapbox-gl/maps) under the hood for its maps.
+Mapbox requires you to provide an access token in order to use their APIs. Read more on that [here](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/).
+
+Create an .env.json file and include your Mapbox API key as follows:
+
+```json
+{
+  "MAPBOX_ACCESS_TOKEN": "pk.eyJ1IjoicnViZW5kZXdpdaRlIpwiYRI6ImNrMHNtcWhjZzAzd24zY3J4NDJwODhxeHoifQ.CsajnMm8yJlFW0kbkP4bpQ"
+}
+```
+
 ### Firebase
 
 Firebase's Realtime Database is used to handle the realtime transmission of location data. In order to build this project the `google-services.json` must be included in the correct directory in the build folder (android/app for android). Read more on Firebase for React Native and how it's set up [here](https://rnfirebase.io/).
