@@ -5,4 +5,4 @@ const defaultConfig = {
   ICE_SERVERS: [{ url: "stun:stun.l.google.com:19302" }]
 };
 
-export default { ...defaultConfig, config } || defaultConfig;
+export default { ...defaultConfig, ...config } || defaultConfig;
