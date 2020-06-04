@@ -6,11 +6,14 @@ import { appNavigator } from "./navigation";
 import store from "../redux/store";
 import { getTrackingIdAction, localLoadSettings } from "../redux/actions/settings";
 import { localLoadRoutes } from "../redux/actions/routes";
-import config from "../config";
+import config from "../utils/env";
 
 const Navigation = createAppContainer(appNavigator);
 
-MapboxGL.setAccessToken(config.mapbox.accessToken);
+if (config.MAPBOX_ACCESS_TOKEN) {
+  MapboxGL.setAccessToken(config.MAPBOX_ACCESS_TOKEN);
+}
+
 batch(() => {
   store.dispatch<any>(getTrackingIdAction());
   store.dispatch<any>(localLoadRoutes());

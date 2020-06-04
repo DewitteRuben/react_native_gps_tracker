@@ -20,9 +20,6 @@ const Defaults = {
       login: `${base}/login`,
       logout: `${base}/logout`
     }
-  },
-  mapbox: {
-    accessToken: "pk.eyJ1IjoicnViZW5kZXdpdHRlIiwiYSI6ImNrMHNtcWhjZzAzd24zY3J4NDJwODhxeHoifQ.YsajnMm8yJlFW0kbkP4bpQ"
   }
 };
 
