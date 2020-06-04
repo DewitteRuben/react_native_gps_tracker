@@ -1,4 +1,4 @@
-# Gps Tracker 
+# Gps Tracker
 
 ## Introduction
 
@@ -16,23 +16,33 @@ Firebase's Realtime Database is used to handle the realtime transmission of loca
 
 [Socket.IO](https://socket.io/) is used to help establish the peer to peer data channel by providing the signaling server with the neccesary information. Read more on WebRTC and signaling [here](https://codelabs.developers.google.com/codelabs/webrtc-web/#0).
 
-Create a .env file with the following key:
+Create an .env.json file with the following key:
 
-```
-SIGNALING_SERVER=http://10.0.2.2:80/
+```json
+{
+  "SIGNALING_SERVER": "http://10.0.2.2:80/"
+}
 ```
 
 Replace `http://10.0.2.2:80/` with the port and address of your signaling server.
 
-###  RTCPeerConnection
+### RTCPeerConnection
 
 In order for a WebRTC peer to peer connection be established, STUN and/or TURN servers are used to pass the neccesary information to each peer. By default only Google's development STUN server is used, for a production build it is advised to provide your own STUN and TURN server.
 
-This can be done by including them as keys in your .env variables:
+This can be done by including them as a key in your .env.json variables:
 
-```
-STUN=stun:stun.l.google.com:19302
-TURN=turn:192.158.29.39:3478
+```json
+{
+  "ICE_SERVERS": [
+    { "url": "stun:stun.l.google.com:19302" },
+    {
+      "urls": "turn:turnserver.example.org",
+      "username": "webrtc",
+      "credential": "turnpassword"
+    }
+  ]
+}
 ```
 
 Replace the values with your STUN and/or TURN server
