@@ -45,7 +45,7 @@ const getMediaDeviceConfig = (front?: boolean, deviceId?: string) =>
   } as MediaStreamConstraints);
 
 const useMediaDevice = (pObject: Partial<MediaDevice>) => {
-  const [mediaDevice, setDevice] = useState();
+  const [mediaDevice, setDevice] = useState<MediaDevice>();
 
   useEffect(() => {
     const asyncGetDevices = async () => {
