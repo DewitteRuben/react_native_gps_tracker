@@ -27,7 +27,7 @@ const trackFAB = memo<Props>(({ isTracking, hasTracked, onTrackFinish, onToggleT
       )}
       <CircleButton containerStyle={styles.trackButtonContainer} onPress={onToggleTracking}>
         <Icon
-          type="MaterialCommunity"
+          type={IconType.MaterialCommunityIcons}
           color={GLOBAL.MAIN.buttonGray}
           size={32}
           name={isTracking ? "pause" : "map-marker-path"}
