@@ -1,8 +1,8 @@
 import database from "@react-native-firebase/database";
-import MapboxGL from "@react-native-mapbox-gl/maps";
+import Mapbox from "@rnmapbox/maps";
 import store from "../redux/store";
 
-export const fbUpdateLastCoords = async (coords: MapboxGL.Coordinates) => {
+export const fbUpdateLastCoords = async (coords: Mapbox.Location["coords"]) => {
   try {
     const { trackingId } = store.getState().settings;
     const ref = database().ref(`users/${trackingId}/last`);
@@ -12,7 +12,7 @@ export const fbUpdateLastCoords = async (coords: MapboxGL.Coordinates) => {
   }
 };
 
-export const fbUpdateCoords = async (coords: MapboxGL.Coordinates[]) => {
+export const fbUpdateCoords = async (coords: Mapbox.Location["coords"][]) => {
   try {
     const { trackingId } = store.getState().settings;
     const ref = database().ref(`users/${trackingId}/full`);

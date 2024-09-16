@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import { View, Platform } from "react-native";
+import MapboxGL from "@rnmapbox/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 import { CText as Text } from "../../components";
@@ -38,7 +37,7 @@ const useLocationPermission = () => {
   return { hasPermission, locationStatus };
 };
 
-const routeToFeature = (route: MapboxGL.Coordinates[]) => {
+const routeToFeature = (route: MapboxGL.Location["coords"][]) => {
   return {
     type: "Feature",
     properties: {},
@@ -49,14 +48,14 @@ const routeToFeature = (route: MapboxGL.Coordinates[]) => {
   } as GeoJSON.Feature;
 };
 
-const didCoordsUpdate = (cur: MapboxGL.Coordinates, prev: MapboxGL.Coordinates) => {
+const didCoordsUpdate = (cur: MapboxGL.Location["coords"], prev: MapboxGL.Location["coords"]) => {
   return (
     Math.abs(cur.latitude - prev.latitude) > COORD_PRECISION ||
     Math.abs(cur.longitude - prev.longitude) > COORD_PRECISION
   );
 };
 
-const renderGpsDetails = (coords: MapboxGL.Coordinates) => (
+const renderGpsDetails = (coords: MapboxGL.Location["coords"]) => (
   <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
     <Text text="accuracy: " />
     <Text text={coords.accuracy || 0} />

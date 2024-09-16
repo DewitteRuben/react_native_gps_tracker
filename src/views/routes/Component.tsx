@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View, SafeAreaView } from "react-native";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
@@ -10,7 +11,7 @@ import { useNavigation } from "react-navigation-hooks";
 import moment from "moment";
 import { RouteData } from "../../redux/store/types";
 import { prettyDuration, metersToUnit } from "../../utils/units";
-import { CText as Text, Icon, RouteItem, CText } from "../../components";
+import { CText as Text, RouteItem, CText } from "../../components";
 import styles from "./styles";
 import { GLOBAL } from "../../styles/global";
 import { ROUTES } from "../../navigators/navigation";
@@ -78,7 +79,12 @@ const Routes: NavigationBottomTabScreenFC = ({ routes, distanceUnit }) => {
 
 Routes.navigationOptions = {
   tabBarIcon: ({ focused }: RenderIconProps) => (
-    <Icon type="FontAwesome5" name="route" color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green} size={23} />
+    <Icon
+      type={IconType.FontAwesome5}
+      name="route"
+      color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green}
+      size={23}
+    />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>

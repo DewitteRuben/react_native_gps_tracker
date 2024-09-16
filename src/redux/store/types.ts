@@ -1,6 +1,6 @@
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import { Action } from "redux";
 import { ThunkAction } from "redux-thunk";
+import Mapbox from "@rnmapbox/maps";
 import { TravelingMethod } from "../../utils/supportedTravelingMethods";
 
 export interface StoreState {
@@ -40,7 +40,7 @@ export interface IRouteSaveState {
 export interface RouteData extends RouteDetail {
   id: string;
   date: string;
-  coordinates: MapboxGL.Coordinates[];
+  coordinates: Mapbox.Location["coords"][];
 }
 
 export interface IUpdateRoutesAction extends Action {

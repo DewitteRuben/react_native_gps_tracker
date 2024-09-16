@@ -1,12 +1,12 @@
 import React, { memo } from "react";
 import { TouchableOpacity, ViewStyle } from "react-native";
-import Icon, { IconTypes } from "../Icon";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { GLOBAL } from "../../styles/global";
 import styles from "./styles";
 
 interface Props {
   onPress?: () => void;
-  type: IconTypes;
+  type: IconType;
   name: string;
   size?: number;
   style?: ViewStyle;

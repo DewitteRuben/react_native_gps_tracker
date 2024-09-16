@@ -1,10 +1,11 @@
-import React, { useMemo, memo, useEffect, useState, useCallback } from "react";
+import React, { useMemo, useEffect, useState, useCallback } from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View } from "react-native";
 import { RTCView } from "react-native-webrtc";
 import { connect } from "react-redux";
 import { useMediaDevice, useMediaStream, useSocket, useRTCPeerConnection, RTCConnectionData } from "../../utils/webrtc";
 import { GLOBAL } from "../../styles/global";
-import { Modal, CircleButton, Icon, MapOverlay } from "..";
+import { Modal, CircleButton } from "..";
 import { getModalButtons } from "../../utils/modal";
 import { StoreState } from "../../redux/store/types";
 import styles from "./styles";
@@ -97,7 +98,7 @@ const WebRTC: React.FC<Props> = ({ trackingId }) => {
       {isConnected(connectionData) && (
         <View style={styles.endCallButtonContainer}>
           <CircleButton onPress={onCallEnd}>
-            <Icon color={GLOBAL.MAIN.buttonGray} size={32} name="call-end" type="MaterialIcons" />
+            <Icon color={GLOBAL.MAIN.buttonGray} size={32} name="call-end" type={IconType.MaterialIcons} />
           </CircleButton>
         </View>
       )}

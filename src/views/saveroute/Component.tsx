@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useCallback, Dispatch, useEffect, useRef } from "react";
 import { View, Route, BackHandler } from "react-native";
 import * as geometry from "spherical-geometry-js";
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import { ThunkAction } from "redux-thunk";
 import { v4 as uuidv4 } from "uuid";
@@ -32,7 +31,7 @@ const SaveRoute: React.FC<Props> = ({ saveRoute, routeState, clearLastId }) => {
 
   const distance: number = useNavigationParam("distance");
   const duration: number = useNavigationParam("duration");
-  const route: MapboxGL.Coordinates[] = useNavigationParam("route");
+  const route: any[] = useNavigationParam("route");
 
   const didMount = useRef(false);
 

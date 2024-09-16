@@ -1,5 +1,5 @@
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import React, { memo } from "react";
-import Icon from "../Icon";
 import CircleButton from "../CircleButton";
 import { GLOBAL } from "../../styles/global";
 
@@ -12,7 +12,7 @@ const locationFAB = memo<Props>(({ onPress, isFollowing }) => {
   return (
     <CircleButton onPress={onPress}>
       <Icon
-        type="MaterialIcons"
+        type={IconType.MaterialIcons}
         color={isFollowing ? GLOBAL.MAIN.green : GLOBAL.MAIN.buttonGray}
         size={32}
         name="my-location"

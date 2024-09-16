@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View, TouchableOpacity, BackHandler } from "react-native";
 import { useNavigationParam, useNavigation } from "react-navigation-hooks";
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import center from "@turf/center";
 import bbox from "@turf/bbox";
+import MapboxGL, { UserTrackingMode } from "@rnmapbox/maps";
 import { ThunkAction } from "redux-thunk";
 import { withNavigation } from "react-navigation";
 import { routeToFeature } from "../map/Utils";
 import { prettyDuration, metersToUnit } from "../../utils/units";
 import { GLOBAL } from "../../styles/global";
 import { RouteData, StoreState } from "../../redux/store/types";
-import { CText as Text, CText, Spinner, Icon, Modal, BackArrowButton, LoadingOverlay } from "../../components";
+import { CText as Text, CText, Spinner, Modal, BackArrowButton, LoadingOverlay } from "../../components";
 import { typeToIconMap, TravelingMethod } from "../../utils/supportedTravelingMethods";
 import { getModalButtons } from "../../utils/modal";
 import styles from "./styles";
@@ -25,7 +26,7 @@ interface Props {
 }
 
 const useFilteredRoute = (routes: RouteData[], routeId: string) => {
-  const [geoJSON, setGeoJSON] = useState<GeoJSON.Feature | null>(null);
+  const [geoJSON, setGeoJSON] = useState<GeoJSON.Feature<any> | null>(null);
   const [route, setRoute] = useState<RouteData | null>(null);
   const [middlePoint, setMiddlePoint] = useState<GeoJSON.Position | null>(null);
 
@@ -110,10 +111,10 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           <BackArrowButton onPress={backHandler} />
           <View style={[styles.actionsContainer, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
             <TouchableOpacity onPress={() => navigate(ROUTES.EDIT_ROUTE, { routeId: id })}>
-              <Icon name="pencil" size={21} type="FontAwesome" />
+              <Icon name="pencil" size={21} type={IconType.FontAwesome} />
             </TouchableOpacity>
             <TouchableOpacity onPress={onModalOpen}>
-              <Icon name="trash" size={21} type="FontAwesome" />
+              <Icon name="trash" size={21} type={IconType.FontAwesome} />
             </TouchableOpacity>
           </View>
         </View>
@@ -126,21 +127,26 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           style={[GLOBAL.LAYOUT.shadow, GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween, styles.infoContainer]}
         >
           <View style={[GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
-            <Icon style={styles.icon} type="FontAwesome5" size={24} name={parsedIconName} />
+            <Icon style={styles.icon} type={IconType.FontAwesome5} size={24} name={parsedIconName} />
             <Text text={method} />
           </View>
           <View style={[GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
-            <Icon style={styles.icon} type="FontAwesome5" size={24} name="route" />
+            <Icon style={styles.icon} type={IconType.FontAwesome5} size={24} name="route" />
             <Text text={`${metersToUnit(distance, distanceUnit)} ${distanceUnit}`} />
           </View>
           <View style={[GLOBAL.LAYOUT.flexRow, GLOBAL.LAYOUT.justifySpaceBetween]}>
-            <Icon style={styles.icon} type="Feather" size={24} name="clock" />
+            <Icon style={styles.icon} type={IconType.Feather} size={24} name="clock" />
             <Text text={prettyDuration(duration)} />
           </View>
         </View>
       </View>
-      <MapboxGL.MapView style={GLOBAL.LAYOUT.container} animated>
-        <MapboxGL.Camera ref={handleCameraRef} zoomLevel={11} centerCoordinate={middlePoint} followUserMode="normal" />
+      <MapboxGL.MapView style={GLOBAL.LAYOUT.container}>
+        <MapboxGL.Camera
+          ref={handleCameraRef}
+          zoomLevel={11}
+          centerCoordinate={middlePoint ?? undefined}
+          followUserMode={UserTrackingMode.Follow}
+        />
         <MapboxGL.PointAnnotation title="Start" id="start" coordinate={startCoords}>
           <MapboxGL.Callout title={start} />
         </MapboxGL.PointAnnotation>

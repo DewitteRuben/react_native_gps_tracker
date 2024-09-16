@@ -1,6 +1,6 @@
 import React, { memo } from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View } from "react-native";
-import Icon from "../Icon";
 import CircleButton from "../CircleButton";
 import { GLOBAL } from "../../styles/global";
 import styles from "./styles";
@@ -22,7 +22,7 @@ const trackFAB = memo<Props>(({ isTracking, hasTracked, onTrackFinish, onToggleT
           containerStyle={styles.finishButtonContainer}
           onPress={onTrackFinish}
         >
-          <Icon type="FontAwesome" color={GLOBAL.MAIN.white} size={26} name="flag-checkered" />
+          <Icon type={IconType.FontAwesome} color={GLOBAL.MAIN.white} size={26} name="flag-checkered" />
         </CircleButton>
       )}
       <CircleButton containerStyle={styles.trackButtonContainer} onPress={onToggleTracking}>

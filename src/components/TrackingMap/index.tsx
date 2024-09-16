@@ -1,8 +1,9 @@
 import React, { useCallback, useState, useMemo, memo, useEffect } from "react";
 import { View } from "react-native";
-import MapboxGL from "@react-native-mapbox-gl/maps";
+import { IconType } from "react-native-dynamic-vector-icons";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { useNavigation } from "react-navigation-hooks";
+import MapboxGL, { UserLocationRenderMode, UserTrackingMode } from "@rnmapbox/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import { MapOverlay, Modal, TrackingFAB, LocationFAB, IconButton } from "..";
@@ -17,7 +18,7 @@ let prevCoords = { longitude: 0, latitude: 0 };
 
 export interface Props {
   onTimerUpdate?: (duration: number) => void;
-  onRouteUpdate?: (route: MapboxGL.Coordinates[], distance: number) => void;
+  onRouteUpdate?: (route: any, distance: number) => void;
   onTrackToggle?: (tracking: boolean) => void;
   minDisplacement: number;
   defaultZoom: number;
@@ -30,8 +31,8 @@ const TrackingMap: React.FC<Props> = memo(
     const { navigate } = useNavigation();
     const { hasPermission, locationStatus } = useLocationPermission();
 
-    const [route, setRoute] = useState<MapboxGL.Coordinates[]>([]);
-    const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature>();
+    const [route, setRoute] = useState<MapboxGL.Location["coords"][]>([]);
+    const [geojsonFeature, setGeoJsonFeature] = useState<GeoJSON.Feature<any>>();
     const [computedDistance, setComputedDistance] = useState(0);
 
     const [isConcludeModalVisible, setConcludeModalVisibility] = useState(false);
@@ -43,11 +44,13 @@ const TrackingMap: React.FC<Props> = memo(
     const [isFullyRendered, setIsFullyRendered] = useState(false);
     const [displacement, setMinDisplacement] = useState(0);
 
-    const [lastPosition, setLastPosition] = useState<MapboxGL.Coordinates>();
+    const [lastPosition, setLastPosition] = useState<MapboxGL.Location["coords"]>();
     const [camera, setCamera] = useState<MapboxGL.Camera>();
 
     useEffect(() => {
-      onTrackToggle(isTracking);
+      if (onTrackToggle) {
+        onTrackToggle(isTracking);
+      }
     }, [isTracking, onTrackToggle]);
 
     const timerCallback = useCallback(
@@ -174,7 +177,10 @@ const TrackingMap: React.FC<Props> = memo(
             }, 1000);
 
             const distanceDifferential = computeLastDistance(newRoute) || computedDistance;
-            onRouteUpdate(newRoute, computedDistance + distanceDifferential);
+
+            if (onRouteUpdate) {
+              onRouteUpdate(newRoute, computedDistance + distanceDifferential);
+            }
             setComputedDistance(prevDistance => prevDistance + distanceDifferential);
 
             if (liveUpdate) {
@@ -197,7 +203,7 @@ const TrackingMap: React.FC<Props> = memo(
       return !!route.length;
     }, [route]);
 
-    const handleCameraRef = useCallback((ref: MapboxGL.Camera) => {
+    const handleCameraRef = useCallback((ref: any) => {
       setCamera(ref);
     }, []);
 
@@ -224,10 +230,9 @@ const TrackingMap: React.FC<Props> = memo(
             style={GLOBAL.LAYOUT.container}
             onDidFinishRenderingMapFully={onDidFinishRenderingMapFully}
             onTouchMove={onTouchMove}
-            animated
           >
             <MapboxGL.Camera
-              followUserMode="normal"
+              followUserMode={UserTrackingMode.Follow}
               followUserLocation={false}
               ref={handleCameraRef}
               zoomLevel={defaultZoom}
@@ -241,14 +246,14 @@ const TrackingMap: React.FC<Props> = memo(
               minDisplacement={displacement}
               onUpdate={onUserlocationUpdate}
               visible={hasPermission}
-              renderMode="normal"
+              renderMode={UserLocationRenderMode.Normal}
               animated
             />
           </MapboxGL.MapView>
           <IconButton
             name={liveUpdate ? "wifi" : "wifi-off"}
             style={styles.wifiButton}
-            type="Feather"
+            type={IconType.Feather}
             onPress={toggleLive}
           />
           <MapOverlay>

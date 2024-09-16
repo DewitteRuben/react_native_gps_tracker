@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View } from "react-native";
 import { NavigationStackOptions, NavigationStackProp } from "react-navigation-stack";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
-import { CText as Text, Icon, WebRTC } from "../../components";
+import Mapbox from "@rnmapbox/maps";
+import { CText as Text, WebRTC } from "../../components";
 import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";
 import { durationToTime, msPerMeterToUnitPerHour } from "../../utils/time";
@@ -58,7 +59,7 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC, min
     setElapsedTime(duration);
   }, []);
 
-  const onRouteUpdate = useCallback((route: MapboxGL.Coordinates[], distance: number) => {
+  const onRouteUpdate = useCallback((route: Mapbox.Location["coords"][], distance: number) => {
     setElapsedDistance(distance);
   }, []);
 
@@ -109,7 +110,12 @@ const Map: NavigationBottomTabScreenFC = React.memo(({ distanceUnit, webRTC, min
 
 Map.navigationOptions = {
   tabBarIcon: ({ focused }: RenderIconProps) => (
-    <Icon type="Foundation" name="map" color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green} size={23} />
+    <Icon
+      type={IconType.Foundation}
+      name="map"
+      color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green}
+      size={23}
+    />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, NavigationParams>, unknown>

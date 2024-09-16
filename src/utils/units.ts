@@ -1,5 +1,4 @@
 import prettyMilliseconds from "pretty-ms";
-import MapboxGL from "@react-native-mapbox-gl/maps";
 import { computeDistanceBetween } from "spherical-geometry-js";
 import _ from "lodash";
 
@@ -30,7 +29,7 @@ export const metersToUnit = (distance: number, distanceUnit: string) => {
 
 export const prettyDuration = (duration: number) => prettyMilliseconds(duration);
 
-export const computeRouteDistance = (route: MapboxGL.Coordinates[]) => {
+export const computeRouteDistance = (route: any[]) => {
   const start = route[0];
   const end = route[route.length - 1];
   if (start && end) {
@@ -41,7 +40,7 @@ export const computeRouteDistance = (route: MapboxGL.Coordinates[]) => {
   return 0;
 };
 
-export const computeLastDistance = (route: MapboxGL.Coordinates[]) => {
+export const computeLastDistance = (route: any[]) => {
   const start = route[route.length - 1];
   const end = route[route.length - 2];
   if (start && end) {

@@ -1,7 +1,7 @@
 import { createAppContainer } from "react-navigation";
 import { Provider, batch } from "react-redux";
 import React from "react";
-import MapboxGL from "@react-native-mapbox-gl/maps";
+import MapboxGL from "@rnmapbox/maps";
 import { appNavigator } from "./navigation";
 import store from "../redux/store";
 import { getTrackingIdAction, localLoadSettings } from "../redux/actions/settings";

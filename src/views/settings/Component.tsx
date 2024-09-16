@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View } from "react-native";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react-navigation";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
+import { isNumber } from "@turf/helpers";
 import { GLOBAL } from "../../styles/global";
-import { CText as Text, Icon, Dropdown, Checkbox, Input } from "../../components";
+import { CText as Text, Dropdown, Checkbox, Input } from "../../components";
 import { IUpdateDistanceUnitAction, IUpdateWebRTCStateAction } from "../../redux/actions/settings";
 import { DropDownData } from "../../components/Dropdown/types";
 import styles from "./styles";
 import { SettingsState } from "../../redux/store/types";
-import { isNumber } from "@turf/helpers";
 
 interface NavigationBottomTabScreenComponent {
   navigationOptions?: NavigationScreenConfig<
@@ -132,7 +133,12 @@ const Settings: NavigationBottomTabScreenFC = (props: Props) => {
 
 Settings.navigationOptions = {
   tabBarIcon: ({ focused }: RenderIconProps) => (
-    <Icon type="FontAwesome" name="cog" color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green} size={23} />
+    <Icon
+      type={IconType.FontAwesome}
+      name="cog"
+      color={focused ? GLOBAL.MAIN.lighterWhite : GLOBAL.MAIN.green}
+      size={23}
+    />
   )
 } as Partial<
   NavigationScreenConfig<NavigationStackOptions, NavigationTabProp<NavigationRoute, NavigationParams>, unknown>

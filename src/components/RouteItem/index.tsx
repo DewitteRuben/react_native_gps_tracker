@@ -1,8 +1,8 @@
 import * as React from "react";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { View, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import CText from "../CText";
-import Icon from "../Icon";
 import { TravelingMethod, typeToIconMap } from "../../utils/supportedTravelingMethods";
 import { GLOBAL } from "../../styles/global";
 
@@ -22,7 +22,7 @@ const RouteItem: React.FC<Props> = ({ title, type, startPoint, endPoint, date, d
     <TouchableOpacity style={[GLOBAL.LAYOUT.shadow, styles.container]} onPress={onPress}>
       <View style={styles.firstContainer}>
         <CText bold variant="h3" text={title} />
-        <Icon type="FontAwesome5" name={typeToIconMap[type.toLowerCase() as TravelingMethod]} size={21} />
+        <Icon type={IconType.FontAwesome5} name={typeToIconMap[type.toLowerCase() as TravelingMethod]} size={21} />
       </View>
       <View style={styles.middleContainer}>
         <View>
