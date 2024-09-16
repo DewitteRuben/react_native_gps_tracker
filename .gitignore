@@ -324,3 +324,5 @@ Pods/*
 
 # Jest
 .jest/
+
+gpsapp.keystore
