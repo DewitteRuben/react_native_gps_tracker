@@ -1,8 +1,14 @@
 # Gps Tracker
 
+## !! Disclaimer !!
+
+This project was created in 2020. To run it in 2024, ensure that you are using Node.js version 8 before running `npm install`.
+
+Making this old React Native project run again was an absolute nightmare, but I eventually got it working on Android (iOS not tested). When running the project you can expect dependency and deprecation warnings. :)
+
 ## Introduction
 
-Read more about this project and its development on my [website](https://www.rubendewitte.com/projects/gpsapp).
+Read more about this project and its development on my [website](https://www.rubendewitte.com/projects/gps-app).
 
 ## Setup
 
