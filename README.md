@@ -8,7 +8,7 @@ Making this old React Native project run again was an absolute nightmare, but I 
 
 ## Introduction
 
-Read more about this project and its development on my [website](https://www.rubendewitte.com/projects/gps-app).
+Read more about this project and its development on my [website](https://www.rubendewitte.com/project/gps-app).
 
 ## Setup
 
