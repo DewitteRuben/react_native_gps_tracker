@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Platform } from "react-native";
-import MapboxGL from "@rnmapbox/maps";
+import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 import { CText as Text } from "../../components";

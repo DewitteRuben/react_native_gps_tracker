@@ -21,7 +21,7 @@
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-firebase/app": "^6.2.0",
     "@react-native-firebase/database": "^6.2.0",
-    "@rnmapbox/maps": "^10.0.0-rc.8",
+    "@react-native-mapbox-gl/maps": "^8.6.0-beta.0",
     "@turf/bbox": "^6.0.1",
     "@turf/center": "^6.0.1",
     "@turf/helpers": "^6.1.4",

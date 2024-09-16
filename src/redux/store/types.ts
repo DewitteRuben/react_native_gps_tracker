@@ -1,6 +1,6 @@
 import { Action } from "redux";
 import { ThunkAction } from "redux-thunk";
-import Mapbox from "@rnmapbox/maps";
+import Mapbox from "@react-native-mapbox-gl/maps";
 import { TravelingMethod } from "../../utils/supportedTravelingMethods";
 
 export interface StoreState {

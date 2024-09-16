@@ -6,7 +6,7 @@ import { NavigationScreenConfig, NavigationRoute, NavigationParams } from "react
 import { RenderIconProps } from "react-navigation-material-bottom-tabs/lib/typescript/src/navigators/createMaterialBottomTabNavigator";
 import { NavigationTabProp } from "react-navigation-material-bottom-tabs";
 import { NavigationBottomTabOptions } from "react-navigation-tabs";
-import Mapbox from "@rnmapbox/maps";
+import Mapbox from "@react-native-mapbox-gl/maps";
 import { CText as Text, WebRTC } from "../../components";
 import TrackingMap from "../../components/TrackingMap";
 import { GLOBAL } from "../../styles/global";

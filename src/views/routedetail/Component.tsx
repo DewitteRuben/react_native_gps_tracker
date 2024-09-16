@@ -5,7 +5,7 @@ import { useNavigationParam, useNavigation } from "react-navigation-hooks";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import center from "@turf/center";
 import bbox from "@turf/bbox";
-import MapboxGL, { UserTrackingMode } from "@rnmapbox/maps";
+import MapboxGL from "@react-native-mapbox-gl/maps";
 import { ThunkAction } from "redux-thunk";
 import { withNavigation } from "react-navigation";
 import { routeToFeature } from "../map/Utils";
@@ -145,7 +145,7 @@ const RouteDetail: React.FC<Props> = ({ routes, distanceUnit, deleteRoute, navig
           ref={handleCameraRef}
           zoomLevel={11}
           centerCoordinate={middlePoint ?? undefined}
-          followUserMode={UserTrackingMode.Follow}
+          followUserMode="normal"
         />
         <MapboxGL.PointAnnotation title="Start" id="start" coordinate={startCoords}>
           <MapboxGL.Callout title={start} />

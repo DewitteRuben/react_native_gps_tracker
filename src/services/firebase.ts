@@ -1,5 +1,5 @@
 import database from "@react-native-firebase/database";
-import Mapbox from "@rnmapbox/maps";
+import Mapbox from "@react-native-mapbox-gl/maps";
 import store from "../redux/store";
 
 export const fbUpdateLastCoords = async (coords: Mapbox.Location["coords"]) => {

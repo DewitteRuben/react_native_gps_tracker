@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { IconType } from "react-native-dynamic-vector-icons";
 import * as GeoJSON from "@turf/helpers/lib/geojson";
 import { useNavigation } from "react-navigation-hooks";
-import MapboxGL, { UserLocationRenderMode, UserTrackingMode } from "@rnmapbox/maps";
+import MapboxGL from "@react-native-mapbox-gl/maps";
 import { didCoordsUpdate, routeToFeature, useLocationPermission } from "../../views/map/Utils";
 import { fbUpdateLastCoords, fbUpdateCoords, fbClearRoute } from "../../services/firebase";
 import { MapOverlay, Modal, TrackingFAB, LocationFAB, IconButton } from "..";
@@ -232,7 +232,7 @@ const TrackingMap: React.FC<Props> = memo(
             onTouchMove={onTouchMove}
           >
             <MapboxGL.Camera
-              followUserMode={UserTrackingMode.Follow}
+              followUserMode="normal"
               followUserLocation={false}
               ref={handleCameraRef}
               zoomLevel={defaultZoom}
@@ -246,7 +246,7 @@ const TrackingMap: React.FC<Props> = memo(
               minDisplacement={displacement}
               onUpdate={onUserlocationUpdate}
               visible={hasPermission}
-              renderMode={UserLocationRenderMode.Normal}
+              renderMode="normal"
               animated
             />
           </MapboxGL.MapView>
